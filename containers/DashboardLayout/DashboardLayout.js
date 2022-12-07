@@ -18,7 +18,7 @@ export default function DashboardLayout({ children }) {
   const appHeight = useSelector((state) => state.App.height);
   const { width, height } = useWindowSize();
 
-  React.useEffect(() => {
+  React.useEffect(()=> {
     dispatch(toggleAll(width, height));
   }, [width, height, dispatch]);
 

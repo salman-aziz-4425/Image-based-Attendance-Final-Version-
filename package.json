@@ -98,6 +98,7 @@
 		"heroku-postbuild": "npm run build"
 	},
 	"devDependencies": {
+		"autoprefixer": "^10.4.13",
 		"babel-plugin-import": "^1.13.0",
 		"babel-plugin-styled-components": "^1.11.1",
 		"cross-env": "^7.0.2",
@@ -105,7 +106,9 @@
 		"imagemin-optipng": "^8.0.0",
 		"imagemin-svgo": "^8.0.0",
 		"nodemon": "^2.0.4",
+		"postcss": "^8.4.19",
 		"redux-devtools-extension": "^2.13.8",
-		"sass": "^1.43.2"
+		"sass": "^1.43.2",
+		"tailwindcss": "^3.2.4"
 	}
 }

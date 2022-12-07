@@ -1,4 +1,7 @@
 /********** Add Your Global CSS Here **********/
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 h1,
 h2,
 h3,
