@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Loginpic from "../assets/Loginpic.jpg";
@@ -7,6 +8,20 @@ import styles from "../style/Home.module.css";
 import Arrow from "../assets/right-arrow.png"
 import Input from '../components/uielements/input';
 export default function Login() {
+  const [email,setEmail] = useState("")
+  const [password,setpassword]=useState("")
+  const emailHandler=(event)=>{
+    setEmail(event.target.value)
+  }
+  const passwordHandler=(event)=>{
+    setpassword(event.target.value)
+  }
+  const submitHandler=()=>{
+    var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    if (!email.match(validRegex)) {
+          
+    }
+  }
   return (
     <div className={styles.container}>
       <Head>
@@ -17,7 +32,7 @@ export default function Login() {
           <h1 className="font-semibold text-3xl ml-20">Welcome Back</h1>
           <div className="flex flex-row w-80 justify-items-center rounded-md space-x-8 py-2 px-4 mt-6 ml-10 ... ring-2 ring-gray-100 ring-inset">
             <Image src={googleIcon} alt="Image" width={20} height={3}/>
-          <h1 className="border-black pl-10 font-semibold text-sm">Login with Google</h1>
+          <h1 className="border-black pl-1/2 font-semibold text-sm whitespace-nowrap">Image-based Attendane system</h1>
           </div>
           <div className="relative flex py-4 items-center w-4/5 ml-10 mt-2" >
           <div className="flex-grow-[1] border-t border-gray-400"></div>

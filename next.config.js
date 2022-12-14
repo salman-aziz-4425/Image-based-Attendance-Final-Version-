@@ -25,6 +25,9 @@ const nextConfig = {
 		return config;
 	},
 	webpack5:false,
+	images: {
+        domains: ['images.unsplash.com'],
+    },
 };
 
 // fix: prevents error when .css files are required by node

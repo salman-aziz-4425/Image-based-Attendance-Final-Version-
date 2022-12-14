@@ -1,5 +1,5 @@
 .container {
   height:100vh;
-  background-image:linear-gradient(to right,rgb(91, 172, 223) 0%,rgb(91, 172, 223) 50%, rgb(0, 0, 91) 50%,rgb(0, 0, 91)  100%);
+  background-image:linear-gradient(to right,rgb(52, 82, 99) 0%,rgb(91, 172, 223) 50%, rgb(0, 0, 91) 50%,rgb(0, 0, 91)  100%);
   overflow: hidden;
 }

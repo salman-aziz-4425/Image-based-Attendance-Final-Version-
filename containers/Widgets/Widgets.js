@@ -7,8 +7,6 @@ import IsoWidgetsWrapper from './WidgetsWrapper';
 import IsoWidgetBox from './WidgetBox';
 import CardWidget from './Card/CardWidget';
 import ProgressWidget from './Progress/ProgressWidget';
-import SingleProgressWidget from './Progress/ProgressSingle';
-import ReportsWidget from './Report/ReportWidget';
 import StickerWidget from './Sticker/StickerWidget';
 import SaleWidget from './Sale/SaleWidget';
 import VCardWidget from './vCard/vCardWidget';
@@ -22,26 +20,12 @@ import {
   dataList,
 } from '../Tables/AntTables/AntTables';
 import * as rechartConfigs from '../Charts/Recharts/config';
-import StackedAreaChart from '../Charts/Recharts/Charts/StackedAreaChart';
-import GoogleChart from 'react-google-charts';
-import * as googleChartConfigs from '../Charts/GoogleChart/config';
 import IntlMessages from '@iso/components/utility/intlMessages';
 import {
-  StickerWidgetUnreadMailIcon,
   StickerWidgetImgUploadIcon,
   StickerWidgetMessageIcon,
   StickerWidgetOrderIcon,
-  CardWidgetNewMsgIcon,
-  CardWidgetVolumeIcon,
-  CardWidgetAchievementIcon,
-  ProgressDownloadIcon,
-  ProgressPieChartIcon,
-  ProgressUploadIcon,
-  SocialFacebookIcon,
-  SocialTwitterIcon,
-  SocialGooglePlusIcon,
-  SocialLinkedinIcon,
-  SocialDribbbleIcon,
+  SidebarProfileIcon
 } from '@iso/config/icon.config';
 
 const tableDataList = clone(dataList);
@@ -50,39 +34,34 @@ const styles = {
   wisgetPageStyle: {
     display: 'flex',
     flexFlow: 'row wrap',
-    alignItems: 'center',
-    overflow: 'hidden',
+    justifyItems:"center",
+    alignItems:'center',
+    whiteSpace:'nowrap',
   },
 };
 
 const STICKER_WIDGET = [
   {
     number: 'widget.stickerwidget1.number',
-    text: 'widget.stickerwidget1.text',
-    icon: <StickerWidgetUnreadMailIcon size={30} color="#ffffff" />,
+    text: 'No of Teachers',
+    icon: <SidebarProfileIcon size={30} color="#ffffff" />,
     fontColor: '#ffffff',
     bgColor: '#7266BA',
   },
   {
     number: 'widget.stickerwidget1.number',
-    text: 'widget.stickerwidget2.text',
-    icon: <StickerWidgetImgUploadIcon size={30} color="#ffffff" />,
+    text: 'Students Enrolled',
+    icon: <SidebarProfileIcon size={25} color="#ffffff" />,
     fontColor: '#ffffff',
+    fontSize:"20px",
     bgColor: '#42A5F6',
   },
   {
     number: 'widget.stickerwidget1.number',
-    text: 'widget.stickerwidget3.text',
+    text: 'Total Courses',
     icon: <StickerWidgetMessageIcon size={30} color="#ffffff" />,
     fontColor: '#ffffff',
     bgColor: '#7ED320',
-  },
-  {
-    number: 'widget.stickerwidget1.number',
-    text: 'widget.stickerwidget4.text',
-    icon: <StickerWidgetOrderIcon size={30} color="#ffffff" />,
-    fontColor: '#ffffff',
-    bgColor: '#F75D81',
   },
 ];
 

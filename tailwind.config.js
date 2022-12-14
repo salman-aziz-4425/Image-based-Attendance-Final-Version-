@@ -4,8 +4,16 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
     "./containers/**/*.{js,ts,jsx,tsx}",
   ],
-  theme: {
-    extend: {},
+    theme: {
+      extend: {
+        height: {
+          '5/7': '89%',
+        }
+        ,
+        width:{
+          '5/7': '93%',
+        }
+      }
   },
   plugins: [],
 }
