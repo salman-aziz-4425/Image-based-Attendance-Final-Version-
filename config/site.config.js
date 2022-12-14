@@ -1,9 +1,8 @@
 export default {
-  siteName: 'ISOMORPHIC',
+  siteName: 'Admin Panel',
   siteIcon: 'ion-flash',
-  footerText: `Isomorphic @ ${new Date().getFullYear()} Created by RedQ, Inc`,
+  footerText: `Image-based Attendance system ${new Date().getFullYear()}`,
   enableAnimatedRoute: false,
-  apiUrl: 'http://yoursite.com/api/',
   google: {
     analyticsKey: 'UA-xxxxxxxxx-1',
   },

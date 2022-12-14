@@ -11,7 +11,7 @@ export default function LanguageSwitcher() {
   const dispatch = useDispatch();
   return (
     <div className="themeSwitchBlock">
-      <h4>
+      {/* <h4>
         <IntlMessages id="languageSwitcher.label" />
       </h4>
       <div className="themeSwitchBtnWrapper">
@@ -35,7 +35,7 @@ export default function LanguageSwitcher() {
             </button>
           );
         })}
-      </div>
+      </div> */}
     </div>
   );
 }

@@ -12,6 +12,7 @@ const { toggleAll } = appActions;
 export default function AppProvider({ children }) {
   const dispatch = useDispatch();
   const { locale } = useSelector(state => state.LanguageSwitcher.language);
+  console.log(locale)
   const { themeName } = useSelector(state => state.ThemeSwitcher.changeThemes);
   const currentAppLocale = AppLocale[locale];
   const { width, height } = useWindowSize();
@@ -22,7 +23,6 @@ export default function AppProvider({ children }) {
   return (
     <ConfigProvider locale={currentAppLocale.antd}>
       <IntlProvider
-        locale={currentAppLocale.locale}
         messages={currentAppLocale.messages}
       >
         <ThemeProvider theme={themes[themeName]}>{children}</ThemeProvider>
