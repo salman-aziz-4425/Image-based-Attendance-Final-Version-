@@ -9,7 +9,9 @@ import '@glidejs/glide/dist/css/glide.core.min.css';
 import 'react-quill/dist/quill.snow.css';
 import 'react-quill/dist/quill.core.css';
 import '../style/global.css';
-
+import { Amplify} from 'aws-amplify';
+import awsconfig from '../src/aws-exports';
+Amplify.configure(awsconfig);
 class CustomApp extends App {
   render() {
     const { Component, pageProps, store } = this.props;

@@ -5,7 +5,7 @@ import Form from '@iso/components/uielements/form';
 const FormItem = Form.Item;
 
 const expandedRowRender = record => (
-  <p>{`${record.firstName} lives in ${record.city}`}</p>
+  <p>{`${record.rollNumber} lives in ${record.name}`}</p>
 );
 const title = () => 'Here is title';
 const showHeader = true;
@@ -83,7 +83,7 @@ export default function CustomizedView(props) {
       }
     };
     return (
-      <FormItem label={option.title} key={option.key}>
+      <FormItem label={option.rollNumber} key={option.key}>
         <Switch checked={checked} onChange={onChange} />
       </FormItem>
     );

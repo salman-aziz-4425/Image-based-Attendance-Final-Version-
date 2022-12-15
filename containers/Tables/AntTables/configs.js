@@ -24,48 +24,48 @@ const renderCell = (object, type, key) => {
 
 const columns = [
   {
-    title: <IntlMessages id="antTable.title.image" />,
-    key: 'avatar',
+    title: <IntlMessages id="image" />,
+    key: 'image',
     width: '1%',
     className: 'isoImageCell',
     render: object => renderCell(object, 'ImageCell', 'avatar'),
   },
   {
-    title: <IntlMessages id="antTable.title.firstName" />,
-    key: 'firstName',
+    title: <IntlMessages id="rollNumber" />,
+    key: 'rollNumber',
     width: 100,
-    render: object => renderCell(object, 'TextCell', 'firstName'),
+    render: object => renderCell(object, 'TextCell', 'rollNumber'),
   },
   {
-    title: <IntlMessages id="antTable.title.lastName" />,
-    key: 'lastName',
+    title: <IntlMessages id="name" />,
+    key: 'name',
     width: 100,
-    render: object => renderCell(object, 'TextCell', 'lastName'),
+    render: object => renderCell(object, 'TextCell', 'name'),
   },
   {
-    title: <IntlMessages id="antTable.title.city" />,
-    key: 'city',
+    title: <IntlMessages id="qualification" />,
+    key: 'qualification',
     width: 200,
-    render: object => renderCell(object, 'TextCell', 'city'),
+    render: object => renderCell(object, 'TextCell', 'qualification'),
   },
   {
-    title: <IntlMessages id="antTable.title.street" />,
-    key: 'street',
+    title: <IntlMessages id="userType" />,
+    key: 'userType',
     width: 200,
-    render: object => renderCell(object, 'TextCell', 'street'),
+    render: object => renderCell(object, 'TextCell', 'userType'),
   },
-  {
-    title: <IntlMessages id="antTable.title.email" />,
-    key: 'email',
-    width: 200,
-    render: object => renderCell(object, 'LinkCell', 'email'),
-  },
-  {
-    title: <IntlMessages id="antTable.title.dob" />,
-    key: 'date',
-    width: 200,
-    render: object => renderCell(object, 'DateCell', 'date'),
-  },
+  // {
+  //   title: <IntlMessages id="antTable.title.email" />,
+  //   key: 'email',
+  //   width: 200,
+  //   render: object => renderCell(object, 'LinkCell', 'email'),
+  // },
+  // {
+  //   title: <IntlMessages id="antTable.title.dob" />,
+  //   key: 'date',
+  //   width: 200,
+  //   render: object => renderCell(object, 'DateCell', 'date'),
+  // },
 ];
 const smallColumns = [columns[1], columns[2], columns[3], columns[4]];
 const sortColumns = [
@@ -83,7 +83,7 @@ const editColumns = [
 const groupColumns = [
   columns[0],
   {
-    title: 'Name',
+    title: 'name',
     children: [columns[1], columns[2]],
   },
   {

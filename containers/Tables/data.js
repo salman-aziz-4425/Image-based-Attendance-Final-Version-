@@ -1,4 +1,16 @@
-const tableData = JSON.parse(
+import {API,graphqlOperation} from 'aws-amplify';
+import { getAllUsers} from '../../src/graphql/queries'
+async function getData(){
+  const Users=await API.graphql(graphqlOperation(getAllUsers))
+  return Users.data.getAllUsers
+}
+const array=getData().then((result)=>{
+  result
+  
+})
+console.log(array)
+const tableData = 
+JSON.parse(
   `[{
   "id": 0,
   "key": 0,
