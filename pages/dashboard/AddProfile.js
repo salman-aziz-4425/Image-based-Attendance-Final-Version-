@@ -6,6 +6,7 @@ import { StickerWidgetImgUploadIcon } from "../../config/icon.config";
 import Upload from "antd/lib/upload/Upload";
 import DropdownButton from "antd/lib/dropdown/dropdown-button";
 import MenuItem from "antd/lib/menu/MenuItem";
+import TopbarDropdownStyles from "../../containers/Topbar/TopbarDropdown.styles";
 export default function AddProfile() {
   const [type, setType] = useState("");
   const [dropdown,setdropdown]=useState(false)
@@ -18,32 +19,29 @@ export default function AddProfile() {
             Add User
           </h1>
         </div>
-        <div className="flex flex-row items-center w-full px-6 py-8 ">
+        <div className="flex flex-row flex-wrap items-center w-full px-6 py-8 ">
           <div className="flex-1 flex flex-col w-5/12 justify-start items-center">
             <Input className="my-2 w-5/6" placeholder="Student Name"></Input>
             <Input className="my-2 w-5/6" placeholder="Student Email"></Input>
             <Input className="my-2 w-5/6" type="number" placeholder="Student Phone No"></Input>
-            {type==="Student"&&
-                      <>
-            <Input className="my-2 w-5/6" placeholder="Current Semester"></Input>
-            <Input className="my-2 w-5/6" type="number" placeholder="Currrent CGPA"></Input>
-                      </>
-            }
           </div>
-          <div className="w-5/12">
+          <div className="flex flex-col items-center w-5/12">
             <Image
               src="https://images.unsplash.com/photo-1464375117522-1311d6a5b81f?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=2250&q=80"
               alt="Image"
               width={200}
-              height={160}
+              height={240}
               priority
               className="object-contain"
             />
-          </div>
         </div>
-        <div className="flex flex-row px-6 py-8 space-x-4 flex-wrap items-center">
-          <Input className="my-2 w-2/6" type="file"></Input>
-        </div>
+        {
+              <div className="flex flex-row items-center align-center justify-center w-full space-x-6 px-16">
+            <Input className="mb-6 w-4/6" placeholder="Current Semester"></Input>
+            <Input className="mb-6 w-4/6" type="number" placeholder="Currrent CGPA"></Input>
+                  </div>
+            }
+      </div>
       </div>
     </DashboardLayout>
   );

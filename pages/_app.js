@@ -11,7 +11,7 @@ import 'react-quill/dist/quill.core.css';
 import '../style/global.css';
 import { Amplify} from 'aws-amplify';
 import awsconfig from '../src/aws-exports';
-Amplify.configure(awsconfig);
+Amplify.configure({...awsconfig, ssr: true});
 class CustomApp extends App {
   render() {
     const { Component, pageProps, store } = this.props;

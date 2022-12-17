@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import clone from 'clone';
 import { Row, Col } from 'antd';
 import LayoutWrapper from '@iso/components/utility/layoutWrapper';
@@ -13,12 +13,9 @@ import VCardWidget from './vCard/vCardWidget';
 import SocialWidget from './SocialWidget/SocialWidget';
 import SocialProfile from './SocialWidget/SocialProfileIcon';
 import userpic from '@iso/assets/images/user1.png';
+import {API,graphqlOperation,withSSRContext} from 'aws-amplify';
+import {getAllUsers} from '../../src/graphql/queries'
 import { isServer } from '@iso/lib/helpers/isServer';
-import {
-  TableViews,
-  tableinfos,
-  dataList,
-} from '../Tables/AntTables/AntTables';
 import * as rechartConfigs from '../Charts/Recharts/config';
 import IntlMessages from '@iso/components/utility/intlMessages';
 import {
@@ -27,33 +24,25 @@ import {
   StickerWidgetOrderIcon,
   SidebarProfileIcon
 } from '@iso/config/icon.config';
+import Table from '../Table/Table';
 
-const tableDataList = clone(dataList);
-tableDataList.size = 5;
 const styles = {
   wisgetPageStyle: {
     display: 'flex',
     flexFlow: 'row wrap',
     justifyItems:"center",
     alignItems:'center',
-    whiteSpace:'nowrap',
+    borderRadius:'20px'
   },
 };
 
 const STICKER_WIDGET = [
   {
     number: 'widget.stickerwidget1.number',
-    text: 'No of Teachers',
-    icon: <SidebarProfileIcon size={30} color="#ffffff" />,
-    fontColor: '#ffffff',
-    bgColor: '#7266BA',
-  },
-  {
-    number: 'widget.stickerwidget1.number',
     text: 'Students Enrolled',
-    icon: <SidebarProfileIcon size={25} color="#ffffff" />,
+    icon: <SidebarProfileIcon size={20} color="#ffffff" />,
     fontColor: '#ffffff',
-    fontSize:"20px",
+    fontSize:"15px",
     bgColor: '#42A5F6',
   },
   {
@@ -66,107 +55,21 @@ const STICKER_WIDGET = [
 ];
 
 const SALE_WIDGET = [
-  // {
-  //   label: 'widget.salewidget1.label',
-  //   price: 'widget.salewidget1.price',
-  //   details: 'widget.salewidget1.details',
-  //   fontColor: '#F75D81',
-  // },
-  // {
-  //   label: 'widget.salewidget2.label',
-  //   price: 'widget.salewidget2.price',
-  //   details: 'widget.salewidget2.details',
-  //   fontColor: '#F75D81',
-  // },
-  // {
-  //   label: 'widget.salewidget3.label',
-  //   price: 'widget.salewidget3.price',
-  //   details: 'widget.salewidget3.details',
-  //   fontColor: '#F75D81',
-  // },
-  // {
-  //   label: 'widget.salewidget4.label',
-  //   price: 'widget.salewidget4.price',
-  //   details: 'widget.salewidget4.details',
-  //   fontColor: '#F75D81',
-  // },
 ];
-
+const PROGRESS_WIDGET=[]
 const CARD_WIDGET = [
-  // {
-  //   icon: <CardWidgetNewMsgIcon size={36} color="#42A5F5" />,
-  //   number: 'widget.cardwidget1.number',
-  //   text: 'widget.cardwidget1.text',
-  // },
-  // {
-  //   icon: <CardWidgetVolumeIcon size={36} color="#F75D81" />,
-  //   number: 'widget.cardwidget2.number',
-  //   text: 'widget.cardwidget2.text',
-  // },
-  // {
-  //   icon: <CardWidgetAchievementIcon size={36} color="#FEAC01" />,
-  //   number: 'widget.cardwidget3.number',
-  //   text: 'widget.cardwidget3.text',
-  // },
 ];
-
-const PROGRESS_WIDGET = [
-  // {
-  //   label: 'widget.progresswidget1.label',
-  //   details: 'widget.progresswidget1.details',
-  //   icon: <ProgressDownloadIcon size={24} color="#4482FF" />,
-  //   percent: 50,
-  //   barHeight: 7,
-  //   status: 'active',
-  // },
-  // {
-  //   label: 'widget.progresswidget2.label',
-  //   details: 'widget.progresswidget2.details',
-  //   icon: <ProgressPieChartIcon size={24} color="#F75D81" />,
-  //   percent: 80,
-  //   barHeight: 7,
-  //   status: 'active',
-  // },
-  // {
-  //   label: 'widget.progresswidget3.label',
-  //   details: 'widget.progresswidget3.details',
-  //   icon: <ProgressUploadIcon size={24} color="#494982" />,
-  //   percent: 65,
-  //   barHeight: 7,
-  //   status: 'active',
-  // },
-];
-
-const SOCIAL_PROFILE = [
-  // {
-  //   url: '#',
-  //   icon: <SocialFacebookIcon size={19} color="#3b5998" />,
-  // },
-  // {
-  //   url: '#',
-  //   icon: <SocialTwitterIcon size={19} color="#00aced" />,
-  // },
-  // {
-  //   url: '#',
-  //   icon: <SocialGooglePlusIcon size={19} color="#dd4b39" />,
-  // },
-  // {
-  //   url: '#',
-  //   icon: <SocialLinkedinIcon size={19} color="#007bb6" />,
-  // },
-  // {
-  //   url: '#',
-  //   icon: <SocialDribbbleIcon size={19} color="#ea4c89" />,
-  // },
-];
+const SOCIAL_PROFILE=[]
 export default function Widgets() {
+  const [Users,setUsers]=useState([])
   const { rowStyle, colStyle } = basicStyle;
-
+  useEffect(async ()=>{
+    const Users=await API.graphql(graphqlOperation(getAllUsers))
+    STICKER_WIDGET[0].number=Users.data.getAllUsers.length
+    setUsers(Users.data.getAllUsers)
+  },[])
   const chartEvents = [
-    // {
-    //   eventName: 'select',
-    //   callback(Chart) {},
-    // },
+  
   ];
 
   const stackConfig = {
@@ -178,7 +81,7 @@ export default function Widgets() {
       <div style={styles.wisgetPageStyle}>
       <Row style={rowStyle} gutter={0} justify="start">
           {STICKER_WIDGET.map((widget, idx) => (
-            <Col lg={6} md={12} sm={12} xs={24} style={colStyle} key={idx}>
+            <Col lg={6} md={12} sm={12} xs={24} style={{ whiteSpace:'nowrap'}} key={idx}>
               <IsoWidgetsWrapper>
                 {/* Sticker Widget */}
                 <StickerWidget
@@ -194,14 +97,11 @@ export default function Widgets() {
         </Row>
 
         <Row style={rowStyle} gutter={0} justify="start">
-          <Col lg={16} md={17} sm={24} xs={24} style={colStyle}>
+          <Col lg={16} md={17} sm={24} xs={24} style={{marginTop:5,borderRadius:20}}>
             <IsoWidgetsWrapper>
               <IsoWidgetBox>
                 {/* TABLE */}
-                <TableViews.SimpleView
-                  tableInfo={tableinfos[0]}
-                  dataList={tableDataList}
-                />
+                <Table Users={Users}/>
               </IsoWidgetBox>
             </IsoWidgetsWrapper>
           </Col>
