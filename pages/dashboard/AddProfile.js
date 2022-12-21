@@ -15,17 +15,17 @@ export default function AddProfile() {
             Add User
           </h1>
         </div>
-        <div className="flex flex-row items-center w-full px-6 py-8 overflow-hidden">
-          <div className="flex-1 flex flex-col w-5/12 justify-start items-center">
-            <Input className="my-2 w-5/6" placeholder="Student Name"></Input>
-            <Input className="my-2 w-5/6" placeholder="Student Email"></Input>
+        <div className="flex flex-row items-center w-full px-8 space-x-2 overflow-hidden bg-red">
+          <div className="flex-1 flex flex-col w-[44%] justify-start items-center">
+            <Input className="my-2 " placeholder="Student Name"></Input>
+            <Input className="my-2 " placeholder="Student Email"></Input>
             <Input
-              className="my-2 w-5/6"
+              className="my-2 "
               type="number"
               placeholder="Student Phone No"
             ></Input>
           </div>
-          <div className="w-5/12">
+          <div className="my-2 w-[44%]">
             <Image
               src="https://images.unsplash.com/photo-1464375117522-1311d6a5b81f?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=2250&q=80"
               alt="Image"
@@ -35,6 +35,7 @@ export default function AddProfile() {
               className="object-contain"
             />
           </div>
+         
           {/* <div className="flex flex-col items-center w-1/5 h-full ml-40 overflow-hidden">
             <div className="mr-90">
               
@@ -71,11 +72,19 @@ export default function AddProfile() {
             </div>
           </div> */}
         </div>
-        <div className="flex flex-row px-6 py-8 space-x-4 flex-wrap items-center">
-          <Input className="my-2 w-2/6" type="file"></Input>
-          <Input className="my-2 w-3/6" type="file"></Input>
-          <Input className="my-2 w-2/6" type="file"></Input>
-        </div>
+        <div  className="flex px-[26px] space-x-2 flex-wrap justify-left">
+          <Input className="my-2 w-[49%] " placeholder="Student Name"></Input>
+
+          <Input className="my-2 w-[49%]" placeholder="Student Name"></Input>
+
+          <Input className="my-2 w-[49%]" placeholder="Student Name"></Input>
+          <Input className="my-2 w-[49%] " placeholder="Student Name"></Input>
+
+          <Input className="my-2 w-[49%]" placeholder="Student Name"></Input>
+
+          <Input className="my-2 w-[49%]" placeholder="Student Name"></Input>
+
+          </div>
       </div>
     </DashboardLayout>
   );
