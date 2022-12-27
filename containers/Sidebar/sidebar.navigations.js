@@ -13,5 +13,11 @@ export default [
 		label:'Add Users',
 		leftIcon: <SidebarProfileIcon size={19} />,
 
+	},
+	{
+		key:'DeleteProfile',
+		label:'Delete Users',
+		leftIcon: <SidebarProfileIcon size={19} />,
+
 	}
 ];

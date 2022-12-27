@@ -1,6 +1,7 @@
 import React from 'react'
 
 function Table({Users}) {
+  console.log(Users)
   return (
     <>
                     <div className="flex flex-col">

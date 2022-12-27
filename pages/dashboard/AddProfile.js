@@ -2,10 +2,9 @@ import React, { useEffect, useState } from "react";
 import DashboardLayout from "../../containers/DashboardLayout/DashboardLayout";
 import Input from "antd/lib/input/Input";
 import Image from "next/image";
-import { StickerWidgetImgUploadIcon } from "../../config/icon.config";
-import Upload from "antd/lib/upload/Upload";
 import { createUser } from "../../src/graphql/mutations";
 import { Button } from "antd";
+import Dropdown from '../../UI/Dropdown/Dropdown'
 import {API,graphqlOperation} from 'aws-amplify'
 export default function AddProfile() {
   const [type, setType] = useState("");
@@ -14,22 +13,39 @@ export default function AddProfile() {
     Email:"",
     PhoneNo:0
   })
-  const [Student,setStudent]=useState({
+  const [typeAttributes,setAttributes]=useState({
     RollNo:"",
-    Qualification:""
+    Qualification:"",
+    Address:""
   })
   const dataHandler=async(event)=>{
     event.preventDefault()
     console.log(User)
-    const variables = {
+    if(type==="")
+      return
+    let variables
+    if(type==="Student"){
+    variables = {
       data: {
-        rollNumber:Student.RollNo,
+        rollNumber:typeAttributes.RollNo,
         name: User.Name,
-        qualification:Student.Qualification,
+        qualification:typeAttributes.Qualification,
         image:"vljlkslj",
         userType:"student"
       } // key is "input" based on the mutation above
     };
+  }
+  else{
+    variables = {
+      data: {
+        Address:typeAttributes.Address,
+        name: User.Name,
+        Address:typeAttributes.Qualification,
+        image:"vljlkslj",
+        userType:"teacher"
+      } // key is "input" based on the mutation above
+    };
+  }
     console.log(variables)
     await API.graphql(graphqlOperation(createUser, variables)).then((result)=>{
       console.log("Value inserted")
@@ -42,7 +58,7 @@ export default function AddProfile() {
     const { name, value } = event.target;
     setUser({ ...User, [name]: value });
     console.log(User)
-    setStudent({...Student,[name]:value})
+      setAttributes({...typeAttributes,[name]:value})
     console.log(Student)
   }
   return (
@@ -75,52 +91,28 @@ export default function AddProfile() {
               className="object-contain"
             />
           </div>
-         
-          {/* <div className="flex flex-col items-center w-1/5 h-full ml-40 overflow-hidden">
-            <div className="mr-90">
-              
-              <label for="cars">Type:</label>
-              <select
-                name="cars"
-                id="cars"
-                onClick={(e) => {
-                  if (e.target.value == "Student") {
-                    setType("Student");
-                  } else if (e.target.value == "Teacher") {
-                    setType("Teacher");
-                  } else {
-                    setType("");
-                  }
-                }}
-              >
-                <option value="Type"></option>
-                <option value="Student">Student</option>
-                <option value="Teacher">Teacher</option>
-              </select>
-              {type === "Student" && (
-                <form className="overflow-hidden">
-                  <Input
-                    className="mt-2 w-5/6"
-                    placeholder="Current Semester"
-                  ></Input>
-                  <Input
-                    className="mt-2 w-5/6"
-                    placeholder="Current Gpa"
-                  ></Input>
-                </form>
-              )}
-            </div>
-          </div> */}
         </div>
         <div  className="flex px-[26px] space-x-2 flex-wrap justify-left">
           <Input className="my-2 w-[49%] " type="file"></Input>
+          <div  className="my-2 w-[49%]">
+          <Dropdown setType={setType}/>
+          </div>
+          <div>
+    </div>
+      {
+        type==="Student"?
+        <>
+        <Input className="my-2 w-[49%]" name="RollNo"  placeholder="Roll no" onChange={inputHandler}></Input>
 
-          <Input className="my-2 w-[49%]" name="Name" placeholder="Student Name"></Input>
+<Input className="my-2 w-[49%]" name="Qualification" placeholder="Qualification" onChange={inputHandler}></Input>
+</>:type==="Teacher"&&<>
+  
+<Input className="my-2 w-[49%] " name="Address"  placeholder="Address" onChange={inputHandler}></Input>
 
-          <Input className="my-2 w-[49%] " name="RollNo"  placeholder="Roll no" onChange={inputHandler}></Input>
-
-          <Input className="my-2 w-[49%]" name="Qualification" placeholder="Qualification" onChange={inputHandler}></Input>
-
+<Input className="my-2 w-[49%]" name="Qualification" placeholder="Qualification" onChange={inputHandler}></Input>
+</>
+      }
+         
           <Button onClick={dataHandler}>Submit</Button>
 
           </div>

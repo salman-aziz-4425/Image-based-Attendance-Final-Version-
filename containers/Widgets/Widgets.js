@@ -52,6 +52,13 @@ const STICKER_WIDGET = [
     fontColor: '#ffffff',
     bgColor: '#7ED320',
   },
+  {
+    number: 'widget.stickerwidget1.number',
+    text: 'Total Teachers',
+    icon: <SidebarProfileIcon size={30} color="#ffffff" />,
+    fontColor: '#ffffff',
+    bgColor: 'black',
+  },
 ];
 
 const SALE_WIDGET = [
@@ -65,7 +72,10 @@ export default function Widgets() {
   const { rowStyle, colStyle } = basicStyle;
   useEffect(async ()=>{
     const Users=await API.graphql(graphqlOperation(getAllUsers))
-    STICKER_WIDGET[0].number=Users.data.getAllUsers.length
+    const Students=Users.data.getAllUsers.filter((object)=>{
+      return object.userType==="student"
+    })
+    STICKER_WIDGET[0].number=Students.length
     setUsers(Users.data.getAllUsers)
   },[])
   const chartEvents = [
