@@ -16,7 +16,7 @@ const { login } = authActions;
 export default function SignInPage(props) {
   const dispatch = useDispatch();
   const router = useRouter();
-
+console.log("Props => ",props.message);
   const handleLogin = e => {
     e.preventDefault();
     dispatch(login(true));
@@ -135,3 +135,16 @@ export default function SignInPage(props) {
     </>
   );
 }
+export const getServerSideProps = async (context) => {
+
+  // const {API } = withSSRContext(context)
+  //   const Users=await API.graphql(graphqlOperation(getAllUsers))
+  //   const data=JSON.stringify(Users)
+  //   console.log("Gather ALL Data => ",data)
+    return {
+      props:{
+        // data,
+        message:"Hello World"
+    }
+    }
+  }

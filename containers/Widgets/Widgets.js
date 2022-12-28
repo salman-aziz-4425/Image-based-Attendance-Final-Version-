@@ -16,7 +16,7 @@ import userpic from '@iso/assets/images/user1.png';
 import {API,graphqlOperation,withSSRContext} from 'aws-amplify';
 import {getAllUsers} from '../../src/graphql/queries'
 import { isServer } from '@iso/lib/helpers/isServer';
-import * as rechartConfigs from '../Charts/Recharts/config';
+// import * as rechartConfigs from '../Charts/Recharts/config';
 import IntlMessages from '@iso/components/utility/intlMessages';
 import {
   StickerWidgetImgUploadIcon,
@@ -82,10 +82,6 @@ export default function Widgets() {
   
   ];
 
-  const stackConfig = {
-    ...rechartConfigs.StackedAreaChart,
-    width: !isServer && window.innerWidth < 450 ? 300 : 500,
-  };
   return (
     <LayoutWrapper>
       <div style={styles.wisgetPageStyle}>

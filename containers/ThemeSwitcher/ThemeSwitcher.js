@@ -2,7 +2,6 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Actions from '@iso/redux/themeSwitcher/actions';
 import Switcher from '@iso/components/ThemeSwitcher/ThemeSwitcher';
-import LanguageSwitcher from '../LanguageSwitcher/LanguageSwitcher';
 import Themes from './config';
 import bucketSVG from '@iso/assets/images/bucket.svg';
 import IntlMessages from '@iso/components/utility/intlMessages';
@@ -45,7 +44,6 @@ export default function ThemeSwitcher() {
           changeTheme={(attr, theme) => dispatch(changeTheme(attr, theme))}
           selectedId={layoutTheme.themeName}
         />
-        <LanguageSwitcher />
       </div>
       <button
         type="primary"
