@@ -38,7 +38,8 @@ const styles = {
 
 const STICKER_WIDGET = [
   {
-    number: 'widget.stickerwidget1.number',
+    count:0,
+    number:'widget.stickerwidget1.number',
     text: 'Students Enrolled',
     icon: <SidebarProfileIcon size={20} color="#ffffff" />,
     fontColor: '#ffffff',
@@ -46,14 +47,16 @@ const STICKER_WIDGET = [
     bgColor: '#42A5F6',
   },
   {
-    number: 'widget.stickerwidget1.number',
+    count:0,
+    number:'widget.stickerwidget2.number',
     text: 'Total Courses',
     icon: <StickerWidgetMessageIcon size={30} color="#ffffff" />,
     fontColor: '#ffffff',
     bgColor: '#7ED320',
   },
   {
-    number: 'widget.stickerwidget1.number',
+    count:0,
+    number: 'widget.stickerwidget3.number',
     text: 'Total Teachers',
     icon: <SidebarProfileIcon size={30} color="#ffffff" />,
     fontColor: '#ffffff',
@@ -71,12 +74,20 @@ export default function Widgets() {
   const [Users,setUsers]=useState([])
   const { rowStyle, colStyle } = basicStyle;
   useEffect(async ()=>{
-    const Users=await API.graphql(graphqlOperation(getAllUsers))
-    const Students=Users.data.getAllUsers.filter((object)=>{
-      return object.userType==="student"
+    await API.graphql(graphqlOperation(getAllUsers)).then((result)=>{
+      console.log(result.data.getAllUsers)
+      if(result.data.getAllUsers.length>0){
+        const Students=result.data.getAllUsers.filter((object)=>{
+          return object.userType==="student"
+        })
+        const Teacher=result.data.getAllUsers.filter((object)=>{
+          return object.userType==="teacher"
+        })
+      STICKER_WIDGET[0].count=Students.length
+      STICKER_WIDGET[2].count=Teacher.length
+        setUsers(result.data.getAllUsers)
+      }
     })
-    STICKER_WIDGET[0].number=Students.length
-    setUsers(Users.data.getAllUsers)
   },[])
   const chartEvents = [
   
@@ -91,6 +102,7 @@ export default function Widgets() {
               <IsoWidgetsWrapper>
                 {/* Sticker Widget */}
                 <StickerWidget
+                 count={widget.count}
                   number={<IntlMessages id={widget.number} />}
                   text={<IntlMessages id={widget.text} />}
                   icon={widget.icon}

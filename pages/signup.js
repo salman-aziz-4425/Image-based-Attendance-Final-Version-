@@ -5,7 +5,6 @@ import { useDispatch } from 'react-redux';
 import Input from '@iso/components/uielements/input';
 import Checkbox from '@iso/components/uielements/checkbox';
 import Button from '@iso/components/uielements/button';
-import FirebaseSignUpForm from '@iso/containers/FirebaseForm/FirebaseForm';
 import authAction from '@iso/redux/auth/actions';
 import appActions from '@iso/redux/app/actions';
 import Auth0 from '../authentication/Auth0';
@@ -101,11 +100,6 @@ export default function SignUp() {
                 <IntlMessages id="page.signUpAuth0" />
               </Button>
 
-              <FirebaseSignUpForm
-                signup={true}
-                history={router}
-                login={() => dispatch(login())}
-              />
             </div>
             <div className="isoInputWrapper isoCenterComponent isoHelperWrapper">
               <Link href="/signin">

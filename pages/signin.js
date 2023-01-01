@@ -9,7 +9,6 @@ import Button from '@iso/components/uielements/button';
 import IntlMessages from '@iso/components/utility/intlMessages';
 import jwtConfig from '@iso/config/jwt.config';
 import Auth0 from '../authentication/Auth0';
-import FirebaseLogin from '@iso/containers/FirebaseForm/FirebaseForm';
 import authActions from '../authentication/actions';
 import SignInStyleWrapper from '../styled/SignIn.styles';
 const { login } = authActions;
@@ -111,10 +110,7 @@ console.log("Props => ",props.message);
                   <IntlMessages id="page.signInAuth0" />
                 </Button>
 
-                <FirebaseLogin
-                  history={router}
-                  login={token => dispatch(login(token))}
-                />
+               
               </div>
               <div className="isoCenterComponent isoHelperWrapper">
                 <Link href="/forgotpassword">
@@ -135,16 +131,3 @@ console.log("Props => ",props.message);
     </>
   );
 }
-export const getServerSideProps = async (context) => {
-
-  // const {API } = withSSRContext(context)
-  //   const Users=await API.graphql(graphqlOperation(getAllUsers))
-  //   const data=JSON.stringify(Users)
-  //   console.log("Gather ALL Data => ",data)
-    return {
-      props:{
-        // data,
-        message:"Hello World"
-    }
-    }
-  }
