@@ -16,6 +16,7 @@ import userpic from '@iso/assets/images/user1.png';
 import {API,graphqlOperation,withSSRContext} from 'aws-amplify';
 import {getAllUsers} from '../../src/graphql/queries'
 import { isServer } from '@iso/lib/helpers/isServer';
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 // import * as rechartConfigs from '../Charts/Recharts/config';
 import IntlMessages from '@iso/components/utility/intlMessages';
 import {
@@ -40,7 +41,7 @@ const STICKER_WIDGET = [
   {
     count:0,
     number:'widget.stickerwidget1.number',
-    text: 'Students Enrolled',
+    text: 'Total Students',
     icon: <SidebarProfileIcon size={20} color="#ffffff" />,
     fontColor: '#ffffff',
     fontSize:"15px",
@@ -50,7 +51,7 @@ const STICKER_WIDGET = [
     count:0,
     number:'widget.stickerwidget2.number',
     text: 'Total Courses',
-    icon: <StickerWidgetMessageIcon size={30} color="#ffffff" />,
+    icon: <LibraryBooksIcon sx={{color:"white"}} size={20} color="white"/>,
     fontColor: '#ffffff',
     bgColor: '#7ED320',
   },
@@ -58,7 +59,7 @@ const STICKER_WIDGET = [
     count:0,
     number: 'widget.stickerwidget3.number',
     text: 'Total Teachers',
-    icon: <SidebarProfileIcon size={30} color="#ffffff" />,
+    icon: <SidebarProfileIcon size={20} color="#ffffff" />,
     fontColor: '#ffffff',
     bgColor: 'black',
   },
