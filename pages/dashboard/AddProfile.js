@@ -36,6 +36,17 @@ export default function AddProfile() {
     Qualification:"",
     Address:""
   })
+  useEffect(()=>{
+    setError({
+      Email:"",
+      Name:"",
+      type:"",
+      PhoneNo:0,
+      Address:"",
+      RollNo:"",
+      Qualification:''
+    })
+  },[type])
   const dataHandler=async(event)=>{
     event.preventDefault()
     const {Flag,Error}=validation(type,User,typeAttributes)
