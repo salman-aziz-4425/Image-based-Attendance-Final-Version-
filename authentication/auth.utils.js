@@ -54,24 +54,24 @@ export const auth = ctx => {
    * If `ctx.req` is available it means we are on the server.
    * Additionally if there's no token it means the user is not logged in.
    */
-  if (ctx.req && !token) {
-    ctx.res.writeHead(302, { Location: '/signin' });
-    ctx.res.end();
-  }
+  // if (ctx.req && !token) {
+  //   ctx.res.writeHead(302, { Location: '/' });
+  //   ctx.res.end();
+  // }
 
   // We already checked for server. This should only happen on client.
-  if (!token) {
-    Router.push('/signin');
-  }
+  // if (!token) {
+  //   Router.push('/');
+  // }
 
-  return token;
+  // return token;
 };
 
 export const logout = () => {
   cookie.remove('token');
   // to support logging out from all windows
   window.localStorage.setItem('logout', Date.now());
-  Router.push('/signin');
+  Router.push('/');
 };
 
 export const withAuthSync = WrappedComponent => {
@@ -79,7 +79,7 @@ export const withAuthSync = WrappedComponent => {
     const syncLogout = event => {
       if (event.key === 'logout') {
         console.log('logged out from storage!');
-        Router.push('/signin');
+        Router.push('/');
       }
     };
 

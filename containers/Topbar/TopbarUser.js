@@ -1,10 +1,10 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import Popover from '@iso/components/uielements/popover';
-import authAction from '../../authentication/actions';
+// import authAction from '../../authentication/actions';
 import TopbarDropdownWrapper from './TopbarDropdown.styles';
 
-const { logout } = authAction;
+// const { logout } = authAction;
 import userpic from '@iso/assets/images/user1.png';
 
 export default function TopbarUser() {
@@ -19,9 +19,9 @@ export default function TopbarUser() {
       <a className="isoDropdownLink">Settings</a>
       <a className="isoDropdownLink">Feedback</a>
       <a className="isoDropdownLink">Help</a>
-      <a className="isoDropdownLink" onClick={() => dispatch(logout())}>
+      {/* <a className="isoDropdownLink" onClick={() => dispatch(logout())}>
         Logout
-      </a>
+      </a> */}
     </TopbarDropdownWrapper>
   );
 
