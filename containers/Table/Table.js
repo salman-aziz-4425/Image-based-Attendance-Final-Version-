@@ -58,7 +58,7 @@ function Table({Users,flag,deleteUsers}) {
               <td className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap">
               <Button className='border-none border-transparent' onClick={()=>setOpen(true)}><EditIcon/></Button>
                <Button className='border-none border-transparent' onClick={()=>deleteUsers(User.rollNumber)}><DeleteIcon/></Button>
-               <Model open={open} setOpen={setOpen}/>
+               <Model open={open} setOpen={setOpen} User1={User}/>
               </td>
 }
             </tr>

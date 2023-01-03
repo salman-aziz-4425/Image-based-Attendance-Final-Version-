@@ -23,14 +23,6 @@ export default function AddProfile() {
     Email:"",
     PhoneNo:0
   })
-  const config2= {
-    borderRadius: '8px',
-    language: 'en',
-    width: '330px',
-    height: '250px',
-    objectFit: 'contain',
-    compressInitial: null,
-  };
   const [typeAttributes,setAttributes]=useState({
     RollNo:"",
     Qualification:"",

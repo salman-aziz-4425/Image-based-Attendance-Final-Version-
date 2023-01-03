@@ -22,7 +22,7 @@ export default function Login() {
 
     // if (!email.match(validRegex) || password.length < 5) {
     // }
-    window.location.href("/dashboard");
+    // window.location.href("/dashboard");
   };
   return (
     <div className={styles.container}>
@@ -66,7 +66,7 @@ export default function Login() {
               <p className="text-sm">Forgot Password</p>
             </div>
           </div>
-          {/* <Link href="/dashboard"> */}
+          <Link href="/dashboard">
           <button
             className="flex ml-10 mt-2 flex-row items-center justify-center px-2 text-white rounded-md flex-1 bg-blue-900 w-4/5"
             onClick={() => submitHandler()}
@@ -81,7 +81,7 @@ export default function Login() {
               className="rounded-r-lg"
             />
           </button>
-          {/* </Link> */}
+          </Link>
         </div>
         <Image
           src={Loginpic}

@@ -9,18 +9,19 @@ import Table from '../../containers/Table/Table';
 import {getAllUsers} from '../../src/graphql/queries'
 import { deleteUser } from '../../src/graphql/mutations';
 import actions from '../../redux/app/actions';
-import ReactImagePickerEditor, { ImagePickerConf } from 'react-image-picker-editor';
+
 import {API,graphqlOperation,withSSRContext} from 'aws-amplify';
 import { width } from '@mui/system';
 import Model from '../../containers/Model/Model';
 const {clearMenu}=actions
 function DeleteProfile() {
   const dispatch=useDispatch()
-  const [User,setUser]=useState([])
+  const [User,setUser]=useState([{
+  }])
   const [Visible,setVisible]=useState(false)
   useEffect(async ()=>{
-    const res=await API.graphql(graphqlOperation(getAllUsers))
-    setUser(res.data.getAllUsers)
+    // const res=await API.graphql(graphqlOperation(getAllUsers))
+    // setUser(res.data.getAllUsers)
   },[])
       const { rowStyle, colStyle } = basicStyle;
       const deleteUser1= async (rollNumber1)=>{

@@ -75,20 +75,20 @@ export default function Widgets() {
   const [Users,setUsers]=useState([])
   const { rowStyle, colStyle } = basicStyle;
   useEffect(async ()=>{
-    await API.graphql(graphqlOperation(getAllUsers)).then((result)=>{
-      console.log(result.data.getAllUsers)
-      if(result.data.getAllUsers.length>0){
-        const Students=result.data.getAllUsers.filter((object)=>{
-          return object.userType==="student"
-        })
-        const Teacher=result.data.getAllUsers.filter((object)=>{
-          return object.userType==="teacher"
-        })
-      STICKER_WIDGET[0].count=Students.length
-      STICKER_WIDGET[2].count=Teacher.length
-        setUsers(result.data.getAllUsers)
-      }
-    })
+    // await API.graphql(graphqlOperation(getAllUsers)).then((result)=>{
+    //   console.log(result.data.getAllUsers)
+    //   if(result.data.getAllUsers.length>0){
+    //     const Students=result.data.getAllUsers.filter((object)=>{
+    //       return object.userType==="student"
+    //     })
+    //     const Teacher=result.data.getAllUsers.filter((object)=>{
+    //       return object.userType==="teacher"
+    //     })
+    //   STICKER_WIDGET[0].count=Students.length
+    //   STICKER_WIDGET[2].count=Teacher.length
+    //     setUsers(result.data.getAllUsers)
+    //   }
+    // })
   },[])
   const chartEvents = [
   
