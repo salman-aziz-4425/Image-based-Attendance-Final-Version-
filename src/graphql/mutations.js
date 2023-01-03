@@ -31,4 +31,12 @@ export const deleteUser = /* GraphQL */ `
       rollNumber
     }
   }
-`;
+`
+export const Loginuser=`
+ mutation loginUser($data:LoginInput!){
+   loginUser(data:$data){
+    token
+   }
+}
+`
+;

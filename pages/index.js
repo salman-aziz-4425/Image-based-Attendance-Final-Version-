@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Loginpic from "../assets/Loginpic.jpg";
@@ -7,6 +7,8 @@ import googleIcon from "../assets/google.png";
 import styles from "../style/Home.module.css";
 import Arrow from "../assets/right-arrow.png";
 import Input from "../components/uielements/input";
+import { Loginuser } from "../src/graphql/mutations";
+import {API,graphqlOperation,withSSRContext} from 'aws-amplify';
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setpassword] = useState("");
@@ -24,6 +26,20 @@ export default function Login() {
     // }
     // window.location.href("/dashboard");
   };
+  useEffect(async ()=>{
+    const variables = {
+      data: {
+        rollNumber:'19F-0139',
+        password:'admin',
+      } // key is "input" based on the mutation above
+    };
+    await API.graphql(graphqlOperation(Loginuser, variables)).then((result)=>{
+      console.log(result)
+    }).catch((error)=>{
+      console.log(error)
+      console.log("error")
+    })
+  },[])
   return (
     <div className={styles.container}>
       <Head>
