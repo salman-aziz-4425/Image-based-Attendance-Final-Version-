@@ -11,11 +11,10 @@ import { deleteUser } from '../../src/graphql/mutations';
 import actions from '../../redux/app/actions';
 import Router from 'next/router';
 import {API,graphqlOperation,Amplify} from 'aws-amplify';
-import { width } from '@mui/system';
-import Model from '../../containers/Model/Model';
-import { Router } from 'next/router';
+import { tokenAuth } from '../../redux/userlogin/userSlice';
 const {clearMenu}=actions
 function DeleteProfile() {
+  const dispatch=useDispatch()
   let token=useSelector((state) => state.userReducer.token)
   Amplify.configure({
     API:{
@@ -28,12 +27,16 @@ function DeleteProfile() {
   }])
   const [Visible,setVisible]=useState(false)
   useEffect(async ()=>{
-    if(token.length<1){
+    if(token.length<1&&localStorage.getItem('Token').length<1){
       Router.push('/')
+    }
+    else{
+      if(token.length<1)
+      dispatch(tokenAuth(localStorage.getItem('Token')))
     }
     const res=await API.graphql(graphqlOperation(getAllUsers))
     setUser(res.data.getAllUsers)
-  },[])
+  },[token])
 
       const { rowStyle, colStyle } = basicStyle;
       const deleteUser1= async (rollNumber1)=>{
@@ -75,5 +78,4 @@ function DeleteProfile() {
     </DashboardLayout>
   )
 }
-
   export default DeleteProfile

@@ -15,6 +15,9 @@ import Router from 'next/router'
 export default function Login() {
   const [RollNo, setRoll] = useState("");
   const [password, setpassword] = useState("");
+  useEffect(()=>{
+    localStorage.setItem('Token','')
+  },[])
   const dispatch=useDispatch()
   const emailHandler = (event) => {
     setRoll(event.target.value);
@@ -35,11 +38,10 @@ export default function Login() {
       let finalToken=token.split('=')
       finalToken=finalToken[1].split('Max-Age')
       finalToken='Bearer '+finalToken[0]
-      console.log(finalToken)
       finalToken=finalToken.split(';')
       finalToken=finalToken[0]
-      console.log(finalToken)
       dispatch(tokenAuth(finalToken))
+      localStorage.setItem('Token',finalToken)
       Router.push('/dashboard')
     }).catch((error)=>{
       console.log(error)

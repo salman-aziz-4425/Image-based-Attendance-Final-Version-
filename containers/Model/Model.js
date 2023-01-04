@@ -3,8 +3,9 @@ import { Modal,Box,Typography } from '@mui/material'
 import {Button } from 'antd';
 import Image from "next/image";
 import Input from "antd/lib/input/Input";
-import { FormControl,InputLabel,FormHelperText } from '@mui/material';
 import Dropdown from '../../UI/Dropdown/Dropdown'
+import {API,graphqlOperation} from 'aws-amplify';
+import { updateUser } from '../../src/graphql/mutations';
 export default function Model({open,setOpen,User1,AllUsers,setUser}) {
   console.log(User1)
     const handleOpen=()=>{
@@ -23,17 +24,12 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
     const [User2,setUser2]=useState({
       Name:"",
       Email:"",
-      PhoneNo:0
-    })
-    const [typeAttributes,setAttributes]=useState({
-      RollNo:"",
+      PhoneNo:0,
       Qualification:"",
-      Address:""
     })
     const inputHandler=(event)=>{
       const { name, value } = event.target;
       setUser2({ ...User2, [name]: value });
-        setAttributes({...typeAttributes,[name]:value})
     }
   return (
     <>
@@ -54,14 +50,14 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
         <div className="flex flex-row items-center w-full px-8 space-x-2 overflow-hidden bg-red">
           <div className="flex-1 flex flex-col w-[44%] justify-start items-center">
            <p className="text-red-600">{error.Name}</p>
-            <Input className="my-2 " name="Name"  placeholder="Student Name" onChange={inputHandler}></Input>
+            <Input className="my-2 " name="Name"  placeholder="Name" onChange={inputHandler}></Input>
             <p className="text-red-600">{error.Email!==""&&error.Email}</p>
-            <Input className="my-2 " placeholder="Student Email" name="Email" onChange={inputHandler}></Input>
+            <Input className="my-2 " placeholder="Email" name="Email" onChange={inputHandler} ></Input>
             <p className="text-red-600">{error.PhoneNo!==0&&error.PhoneNo}</p>
             <Input
               className="my-2 "
               type="number"
-              placeholder="Student Phone No"
+              placeholder="Phone No"
               name="PhoneNo"
               onChange={inputHandler}
             ></Input>
@@ -82,41 +78,40 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
           <Input className="my-2 w-[49%] " type="file"></Input>
           <div  className="flex flex-col items-center my-2 w-[49%]">
           <p className="text-red-600 align-middle">{error.type}</p>
-          <Dropdown setType={setType}/>
+          <Dropdown type={type} setType={setType}/>
           </div>
           <div>
     </div>
-      {
-        type==="Student"?
-        <>
-        <div  className="flex flex-col my-1 w-[49%]">
-<Input  name="RollNo"  placeholder="Roll no" ></Input>
-<p className="text-red-600 align-middle">{error.RollNo}</p>
-</div>
 <div className="flex flex-col my-1 w-[49%]">
 <Input  name="Qualification" placeholder="Qualification" ></Input>
 <p className="text-red-600 align-middle">{error.Qualification}</p>
 </div>
-</>:type==="Teacher"&&<>
-<div  className="flex flex-col my-1 w-[49%]">
-<Input  name="Address"  placeholder="Address" ></Input>
-<p className="text-red-600 align-middle">{error.Address}</p>
-</div>
-<div className="flex flex-col my-1 w-[49%]">
-<Input  name="Qualification" placeholder="Qualification" ></Input>
-<p className="text-red-600 align-middle">{error.Qualification}</p>
-</div>
-
-</>
-      }
-         
-          <Button onClick={()=>{
-            const User2=[...AllUsers]
-            const index=User2.findIndex((object)=>{
+          <Button onClick={async (event)=>{
+            event.preventDefault()
+            const index=AllUsers.findIndex((object)=>{
               return object.id===User1.id
             })
+            if(User2.Name.length>1){
+              AllUsers[index].name=User2.Name
+              console.log(AllUsers)
+            }
             console.log(index)
-
+            const variables = {
+              data:{
+                user:{
+                  name:AllUsers.Name,
+                  qualification:AllUsers.Qualification,
+                  userType:User1.userType
+                },
+               rollNumber:User1.rollNumber,
+              }
+           };
+            await API.graphql(graphqlOperation(updateUser,variables)).then(()=>{
+              setUser(AllUsers)
+              alert("Updated")
+            }).catch((error)=>{
+              console.log(error)
+            })
           }}>Update</Button>
 
           </div>

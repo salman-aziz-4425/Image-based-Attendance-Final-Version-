@@ -9,7 +9,9 @@ import {API,graphqlOperation,Amplify} from 'aws-amplify'
 import validation from "./validation";
 import Router from 'next/router'
 import { useSelector, useDispatch } from 'react-redux'
+import { tokenAuth } from "../../redux/userlogin/userSlice";
 export default function AddProfile() {
+  const dispatch=useDispatch()
   let token=useSelector((state) => state.userReducer.token)
   Amplify.configure({
     API:{
@@ -41,8 +43,12 @@ export default function AddProfile() {
     Address:""
   })
   useEffect(()=>{
-    if(token.length<1){
+    if(token.length<1&&localStorage.getItem('Token').length<1){
       Router.push('/')
+    }
+    else{
+    if(token.length<1)
+      dispatch(tokenAuth(localStorage.getItem('Token')))
     }
   },[])
   useEffect(()=>{

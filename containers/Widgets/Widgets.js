@@ -13,18 +13,15 @@ import VCardWidget from './vCard/vCardWidget';
 import SocialWidget from './SocialWidget/SocialWidget';
 import SocialProfile from './SocialWidget/SocialProfileIcon';
 import userpic from '@iso/assets/images/user1.png';
-import {API,graphqlOperation,Amplify} from 'aws-amplify';
+import {API,Amplify} from 'aws-amplify';
 import {getAllUsers} from '../../src/graphql/queries'
-import { isServer } from '@iso/lib/helpers/isServer';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import { tokenAuth } from '../../redux/userlogin/userSlice';
 import { useSelector, useDispatch } from 'react-redux'
 // import * as rechartConfigs from '../Charts/Recharts/config';
 import IntlMessages from '@iso/components/utility/intlMessages';
 import Router from 'next/router';
 import {
-  StickerWidgetImgUploadIcon,
-  StickerWidgetMessageIcon,
-  StickerWidgetOrderIcon,
   SidebarProfileIcon
 } from '@iso/config/icon.config';
 import Table from '../Table/Table';
@@ -84,11 +81,15 @@ export default function Widgets() {
   }
   })
   const authToken = useSelector((state) => state.userReducer.token)
+  const dispatch=useDispatch()
   const [Users,setUsers]=useState([])
   const { rowStyle, colStyle } = basicStyle;
   useEffect(async ()=>{
-    if(token.length<1){
+    if(token.length<1&&localStorage.getItem('Token').length<1){
       router.push('/')
+    }
+    else{
+        dispatch(tokenAuth(localStorage.getItem('Token')))
     }
     console.log(authToken)
     await API.graphql({
@@ -108,7 +109,7 @@ export default function Widgets() {
         setUsers(result.data.getAllUsers)
       }
     })
-  },[])
+  },[token])
   const chartEvents = [
   
   ];
