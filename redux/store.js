@@ -5,7 +5,7 @@ import thunk from 'redux-thunk';
 
 import rootReducer from './root-reducer';
 import rootSaga from './root-saga';
-
+import userReducer from './userlogin/userSlice';
 const sagaMiddleware = createSagaMiddleware();
 
 const bindMiddleware = middleware => {
@@ -19,7 +19,6 @@ const bindMiddleware = middleware => {
 function configureStore(initialState = {}) {
   const store = createStore(
     rootReducer,
-
     initialState,
     bindMiddleware([thunk, sagaMiddleware])
   );

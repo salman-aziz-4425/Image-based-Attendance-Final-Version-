@@ -9,37 +9,44 @@ import Arrow from "../assets/right-arrow.png";
 import Input from "../components/uielements/input";
 import { Loginuser } from "../src/graphql/mutations";
 import {API,graphqlOperation,withSSRContext} from 'aws-amplify';
+import { tokenAuth } from "../redux/userlogin/userSlice";
+import { useSelector, useDispatch } from 'react-redux'
+import Router from 'next/router'
 export default function Login() {
-  const [email, setEmail] = useState("");
+  const [RollNo, setRoll] = useState("");
   const [password, setpassword] = useState("");
+  const dispatch=useDispatch()
   const emailHandler = (event) => {
-    setEmail(event.target.value);
+    setRoll(event.target.value);
   };
   const passwordHandler = (event) => {
     setpassword(event.target.value);
   };
-  const submitHandler = () => {
-    // var validRegex =
-    //   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-
-    // if (!email.match(validRegex) || password.length < 5) {
-    // }
-    // window.location.href("/dashboard");
-  };
-  useEffect(async ()=>{
+  const submitHandler = async () => {
+    event.preventDefault()
     const variables = {
       data: {
-        rollNumber:'19F-0139',
-        password:'admin',
+        rollNumber:RollNo,
+        password:password,
       } // key is "input" based on the mutation above
     };
     await API.graphql(graphqlOperation(Loginuser, variables)).then((result)=>{
-      console.log(result)
+      const token=JSON.parse(result.data.loginUser.token)
+      let finalToken=token.split('=')
+      finalToken=finalToken[1].split('Max-Age')
+      finalToken='Bearer '+finalToken[0]
+      console.log(finalToken)
+      finalToken=finalToken.split(';')
+      finalToken=finalToken[0]
+      console.log(finalToken)
+      dispatch(tokenAuth(finalToken))
+      Router.push('/dashboard')
     }).catch((error)=>{
       console.log(error)
       console.log("error")
+      alert("data not found")
     })
-  },[])
+  };
   return (
     <div className={styles.container}>
       <Head>
@@ -66,23 +73,24 @@ export default function Login() {
             <Input
               id="inputUserName"
               size="large"
-              placeholder="Username"
-              defaultValue="demo@gmail.com"
+              placeholder="19F-000"
+              defaultValue="19F-000"
+              onChange={emailHandler}
             />
             <Input
               id="inpuPassword"
               size="large"
               type="password"
               placeholder="Password"
-              defaultValue="demodemo"
+              defaultValue="admin"
               className="my-2"
+              onChange={passwordHandler}
             />
             <div className="flex flex-row mt-2">
               <p className="text-sm flex-1 ">Keep me logged in</p>
               <p className="text-sm">Forgot Password</p>
             </div>
           </div>
-          <Link href="/dashboard">
           <button
             className="flex ml-10 mt-2 flex-row items-center justify-center px-2 text-white rounded-md flex-1 bg-blue-900 w-4/5"
             onClick={() => submitHandler()}
@@ -97,7 +105,6 @@ export default function Login() {
               className="rounded-r-lg"
             />
           </button>
-          </Link>
         </div>
         <Image
           src={Loginpic}

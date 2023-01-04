@@ -13,10 +13,11 @@ import VCardWidget from './vCard/vCardWidget';
 import SocialWidget from './SocialWidget/SocialWidget';
 import SocialProfile from './SocialWidget/SocialProfileIcon';
 import userpic from '@iso/assets/images/user1.png';
-import {API,graphqlOperation,withSSRContext} from 'aws-amplify';
+import {API,graphqlOperation,Amplify} from 'aws-amplify';
 import {getAllUsers} from '../../src/graphql/queries'
 import { isServer } from '@iso/lib/helpers/isServer';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import { useSelector, useDispatch } from 'react-redux'
 // import * as rechartConfigs from '../Charts/Recharts/config';
 import IntlMessages from '@iso/components/utility/intlMessages';
 import {
@@ -72,23 +73,36 @@ const CARD_WIDGET = [
 ];
 const SOCIAL_PROFILE=[]
 export default function Widgets() {
+  let token=useSelector((state) => state.userReducer.token)
+  Amplify.configure({
+    API:{
+   graphql_headers:async () =>({
+     'token':token
+   })
+  }
+  })
+  const authToken = useSelector((state) => state.userReducer.token)
   const [Users,setUsers]=useState([])
   const { rowStyle, colStyle } = basicStyle;
   useEffect(async ()=>{
-    // await API.graphql(graphqlOperation(getAllUsers)).then((result)=>{
-    //   console.log(result.data.getAllUsers)
-    //   if(result.data.getAllUsers.length>0){
-    //     const Students=result.data.getAllUsers.filter((object)=>{
-    //       return object.userType==="student"
-    //     })
-    //     const Teacher=result.data.getAllUsers.filter((object)=>{
-    //       return object.userType==="teacher"
-    //     })
-    //   STICKER_WIDGET[0].count=Students.length
-    //   STICKER_WIDGET[2].count=Teacher.length
-    //     setUsers(result.data.getAllUsers)
-    //   }
-    // })
+    console.log(authToken)
+    await API.graphql({
+      query:getAllUsers,
+      authToken:authToken
+    }).then((result)=>{
+      console.log(result)
+      if(result.data.getAllUsers.length>0){
+        const Students=result.data.getAllUsers.filter((object)=>{
+          return object.userType==="student"
+        })
+        const Teacher=result.data.getAllUsers.filter((object)=>{
+          return object.userType==="teacher"
+        })
+      STICKER_WIDGET[0].count=Students.length
+      STICKER_WIDGET[2].count=Teacher.length
+        setUsers(result.data.getAllUsers)
+      }
+    })
   },[])
   const chartEvents = [
   

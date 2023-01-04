@@ -5,14 +5,24 @@ import Image from "next/image";
 import { createUser } from "../../src/graphql/mutations";
 import { Button } from "antd";
 import Dropdown from '../../UI/Dropdown/Dropdown'
-import {API,graphqlOperation} from 'aws-amplify'
+import {API,graphqlOperation,Amplify} from 'aws-amplify'
 import validation from "./validation";
+import { useSelector, useDispatch } from 'react-redux'
 export default function AddProfile() {
+  let token=useSelector((state) => state.userReducer.token)
+  Amplify.configure({
+    API:{
+   graphql_headers:async () =>({
+     'token':token
+   })
+  }
+  })
   const [type, setType] = useState("");
   const [error,setError]=useState({
     Email:"",
     Name:"",
     type:"",
+    password:"",
     PhoneNo:0,
     Address:"",
     RollNo:"",
@@ -21,7 +31,8 @@ export default function AddProfile() {
   const [User,setUser]=useState({
     Name:"",
     Email:"",
-    PhoneNo:0
+    PhoneNo:0,
+    password:''
   })
   const [typeAttributes,setAttributes]=useState({
     RollNo:"",
@@ -52,7 +63,10 @@ export default function AddProfile() {
     variables = {
       data: {
         rollNumber:typeAttributes.RollNo,
+        password:User.password,
         name: User.Name,
+        email:User.Email,
+        phoneNo:User.PhoneNo,
         qualification:typeAttributes.Qualification,
         image:"vljlkslj",
         userType:"student"
@@ -64,11 +78,28 @@ export default function AddProfile() {
     console.log(typeAttributes)
     variables = {
       data: {
+        rollNumber:typeAttributes.RollNo,
+        password:User.password,
+        name: User.Name,
+        email:User.Email,
+        phoneNo:User.PhoneNo,
+        Address:typeAttributes.Address,
+        qualification:typeAttributes.Qualification,
+        image:"vljlkslj",
+        userType:"teacher"
+      } // key is "input" based on the mutation above
+    };
+  }
+  else{
+    console.log(User)
+    console.log(typeAttributes)
+    variables = {
+      data: {
         rollNumber:'19F-0000',
         name: User.Name,
        qualification:typeAttributes.Qualification,
         image:"vljlkslj",
-        userType:"teacher"
+        userType:"admin"
       } // key is "input" based on the mutation above
     };
   }
@@ -99,14 +130,16 @@ export default function AddProfile() {
         <div className="flex flex-row items-center w-full px-8 space-x-2 overflow-hidden bg-red">
           <div className="flex-1 flex flex-col w-[44%] justify-start items-center">
            <p className="text-red-600">{error.Name}</p>
-            <Input className="my-2 " name="Name"  placeholder="Student Name" onChange={inputHandler}></Input>
+            <Input className="my-2 " name="Name"  placeholder="Name" onChange={inputHandler}></Input>
             <p className="text-red-600">{error.Email!==""&&error.Email}</p>
-            <Input className="my-2 " placeholder="Student Email" name="Email" onChange={inputHandler}></Input>
+            <Input className="my-2 " placeholder="Email" name="Email" onChange={inputHandler}></Input>
+            <p className="text-red-600">{error.password}</p>
+            <Input className="my-2 " type="password" placeholder="password" name="password" onChange={inputHandler}></Input>
             <p className="text-red-600">{error.PhoneNo!==0&&error.PhoneNo}</p>
             <Input
               className="my-2 "
               type="number"
-              placeholder="Student Phone No"
+              placeholder="Phone No"
               name="PhoneNo"
               onChange={inputHandler}
             ></Input>
@@ -127,12 +160,12 @@ export default function AddProfile() {
           <Input className="my-2 w-[49%] " type="file"></Input>
           <div  className="flex flex-col items-center my-2 w-[49%]">
           <p className="text-red-600 align-middle">{error.type}</p>
-          <Dropdown setType={setType}/>
+          <Dropdown type={type} setType={setType}/>
           </div>
           <div>
     </div>
       {
-        type==="Student"?
+        (type==="Student"||type==="admin")?
         <>
         <div  className="flex flex-col my-1 w-[49%]">
 <Input  name="RollNo"  placeholder="Roll no" onChange={inputHandler}></Input>

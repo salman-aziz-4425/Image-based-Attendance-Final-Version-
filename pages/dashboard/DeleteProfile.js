@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
 import DashboardLayout from '../../containers/DashboardLayout/DashboardLayout'
 import { Row, Col, Button } from 'antd';
 import basicStyle from '@iso/assets/styles/constants';
@@ -10,19 +10,27 @@ import {getAllUsers} from '../../src/graphql/queries'
 import { deleteUser } from '../../src/graphql/mutations';
 import actions from '../../redux/app/actions';
 
-import {API,graphqlOperation,withSSRContext} from 'aws-amplify';
+import {API,graphqlOperation,Amplify} from 'aws-amplify';
 import { width } from '@mui/system';
 import Model from '../../containers/Model/Model';
 const {clearMenu}=actions
 function DeleteProfile() {
-  const dispatch=useDispatch()
+  let token=useSelector((state) => state.userReducer.token)
+  Amplify.configure({
+    API:{
+   graphql_headers:async () =>({
+     'token':token
+   })
+  }
+  })
   const [User,setUser]=useState([{
   }])
   const [Visible,setVisible]=useState(false)
   useEffect(async ()=>{
-    // const res=await API.graphql(graphqlOperation(getAllUsers))
-    // setUser(res.data.getAllUsers)
+    const res=await API.graphql(graphqlOperation(getAllUsers))
+    setUser(res.data.getAllUsers)
   },[])
+
       const { rowStyle, colStyle } = basicStyle;
       const deleteUser1= async (rollNumber1)=>{
         console.log(rollNumber1)

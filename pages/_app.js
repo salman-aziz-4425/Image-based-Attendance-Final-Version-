@@ -1,5 +1,4 @@
 import React from 'react';
-import App from 'next/app';
 import { Provider } from 'react-redux';
 import withRedux from 'next-redux-wrapper';
 import ThemeProvider from '../containers/ThemeProvider';
@@ -11,10 +10,10 @@ import 'react-quill/dist/quill.core.css';
 import '../style/global.css';
 import { Amplify} from 'aws-amplify';
 import awsconfig from '../src/aws-exports';
-Amplify.configure({...awsconfig, ssr: true});
-class CustomApp extends App {
-  render() {
-    const { Component, pageProps, store } = this.props;
+import { useSelector, useDispatch } from 'react-redux'
+Amplify.configure({...awsconfig});
+
+function CustomApp({ Component, pageProps, store }){
     return (
       <Provider store={store}>
         <ThemeProvider>
@@ -22,7 +21,6 @@ class CustomApp extends App {
         </ThemeProvider>
       </Provider>
     );
-  }
 }
 
 export default withRedux(initStore)(CustomApp);

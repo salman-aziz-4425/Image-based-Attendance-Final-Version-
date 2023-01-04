@@ -9,6 +9,7 @@ export default function validation(type,User,typeAttributes){
         Email:"",
         Name:"",
         type:"",
+        password:"",
         PhoneNo:0,
         Address:"",
         RollNo:"",
@@ -26,13 +27,17 @@ export default function validation(type,User,typeAttributes){
       error.type="Invalid Type"
       count=count+1
     }
-    if(!validator.validate(User.Email))
+    if(User.Email===""){
+      error.Email="Invalid Email Format"
+      count+=1
+    }
+    else if(!validator.validate(User.Email))
     {
 
         error.Email="Invalid Email Format"
         count+=1
     }
-    else{
+    if(validator.validate(User.Email)&&User.Email!=""){
         for(let i=0;i<User.Email.length;i++){
             if(i<5&&User.Email.charCodeAt(i)<65){
                 error.Email="Invalid Email Format"
@@ -47,8 +52,16 @@ export default function validation(type,User,typeAttributes){
       count=count+1
 
     }
-    if(usernameFormat===false){
+    else if(usernameFormat===false){
         error.Name="Wrong Name format"
+      count=count+1
+    }
+    if(User.password.length==0){
+      error.password="Empty password Field"
+      count=count+1
+    }
+    else if(User.password.length<5){
+      error.password="password is too short"
       count=count+1
     }
     if(User.PhoneNo.length===0)
@@ -56,7 +69,7 @@ export default function validation(type,User,typeAttributes){
         error.PhoneNo="Empty Phone no Field"
       count=count+1
     }
-    if(User.PhoneNo.length!=11){
+    else if(User.PhoneNo.length!=11){
         error.PhoneNo="Length of Phone No is not valid"
         count=count+1
     }
