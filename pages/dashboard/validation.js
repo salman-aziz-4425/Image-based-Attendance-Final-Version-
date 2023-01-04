@@ -92,12 +92,12 @@ export default function validation(type,User,typeAttributes){
             }
         }
     }
-     if(typeAttributes.RollNo===""&&type==="Student")
+     if(typeAttributes.RollNo===""&&(type==="Student"||type=="admin"))
      {
         error.RollNo="Empty Roll no Field"
       count=count+1
      }
-     if(!typeAttributes.RollNo.includes("F")&&type==="Student"){
+     if(!typeAttributes.RollNo.includes("F")&&(type==="Student"||type=="admin")){
         error.RollNo="Wrong Roll no Format"
       count=count+1
      }

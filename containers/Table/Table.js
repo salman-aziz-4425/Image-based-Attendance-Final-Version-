@@ -4,8 +4,13 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useState } from 'react';
 import Model from '../Model/Model';
-function Table({Users,flag,deleteUsers}) {
+function Table({Users,flag,deleteUsers,setUser}) {
   const [open,setOpen]=useState(false)
+  const [singleUser,setSingle]=useState({})
+  const modelHanlder=(User)=>{
+    setSingle(User)
+    setOpen(true)
+  }
   return (
     <>
                     <div className="flex flex-col w-full">
@@ -56,9 +61,8 @@ function Table({Users,flag,deleteUsers}) {
               </td>
               {flag&&
               <td className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap">
-              <Button className='border-none border-transparent' onClick={()=>setOpen(true)}><EditIcon/></Button>
+              <Button className='border-none border-transparent' onClick={()=>modelHanlder(User)}><EditIcon/></Button>
                <Button className='border-none border-transparent' onClick={()=>deleteUsers(User.rollNumber)}><DeleteIcon/></Button>
-               <Model open={open} setOpen={setOpen} User1={User}/>
               </td>
 }
             </tr>
@@ -68,6 +72,7 @@ function Table({Users,flag,deleteUsers}) {
           </tbody>
         </table>
       </div>
+      <Model open={open} setOpen={setOpen} User1={singleUser} AllUsers={Users} setUser={setUser}/>
     </div>
   </div>
 </div>

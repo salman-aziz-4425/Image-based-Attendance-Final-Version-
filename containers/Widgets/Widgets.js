@@ -20,6 +20,7 @@ import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import { useSelector, useDispatch } from 'react-redux'
 // import * as rechartConfigs from '../Charts/Recharts/config';
 import IntlMessages from '@iso/components/utility/intlMessages';
+import Router from 'next/router';
 import {
   StickerWidgetImgUploadIcon,
   StickerWidgetMessageIcon,
@@ -27,6 +28,7 @@ import {
   SidebarProfileIcon
 } from '@iso/config/icon.config';
 import Table from '../Table/Table';
+import router from 'next/router';
 
 const styles = {
   wisgetPageStyle: {
@@ -85,6 +87,9 @@ export default function Widgets() {
   const [Users,setUsers]=useState([])
   const { rowStyle, colStyle } = basicStyle;
   useEffect(async ()=>{
+    if(token.length<1){
+      router.push('/')
+    }
     console.log(authToken)
     await API.graphql({
       query:getAllUsers,

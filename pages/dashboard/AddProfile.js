@@ -7,6 +7,7 @@ import { Button } from "antd";
 import Dropdown from '../../UI/Dropdown/Dropdown'
 import {API,graphqlOperation,Amplify} from 'aws-amplify'
 import validation from "./validation";
+import Router from 'next/router'
 import { useSelector, useDispatch } from 'react-redux'
 export default function AddProfile() {
   let token=useSelector((state) => state.userReducer.token)
@@ -39,6 +40,11 @@ export default function AddProfile() {
     Qualification:"",
     Address:""
   })
+  useEffect(()=>{
+    if(token.length<1){
+      Router.push('/')
+    }
+  },[])
   useEffect(()=>{
     setError({
       Email:"",
@@ -95,9 +101,12 @@ export default function AddProfile() {
     console.log(typeAttributes)
     variables = {
       data: {
-        rollNumber:'19F-0000',
+        rollNumber:typeAttributes.RollNo,
+        password:User.password,
         name: User.Name,
-       qualification:typeAttributes.Qualification,
+        email:User.Email,
+        phoneNo:User.PhoneNo,
+        qualification:typeAttributes.Qualification,
         image:"vljlkslj",
         userType:"admin"
       } // key is "input" based on the mutation above

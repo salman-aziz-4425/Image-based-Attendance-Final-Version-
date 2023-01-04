@@ -5,7 +5,7 @@ import Image from "next/image";
 import Input from "antd/lib/input/Input";
 import { FormControl,InputLabel,FormHelperText } from '@mui/material';
 import Dropdown from '../../UI/Dropdown/Dropdown'
-export default function Model({open,setOpen,User1}) {
+export default function Model({open,setOpen,User1,AllUsers,setUser}) {
   console.log(User1)
     const handleOpen=()=>{
         setOpen(!open)
@@ -20,7 +20,7 @@ export default function Model({open,setOpen,User1}) {
       RollNo:"",
       Qualification:''
     })
-    const [User,setUser]=useState({
+    const [User2,setUser2]=useState({
       Name:"",
       Email:"",
       PhoneNo:0
@@ -32,9 +32,7 @@ export default function Model({open,setOpen,User1}) {
     })
     const inputHandler=(event)=>{
       const { name, value } = event.target;
-      console.log(name)
-      setUser({ ...User, [name]: value });
-      console.log(User)
+      setUser2({ ...User2, [name]: value });
         setAttributes({...typeAttributes,[name]:value})
     }
   return (
@@ -112,7 +110,14 @@ export default function Model({open,setOpen,User1}) {
 </>
       }
          
-          <Button >Update</Button>
+          <Button onClick={()=>{
+            const User2=[...AllUsers]
+            const index=User2.findIndex((object)=>{
+              return object.id===User1.id
+            })
+            console.log(index)
+
+          }}>Update</Button>
 
           </div>
       </div>

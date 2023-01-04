@@ -9,10 +9,11 @@ import Table from '../../containers/Table/Table';
 import {getAllUsers} from '../../src/graphql/queries'
 import { deleteUser } from '../../src/graphql/mutations';
 import actions from '../../redux/app/actions';
-
+import Router from 'next/router';
 import {API,graphqlOperation,Amplify} from 'aws-amplify';
 import { width } from '@mui/system';
 import Model from '../../containers/Model/Model';
+import { Router } from 'next/router';
 const {clearMenu}=actions
 function DeleteProfile() {
   let token=useSelector((state) => state.userReducer.token)
@@ -27,13 +28,15 @@ function DeleteProfile() {
   }])
   const [Visible,setVisible]=useState(false)
   useEffect(async ()=>{
+    if(token.length<1){
+      Router.push('/')
+    }
     const res=await API.graphql(graphqlOperation(getAllUsers))
     setUser(res.data.getAllUsers)
   },[])
 
       const { rowStyle, colStyle } = basicStyle;
       const deleteUser1= async (rollNumber1)=>{
-        console.log(rollNumber1)
         const variables = {
               rollNumber:rollNumber1
         };
@@ -62,7 +65,7 @@ function DeleteProfile() {
               <IsoWidgetBox>
                 {/* TABLE */}
                 <div className='w-full'>
-                <Table Users={User} flag={Visible} deleteUsers={deleteUser1}/>
+                <Table Users={User} flag={Visible} deleteUsers={deleteUser1} setUser={setUser}/>
                 </div>
               </IsoWidgetBox>
             </IsoWidgetsWrapper>
