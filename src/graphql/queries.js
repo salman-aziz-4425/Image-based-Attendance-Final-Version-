@@ -25,3 +25,12 @@ export const getAllUsers = /* GraphQL */ `
     }
   }
 `;
+
+export const getS3Url = `
+  query GetS3Url {
+    getS3Url {
+      s3Url
+      key
+  }
+  }
+`;

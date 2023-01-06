@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Loginpic from "../assets/Loginpic.jpg";
@@ -8,17 +8,17 @@ import styles from "../style/Home.module.css";
 import Arrow from "../assets/right-arrow.png";
 import Input from "../components/uielements/input";
 import { Loginuser } from "../src/graphql/mutations";
-import {API,graphqlOperation,withSSRContext} from 'aws-amplify';
+import { API, graphqlOperation, withSSRContext } from "aws-amplify";
 import { tokenAuth } from "../redux/userlogin/userSlice";
-import { useSelector, useDispatch } from 'react-redux'
-import Router from 'next/router'
+import { useSelector, useDispatch } from "react-redux";
+import Router from "next/router";
 export default function Login() {
   const [RollNo, setRoll] = useState("");
   const [password, setpassword] = useState("");
-  useEffect(()=>{
-    localStorage.setItem('Token','')
-  },[])
-  const dispatch=useDispatch()
+  useEffect(() => {
+    localStorage.setItem("Token", "");
+  }, []);
+  const dispatch = useDispatch();
   const emailHandler = (event) => {
     setRoll(event.target.value);
   };
@@ -26,28 +26,30 @@ export default function Login() {
     setpassword(event.target.value);
   };
   const submitHandler = async () => {
-    event.preventDefault()
+    event.preventDefault();
     const variables = {
       data: {
-        rollNumber:RollNo,
-        password:password,
-      } // key is "input" based on the mutation above
+        rollNumber: RollNo,
+        password: password,
+      }, // key is "input" based on the mutation above
     };
-    await API.graphql(graphqlOperation(Loginuser, variables)).then((result)=>{
-      const token=JSON.parse(result.data.loginUser.token)
-      let finalToken=token.split('=')
-      finalToken=finalToken[1].split('Max-Age')
-      finalToken='Bearer '+finalToken[0]
-      finalToken=finalToken.split(';')
-      finalToken=finalToken[0]
-      dispatch(tokenAuth(finalToken))
-      localStorage.setItem('Token',finalToken)
-      Router.push('/dashboard')
-    }).catch((error)=>{
-      console.log(error)
-      console.log("error")
-      alert("data not found")
-    })
+    await API.graphql(graphqlOperation(Loginuser, variables))
+      .then((result) => {
+        const token = JSON.parse(result.data.loginUser.token);
+        let finalToken = token.split("=");
+        finalToken = finalToken[1].split("Max-Age");
+        finalToken = "Bearer " + finalToken[0];
+        finalToken = finalToken.split(";");
+        finalToken = finalToken[0];
+        dispatch(tokenAuth(finalToken));
+        localStorage.setItem("Token", finalToken);
+        Router.push("/dashboard");
+      })
+      .catch((error) => {
+        console.log(error);
+        console.log("error");
+        alert("data not found");
+      });
   };
   return (
     <div className={styles.container}>
@@ -55,10 +57,9 @@ export default function Login() {
         <title>Admin Panel</title>
       </Head>
       <div className="flex flex-row mt-10 mx-40 h-5/6">
-        <div className="flex-1 bg-white pt-12 px-20 rounded-l-lg">
+        <div className="bg-white pt-12 px-20 rounded-l-lg">
           <h1 className="font-semibold text-3xl ml-20">Welcome Back</h1>
           <div className="flex flex-row w-80 justify-items-center rounded-md space-x-8 py-2 px-4 mt-6 ml-10 ... ring-2 ring-gray-100 ring-inset">
-            <Image src={googleIcon} alt="Image" width={20} height={3} />
             <h1 className="border-black pl-1/2 font-semibold text-sm whitespace-nowrap">
               Image-based Attendane system
             </h1>
@@ -66,7 +67,7 @@ export default function Login() {
           <div className="relative flex py-4 items-center w-4/5 ml-10 mt-2">
             <div className="flex-grow-[1] border-t border-gray-400"></div>
             <span className="flex-shrink mx-2 text-gray-400 text-sm mb-1">
-              Or Login with Email
+              Login with Email
             </span>
             <div className="flex-grow-[1] border-t border-gray-400"></div>
           </div>
@@ -76,7 +77,7 @@ export default function Login() {
               id="inputUserName"
               size="large"
               placeholder="19F-000"
-              defaultValue="19F-000"
+              defaultValue="19F-"
               onChange={emailHandler}
             />
             <Input
@@ -114,7 +115,7 @@ export default function Login() {
           width={400}
           height={500}
           priority
-          className="rounded-r-lg"
+          className="rounded-r-lg md:hidden lg:hidden"
         />
       </div>
     </div>
