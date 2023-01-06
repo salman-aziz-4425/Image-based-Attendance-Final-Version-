@@ -58,7 +58,7 @@ function DeleteProfile() {
          <div className="h-5/7 w-5/7 my-6 mx-10 bg-white font-extrabold align-middle rounded-md shadow-2xl overflow-hidden">
          <div className='flex'>
          <h1 className="p-4 font-extrabold text-transparent text-3xl bg-clip-text bg-gradient-to-r from-gray-700 to-red-700">
-            Delete User
+            Delete/Update User
           </h1>
           </div>
             <Button className='ml-6' onClick={()=>setVisible(!Visible)}>Edit Student</Button>

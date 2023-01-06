@@ -18,7 +18,7 @@ const changeThemes = {
 };
 const topbarTheme = {
   id: 'topbarTheme',
-  label: 'themeSwitcher.Topbar',
+  label: 'Topbar',
   defaultTheme: themeConfig.topbar,
   options: [
     {
@@ -72,7 +72,7 @@ const topbarTheme = {
 };
 const sidebarTheme = {
   id: 'sidebarTheme',
-  label: 'themeSwitcher.Sidebar',
+  label: 'Sidebar',
   defaultTheme: themeConfig.sidebar,
   options: [
     {
@@ -127,7 +127,7 @@ const sidebarTheme = {
 };
 const layoutTheme = {
   id: 'layoutTheme',
-  label: 'themeSwitcher.Background',
+  label: 'Background',
   defaultTheme: themeConfig.layout,
   options: [
     {
@@ -152,6 +152,12 @@ const layoutTheme = {
       themeName: 'theme3',
       buttonColor: '#ebebeb',
       backgroundColor: '#ebebeb',
+      textColor: '#ffffff',
+    },
+    {
+      themeName: 'theme4',
+      buttonColor: '#422e62',
+      backgroundColor: '#422e62',
       textColor: '#ffffff',
     },
   ],

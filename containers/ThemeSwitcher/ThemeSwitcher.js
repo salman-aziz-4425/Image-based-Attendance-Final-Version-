@@ -22,7 +22,7 @@ export default function ThemeSwitcher() {
     >
       <div className="componentTitleWrapper" style={styleButton}>
         <h3 className="componentTitle">
-          <IntlMessages id="themeSwitcher.settings" />
+          <IntlMessages id="Settings" />
         </h3>
       </div>
 

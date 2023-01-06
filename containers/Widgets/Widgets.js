@@ -50,7 +50,7 @@ const STICKER_WIDGET = [
   {
     count:0,
     number:'widget.stickerwidget2.number',
-    text: 'Total Courses',
+    text: 'Total Admin',
     icon: <LibraryBooksIcon sx={{color:"white"}} size={20} color="white"/>,
     fontColor: '#ffffff',
     bgColor: '#7ED320',
@@ -104,8 +104,12 @@ export default function Widgets() {
         const Teacher=result.data.getAllUsers.filter((object)=>{
           return object.userType==="teacher"
         })
+        const Admin=result.data.getAllUsers.filter((object)=>{
+          return object.userType==="admin"
+        })
       STICKER_WIDGET[0].count=Students.length
       STICKER_WIDGET[2].count=Teacher.length
+      STICKER_WIDGET[1].count=Admin.length
         setUsers(result.data.getAllUsers)
       }
     })
@@ -151,7 +155,7 @@ export default function Widgets() {
                 style={{ height: '450px' }}
                 src={userpic}
                 alt="Jhon"
-                name={<IntlMessages id="widget.vcardwidget.name" />}
+                name={<IntlMessages id="Name" />}
                 title={<IntlMessages id="widget.vcardwidget.title" />}
                 description={
                   <IntlMessages id="widget.vcardwidget.description" />

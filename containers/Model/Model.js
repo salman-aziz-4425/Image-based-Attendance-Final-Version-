@@ -6,12 +6,14 @@ import Input from "antd/lib/input/Input";
 import Dropdown from '../../UI/Dropdown/Dropdown'
 import {API,graphqlOperation} from 'aws-amplify';
 import { updateUser } from '../../src/graphql/mutations';
+import UploadImage from "../../components/utility/imageUploading";
+import {getS3Url} from '../../src/graphql/queries'
 export default function Model({open,setOpen,User1,AllUsers,setUser}) {
-  console.log(User1)
     const handleOpen=()=>{
         setOpen(!open)
     }
     const [type, setType] = useState("");
+    const [images, setImages] = React.useState([]);
     const [error,setError]=useState({
       Email:"",
       Name:"",
@@ -30,6 +32,28 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
     const inputHandler=(event)=>{
       const { name, value } = event.target;
       setUser2({ ...User2, [name]: value });
+    }
+    const storeImageToS3Bucket = async () =>{
+      console.log("Image List => ",images[0]?.data_url);
+      const image = images[0].file;
+      //  Get Secure URL from our server
+      const res=await API.graphql(graphqlOperation(getS3Url))
+      //  Post the image directly to S3 bucket
+      console.log("Res => ",res)
+      const s3obj  = res.data.getS3Url;
+      console.log("Url :- ",s3obj)
+      await fetch(s3obj?.s3Url, {
+        method: "PUT",
+        headers: {
+          "ContentType": "multipart/form-data"
+        },
+        body: image
+      }).then(res=>{
+        console.log("Bucket Res ",res , " s3obj ",s3obj?.key);
+         return s3obj?.key;
+      }).catch(err=>{
+        console.log("Error => ",err)})
+        return undefined
     }
   return (
     <>
@@ -63,15 +87,7 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
             ></Input>
           </div>
           <div className="my-2 w-[44%]">
-            <Image
-              src="https://images.unsplash.com/photo-1464375117522-1311d6a5b81f?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=2250&q=80"
-              alt="Image"
-              width={200}
-              height={160}
-              priority
-              className="object-contain"
-            />
-             
+            <UploadImage setImagesFunc={setImages}/>
           </div>
         </div>
         <div  className="flex px-[26px] space-x-2 flex-wrap justify-left">
@@ -83,7 +99,7 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
           <div>
     </div>
 <div className="flex flex-col my-1 w-[49%]">
-<Input  name="Qualification" placeholder="Qualification" ></Input>
+<Input  name="Qualification" placeholder="Qualification" onChange={inputHandler}></Input>
 <p className="text-red-600 align-middle">{error.Qualification}</p>
 </div>
           <Button onClick={async (event)=>{
@@ -93,20 +109,24 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
             })
             if(User2.Name.length>1){
               AllUsers[index].name=User2.Name
-              console.log(AllUsers)
             }
-            console.log(index)
             const variables = {
               data:{
                 user:{
-                  name:AllUsers.Name,
-                  qualification:AllUsers.Qualification,
-                  userType:User1.userType
+                  rollNumber:User1.rollNumber,
+                  name:User2.Name,
+                  email:User2.Email,
+                  qualification:User2.Qualification,
+                  image:"m;sfk;ks;df",
+                  userType:type.toLowerCase()
                 },
                rollNumber:User1.rollNumber,
               }
            };
-            await API.graphql(graphqlOperation(updateUser,variables)).then(()=>{
+           console.log(variables)
+            await API.graphql(graphqlOperation(updateUser,variables)).then((result)=>{
+              console.log("response data")
+              console.log(result)
               setUser(AllUsers)
               alert("Updated")
             }).catch((error)=>{

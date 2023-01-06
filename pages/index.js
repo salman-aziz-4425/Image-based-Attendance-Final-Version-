@@ -13,10 +13,19 @@ import { tokenAuth } from "../redux/userlogin/userSlice";
 import { useSelector, useDispatch } from "react-redux";
 import Router from "next/router";
 export default function Login() {
+  let token = useSelector((state) => state.userReducer.token);
   const [RollNo, setRoll] = useState("");
   const [password, setpassword] = useState("");
   useEffect(() => {
-    localStorage.setItem("Token", "");
+    console.log(token)
+    if(token.length>6||localStorage.getItem('Token').length>6)
+    {
+      dispatch(tokenAuth(localStorage.getItem('Token')))
+      Router.push('/dashboard')
+    }
+    else{
+      localStorage.setItem("Token", "");
+    }
   }, []);
   const dispatch = useDispatch();
   const emailHandler = (event) => {
@@ -33,6 +42,7 @@ export default function Login() {
         password: password,
       }, // key is "input" based on the mutation above
     };
+    console.log(variables)
     await API.graphql(graphqlOperation(Loginuser, variables))
       .then((result) => {
         const token = JSON.parse(result.data.loginUser.token);
@@ -89,9 +99,11 @@ export default function Login() {
               className="my-2"
               onChange={passwordHandler}
             />
-            <div className="flex flex-row mt-2">
-              <p className="text-sm flex-1 ">Keep me logged in</p>
-              <p className="text-sm">Forgot Password</p>
+            <div className="flex flex-row justify-end mt-2">
+
+              <Link href="/dashboard/forgotPage" color="inherit">
+              Forgot my password
+              </Link>
             </div>
           </div>
           <button

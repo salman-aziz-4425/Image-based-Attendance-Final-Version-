@@ -12,7 +12,7 @@ const { toggleCollapsed } = appActions;
 class Topbar extends Component {
   render() {
     // const { toggleCollapsed, url, customizedTheme, locale } = this.props;
-    const { toggleCollapsed, url, customizedTheme } = this.props;
+    const { toggleCollapsed, url, customizedTheme, locale } = this.props;
 
     const collapsed = this.props.collapsed && !this.props.openDrawer;
     const styling = {
@@ -46,7 +46,7 @@ class Topbar extends Component {
               onClick={() => this.setState({ selectedItem: 'user' })}
               className="isoUser"
             >
-              {/* <TopbarUser locale={locale} /> */}
+              <TopbarUser locale={locale} />
             </li>
           </ul>
         </Header>

@@ -16,7 +16,7 @@ export default [
 	},
 	{
 		key:'DeleteProfile',
-		label:'Delete Users',
+		label:'Delete/Update Users',
 		leftIcon: <SidebarProfileIcon size={19} />,
 
 	}
