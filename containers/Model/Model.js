@@ -8,6 +8,7 @@ import {API,graphqlOperation} from 'aws-amplify';
 import { updateUser } from '../../src/graphql/mutations';
 import UploadImage from "../../components/utility/imageUploading";
 import {getS3Url} from '../../src/graphql/queries'
+import validation from './Validation'
 export default function Model({open,setOpen,User1,AllUsers,setUser}) {
     const handleOpen=()=>{
         setOpen(!open)
@@ -21,13 +22,14 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
       PhoneNo:0,
       Address:"",
       RollNo:"",
-      Qualification:''
+      Qualification:""
     })
     const [User2,setUser2]=useState({
       Name:"",
       Email:"",
       PhoneNo:0,
-      Qualification:"",
+      Qualification:"*",
+      userType:""
     })
     const inputHandler=(event)=>{
       const { name, value } = event.target;
@@ -91,7 +93,7 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
           </div>
         </div>
         <div  className="flex px-[26px] space-x-2 flex-wrap justify-left">
-          <Input className="my-2 w-[49%] " type="file"></Input>
+          <div className="my-2 w-[49%] "></div>
           <div  className="flex flex-col items-center my-2 w-[49%]">
           <p className="text-red-600 align-middle">{error.type}</p>
           <Dropdown type={type} setType={setType}/>
@@ -107,23 +109,29 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
             const index=AllUsers.findIndex((object)=>{
               return object.id===User1.id
             })
-            if(User2.Name.length>1){
-              AllUsers[index].name=User2.Name
+            const valid=validation(type,User2,User1)
+            setError(valid.Error)
+            if(valid.Flag===false){
+              return
+            }
+            else{
+              AllUsers[index].name=valid.User.Name
+              AllUsers[index].email=valid.User.Email
+              AllUsers[index].userType=valid.User.userType.toLowerCase()
+              AllUsers[index].qualification=valid.User.Qualification
+              console.log(valid.User)
             }
             const variables = {
               data:{
+                rollNumber:User1.rollNumber,
                 user:{
-                  rollNumber:User1.rollNumber,
-                  name:User2.Name,
-                  email:User2.Email,
-                  qualification:User2.Qualification,
-                  image:"m;sfk;ks;df",
-                  userType:type.toLowerCase()
+                  name:valid.User.Name,
+                  email:valid.User.Email,
+                  qualification:valid.User.Qualification,
+                  userType:valid.User.userType.toLowerCase()
                 },
-               rollNumber:User1.rollNumber,
               }
            };
-           console.log(variables)
             await API.graphql(graphqlOperation(updateUser,variables)).then((result)=>{
               console.log("response data")
               console.log(result)

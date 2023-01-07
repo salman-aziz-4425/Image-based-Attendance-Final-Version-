@@ -46,13 +46,22 @@ export default function AddProfile() {
     Qualification: "",
     Address: "",
   });
-  useEffect(() => {
-    if (token.length < 1 && localStorage.getItem("Token").length < 1) {
-      Router.push("/");
-    } else {
-      if (token.length < 1) dispatch(tokenAuth(localStorage.getItem("Token")));
+  useEffect(async ()=>{
+    const Data=JSON.parse(localStorage.getItem('Token'))
+    if(Data.Auth===false){
+      router.push('/')
     }
-  }, []);
+    else{
+      dispatch(tokenAuth( {
+        token:Data.token,
+        name:Data.name,
+        email:Data.email,
+        image:Data.image,
+        qualification:Data.qualification,
+        rollNumber:Data.rollNumber,
+        Auth:true
+      }));
+    }})
   useEffect(() => {
     setError({
       Email: "",

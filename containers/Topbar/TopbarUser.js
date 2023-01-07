@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Popover from '@iso/components/uielements/popover';
 // import authAction from '../../authentication/actions';
 import TopbarDropdownWrapper from './TopbarDropdown.styles';
@@ -13,12 +13,21 @@ export default function TopbarUser() {
   function handleVisibleChange() {
     setVisibility(visible => !visible);
   }
-
+  let srcImage=useSelector((state)=>state.userReducer.image)
   const content = (
     <TopbarDropdownWrapper className="isoUserDropdown">
       <a className="isoDropdownLink" onClick={() =>{
-        dispatch(tokenAuth(''))
-        localStorage.setItem('Token','')
+        dispatch(tokenAuth({
+          token:'',
+          name:'',
+          email:'',
+          image:'',
+          email:' ',
+          Auth:false
+      }))
+        localStorage.setItem('Token',JSON.stringify({
+          Auth:false
+        }))
         Router.push('/')
       }}>
         Logout
@@ -36,7 +45,7 @@ export default function TopbarUser() {
       placement="bottomLeft"
     >
       <div className="isoImgWrapper">
-        {/* <img alt="user" src={userpic} /> */}
+        <img alt="user" src={srcImage} />
         <span className="userActivity online" />
       </div>
     </Popover>

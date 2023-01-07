@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import withRedux from 'next-redux-wrapper';
 import ThemeProvider from '../containers/ThemeProvider';
@@ -14,6 +14,9 @@ import { useSelector, useDispatch } from 'react-redux'
 Amplify.configure({...awsconfig});
 
 function CustomApp({ Component, pageProps, store }){
+  useEffect(()=>{
+
+  },[])
     return (
       <Provider store={store}>
         <ThemeProvider>

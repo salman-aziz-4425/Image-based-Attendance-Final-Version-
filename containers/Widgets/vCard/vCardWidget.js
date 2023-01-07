@@ -5,6 +5,7 @@ export default function VCardWidget(
   {
     src,
     alt,
+    email,
     name,
     title,
     description,
@@ -21,7 +22,7 @@ export default function VCardWidget(
       <div className="isoVCardBody">
         <h3 className="isoName">{name}</h3>
         <span className="isoDesgTitle">{title}</span>
-
+        <span className="isoDesgTitle">{email}</span>
         <p className="isoDescription">{description}</p>
 
         <div className="isoWidgetSocial">{children}</div>

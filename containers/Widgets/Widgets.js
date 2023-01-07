@@ -73,6 +73,12 @@ const CARD_WIDGET = [
 const SOCIAL_PROFILE=[]
 export default function Widgets() {
   let token=useSelector((state) => state.userReducer.token)
+  const User={
+    name:useSelector((state) => state.userReducer.name),
+    email:useSelector((state) => state.userReducer.email),
+    qualification:useSelector((state) => state.userReducer.qualification),
+    rollNumber:useSelector((state) => state.userReducer.rollNumber)
+  }
   Amplify.configure({
     API:{
    graphql_headers:async () =>({
@@ -85,18 +91,27 @@ export default function Widgets() {
   const [Users,setUsers]=useState([])
   const { rowStyle, colStyle } = basicStyle;
   useEffect(async ()=>{
-    if(token.length<1&&localStorage.getItem('Token').length<1){
+    const Data=JSON.parse(localStorage.getItem('Token'))
+    if(Data.Auth===false){
       router.push('/')
     }
     else{
-        dispatch(tokenAuth(localStorage.getItem('Token')))
+      dispatch(tokenAuth( {
+        token:Data.token,
+        name:Data.name,
+        email:Data.email,
+        image:Data.image,
+        qualification:Data.qualification,
+        rollNumber:Data.rollNumber,
+        Auth:true
+      }
+      ));;
     }
     console.log(authToken)
     await API.graphql({
       query:getAllUsers,
       authToken:authToken
     }).then((result)=>{
-      console.log(result)
       if(result.data.getAllUsers.length>0){
         const Students=result.data.getAllUsers.filter((object)=>{
           return object.userType==="student"
@@ -155,10 +170,11 @@ export default function Widgets() {
                 style={{ height: '450px' }}
                 src={userpic}
                 alt="Jhon"
-                name={<IntlMessages id="Name" />}
-                title={<IntlMessages id="widget.vcardwidget.title" />}
+                name={User.name}
+                email={User.email}
+                title={User.rollNumber}
                 description={
-                  <IntlMessages id="widget.vcardwidget.description" />
+                  User.qualification
                 }
               >
                 <SocialWidget>
@@ -175,54 +191,9 @@ export default function Widgets() {
           </Col>
         </Row>
 
-        <Row style={rowStyle} gutter={0} justify="start">
-          {SALE_WIDGET.map((widget, idx) => (
-            <Col lg={6} md={12} sm={12} xs={24} style={colStyle} key={idx}>
-              <IsoWidgetsWrapper>
-                {/* Sale Widget */}
-                <SaleWidget
-                  label={<IntlMessages id={widget.label} />}
-                  price={<IntlMessages id={widget.price} />}
-                  details={<IntlMessages id={widget.details} />}
-                  fontColor={widget.fontColor}
-                />
-              </IsoWidgetsWrapper>
-            </Col>
-          ))}
-        </Row>
+   
 
         <Row style={rowStyle} gutter={0} justify="start">
-          <Col lg={6} md={12} sm={12} xs={24} style={colStyle}>
-            {CARD_WIDGET.map((widget, idx) => (
-              <IsoWidgetsWrapper key={idx} gutterBottom={20}>
-                {/* Card Widget */}
-                <CardWidget
-                  icon={widget.icon}
-                  iconcolor={widget.iconcolor}
-                  number={<IntlMessages id={widget.number} />}
-                  text={<IntlMessages id={widget.text} />}
-                />
-              </IsoWidgetsWrapper>
-            ))}
-          </Col>
-
-          <Col lg={6} md={12} sm={12} xs={24} style={colStyle}>
-            {PROGRESS_WIDGET.map((widget, idx) => (
-              <IsoWidgetsWrapper key={idx} gutterBottom={20}>
-                {/* Progress Widget */}
-                <ProgressWidget
-                  label={<IntlMessages id={widget.label} />}
-                  details={<IntlMessages id={widget.details} />}
-                  icon={widget.icon}
-                  iconcolor={widget.iconcolor}
-                  percent={widget.percent}
-                  barHeight={widget.barHeight}
-                  status={widget.status}
-                />
-              </IsoWidgetsWrapper>
-            ))}
-          </Col>
-
        
         </Row>
         <Row style={rowStyle} gutter={0} justify="start">

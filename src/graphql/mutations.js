@@ -22,6 +22,7 @@ export const updateUser = /* GraphQL */ `
       qualification
       image
       userType
+      email
     }
   }
 `;
@@ -36,7 +37,23 @@ export const Loginuser=`
  mutation loginUser($data:LoginInput!){
    loginUser(data:$data){
     token
+    user{
+      id
+      rollNumber
+      name
+      email
+      qualification
+      image
+      userType
+    }
    }
 }
+`
+export const optCode = /* GraphQL */ `
+  mutation getOtpCode($data:OptCodeInput!) {
+    getOtpCode(data:$data) {
+      optCode
+    }
+  }
 `
 ;

@@ -7,9 +7,12 @@ export const getUser = /* GraphQL */ `
       id
       rollNumber
       name
+      email
       qualification
+      password
       image
       userType
+      phoneNo
     }
   }
 `;
@@ -19,9 +22,12 @@ export const getAllUsers = /* GraphQL */ `
       id
       rollNumber
       name
+      email
       qualification
+      password
       image
       userType
+      phoneNo
     }
   }
 `;

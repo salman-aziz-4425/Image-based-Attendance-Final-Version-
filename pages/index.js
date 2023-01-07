@@ -17,14 +17,9 @@ export default function Login() {
   const [RollNo, setRoll] = useState("");
   const [password, setpassword] = useState("");
   useEffect(() => {
-    console.log(token)
-    if(token.length>6||localStorage.getItem('Token').length>6)
-    {
-      dispatch(tokenAuth(localStorage.getItem('Token')))
+    const Data=JSON.parse(localStorage.getItem('Token'))
+    if(Data.Auth===true){
       Router.push('/dashboard')
-    }
-    else{
-      localStorage.setItem("Token", "");
     }
   }, []);
   const dispatch = useDispatch();
@@ -51,8 +46,24 @@ export default function Login() {
         finalToken = "Bearer " + finalToken[0];
         finalToken = finalToken.split(";");
         finalToken = finalToken[0];
-        dispatch(tokenAuth(finalToken));
-        localStorage.setItem("Token", finalToken);
+        dispatch(tokenAuth( {
+          token:finalToken,
+          name:result.data.loginUser.user.name,
+          email:result.data.loginUser.user.email,
+          image:result.data.loginUser.user.image,
+          qualification:result.data.loginUser.user.qualification,
+          rollNumber:result.data.loginUser.user.rollNumber,
+          Auth:true
+        }));
+        localStorage.setItem("Token",JSON.stringify({
+          token:finalToken,
+          name:result.data.loginUser.user.name,
+          email:result.data.loginUser.user.email,
+          image:result.data.loginUser.user.image,
+          rollNumber:result.data.loginUser.user.rollNumber,
+          qualification:result.data.loginUser.user.qualification,
+          Auth:true
+        }));
         Router.push("/dashboard");
       })
       .catch((error) => {

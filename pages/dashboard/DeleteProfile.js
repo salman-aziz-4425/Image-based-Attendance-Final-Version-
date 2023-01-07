@@ -27,18 +27,25 @@ function DeleteProfile() {
   }])
   const [Visible,setVisible]=useState(false)
   useEffect(async ()=>{
-    if(token.length<1&&localStorage.getItem('Token').length<1){
-      Router.push('/')
+    const Data=JSON.parse(localStorage.getItem('Token'))
+    if(Data.Auth===false){
+      router.push('/')
     }
     else{
-      if(token.length<1)
-      dispatch(tokenAuth(localStorage.getItem('Token')))
+      dispatch(tokenAuth( {
+        token:Data.token,
+        name:Data.name,
+        email:Data.email,
+        image:Data.image,
+        qualification:Data.qualification,
+        rollNumber:Data.rollNumber,
+        Auth:true
+      }));
     }
     const res=await API.graphql(graphqlOperation(getAllUsers))
     setUser(res.data.getAllUsers)
   },[token])
 
-      const { rowStyle, colStyle } = basicStyle;
       const deleteUser1= async (rollNumber1)=>{
         const variables = {
               rollNumber:rollNumber1
