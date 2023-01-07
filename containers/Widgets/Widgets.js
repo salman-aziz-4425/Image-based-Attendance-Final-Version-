@@ -65,7 +65,8 @@ export default function Widgets() {
     name:useSelector((state) => state.userReducer.name),
     email:useSelector((state) => state.userReducer.email),
     qualification:useSelector((state) => state.userReducer.qualification),
-    rollNumber:useSelector((state) => state.userReducer.rollNumber)
+    rollNumber:useSelector((state) => state.userReducer.rollNumber),
+    image:useSelector((state) => state.userReducer.image),
   }
   Amplify.configure({
     API:{
@@ -156,7 +157,7 @@ export default function Widgets() {
               {/* VCard Widget */}
               <VCardWidget
                 style={{ height: '450px' }}
-                src={userpic}
+                src={User.image}
                 alt="Jhon"
                 name={User.name}
                 email={User.email}

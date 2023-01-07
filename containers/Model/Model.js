@@ -3,13 +3,17 @@ import { Modal,Box,Typography } from '@mui/material'
 import {Button } from 'antd';
 import Image from "next/image";
 import Input from "antd/lib/input/Input";
+import { useSelector, useDispatch } from 'react-redux'
 import Dropdown from '../../UI/Dropdown/Dropdown'
 import {API,graphqlOperation} from 'aws-amplify';
 import { updateUser } from '../../src/graphql/mutations';
 import UploadImage from "../../components/utility/imageUploading";
 import {getS3Url} from '../../src/graphql/queries'
 import validation from './Validation'
+import { tokenAuth } from '../../redux/userlogin/userSlice';
 export default function Model({open,setOpen,User1,AllUsers,setUser}) {
+  const token = useSelector((state)=>state.userReducer.token);
+  const dispatch=useDispatch()
     const handleOpen=()=>{
         setOpen(!open)
     }
@@ -36,14 +40,18 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
       setUser2({ ...User2, [name]: value });
     }
     const storeImageToS3Bucket = async () =>{
-      console.log("Image List => ",images[0]?.data_url);
-      const image = images[0].file;
+      if(images === undefined||images.length<1){
+        setError({...error,image:"Kindly upload your picture"});
+        return
+      }
+
+      const image = images[0]?.file;
       //  Get Secure URL from our server
-      const res=await API.graphql(graphqlOperation(getS3Url))
+      const res = await API.graphql(graphqlOperation(getS3Url))
       //  Post the image directly to S3 bucket
-      console.log("Res => ",res)
+  
       const s3obj  = res.data.getS3Url;
-      console.log("Url :- ",s3obj)
+    
       await fetch(s3obj?.s3Url, {
         method: "PUT",
         headers: {
@@ -51,11 +59,11 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
         },
         body: image
       }).then(res=>{
-        console.log("Bucket Res ",res , " s3obj ",s3obj?.key);
-         return s3obj?.key;
+       
       }).catch(err=>{
-        console.log("Error => ",err)})
         return undefined
+      })
+      return s3obj?.key;
     }
   return (
     <>
@@ -110,15 +118,25 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
               return object.id===User1.id
             })
             const valid=validation(type,User2,User1)
+            const imageKey = await storeImageToS3Bucket();
+            const imageURl =  `https://user-attendance-image-test.s3.amazonaws.com/` + imageKey;
+            console.log(imageURl)
+            if(imageURl.length===undefined){
+              imageURl=User1.image
+            }
             setError(valid.Error)
             if(valid.Flag===false){
               return
             }
             else{
+              if(valid.User.userType===undefined||valid.User.userType.length===0){
+                valid.User.userType=User1.userType
+              }
               AllUsers[index].name=valid.User.Name
               AllUsers[index].email=valid.User.Email
               AllUsers[index].userType=valid.User.userType.toLowerCase()
               AllUsers[index].qualification=valid.User.Qualification
+              AllUsers[index].image=imageURl
               console.log(valid.User)
             }
             const variables = {
@@ -128,13 +146,35 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
                   name:valid.User.Name,
                   email:valid.User.Email,
                   qualification:valid.User.Qualification,
+                  image:imageURl,
                   userType:valid.User.userType.toLowerCase()
                 },
               }
            };
+           console.log(variables)
             await API.graphql(graphqlOperation(updateUser,variables)).then((result)=>{
               console.log("response data")
-              console.log(result)
+              console.log(result.data.updateUser.id)
+              if(result.data.updateUser.id===User1.id){
+                dispatch(tokenAuth( {
+                  token:token,
+                  name:result.data.updateUser.name,
+                  email:result.data.updateUser.email,
+                  image:result.data.updateUser.image,
+                  qualification:result.data.updateUser.qualification,
+                  rollNumber:result.data.updateUser.rollNumber,
+                  Auth:true
+                }))
+                localStorage.setItem("Token",JSON.stringify({
+                  token:token,
+                  name:result.data.updateUser.name,
+                  email:result.data.updateUser.email,
+                  image:result.data.updateUser.image,
+                  qualification:result.data.updateUser.qualification,
+                  rollNumber:result.data.updateUser.rollNumber,
+                  Auth:true
+                }));
+              }
               setUser(AllUsers)
               alert("Updated")
             }).catch((error)=>{

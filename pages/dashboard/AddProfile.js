@@ -34,6 +34,7 @@ export default function AddProfile() {
     Address: "",
     RollNo: "",
     Qualification: "",
+    image:""
   });
   const [User, setUser] = useState({
     Name: "",
@@ -74,10 +75,15 @@ export default function AddProfile() {
     });
   }, [type]);
   const storeImageToS3Bucket = async () =>{
+    if(images === undefined||images.length<1){
+      alert('no pic image')
+      setError({...error,image:"Kindly upload your picture"});
+      return
+    }
     console.log("Image List => ",images[0]?.data_url);
-    const image = images[0].file;
+    const image = images[0]?.file;
     //  Get Secure URL from our server
-    const res=await API.graphql(graphqlOperation(getS3Url))
+    const res = await API.graphql(graphqlOperation(getS3Url))
     //  Post the image directly to S3 bucket
     console.log("Res => ",res)
     const s3obj  = res.data.getS3Url;
@@ -90,13 +96,15 @@ export default function AddProfile() {
       body: image
     }).then(res=>{
       console.log("Bucket Res ",res , " s3obj ",s3obj?.key);
-       return s3obj?.key;
     }).catch(err=>{
-      console.log("Error => ",err)})
+      console.log("Error => ",err)
       return undefined
+    })
+    return s3obj?.key;
   }
   const dataHandler = async (event) => {
     event.preventDefault();
+    setAttributes({...typeAttributes,RollNo:"19F-0188"})
     const { Flag, Error } = validation(type, User, typeAttributes);
     setError(Error);
     console.log(Flag);
@@ -104,10 +112,14 @@ export default function AddProfile() {
       return;
     }
     let variables;
-    const imageKey = storeImageToS3Bucket();
-    if(imageKey != undefined){
-      setError("Image not Uploaded on S3 Bucket");
+    const imageKey = await storeImageToS3Bucket();
+    console.log("Image key  "+imageKey)
+    if(imageKey ===undefined){
+      setError({...error,image:"Key not found"});
+      return
     }
+    const imageURl =  `https://user-attendance-image-test.s3.amazonaws.com/` + imageKey;
+    console.log("Image Url => ", imageURl);
     if (type === "Student") {
       variables = {
         data: {
@@ -117,7 +129,7 @@ export default function AddProfile() {
           email: User.Email,
           phoneNo: User.PhoneNo,
           qualification: typeAttributes.Qualification,
-          image: imageKey,
+          image: imageURl,
           userType: "student",
         }, // key is "input" based on the mutation above
       };
@@ -133,7 +145,7 @@ export default function AddProfile() {
           phoneNo: User.PhoneNo,
           Address: typeAttributes.Address,
           qualification: typeAttributes.Qualification,
-          image: imageKey,
+          image: imageURl,
           userType: "teacher",
         }, // key is "input" based on the mutation above
       };
@@ -148,7 +160,7 @@ export default function AddProfile() {
           email: User.Email,
           phoneNo: User.PhoneNo,
           qualification: typeAttributes.Qualification,
-          image: imageKey,
+          image: imageURl,
           userType: "admin",
         }, // key is "input" based on the mutation above
       };
@@ -205,6 +217,7 @@ export default function AddProfile() {
               placeholder="password"
               name="password"
               onChange={inputHandler}
+              maxLength={11}
             ></Input>
             <p className="text-red-600">
               {error.PhoneNo !== 0 && error.PhoneNo}
@@ -215,16 +228,18 @@ export default function AddProfile() {
               placeholder="Phone No"
               name="PhoneNo"
               onChange={inputHandler}
+              maxLength={6}
             ></Input>
           </div>
           <div className="my-2 w-[44%]">
             <UploadImage setImagesFunc={setImages}/>
+            <p className="text-red-600">{error.image}</p>
           </div>
         </div>
         <div className="flex px-[26px] space-x-2 flex-wrap justify-left">
           <div className="flex flex-col items-center my-2 w-[49%]">
             <p className="text-red-600 align-middle">{error.type}</p>
-            {/* <Dropdown type={type} setType={setType} /> */}
+            <Dropdown type={type} setType={setType} />
           </div>
           <div></div>
           {type === "Student" || type === "admin" ? (

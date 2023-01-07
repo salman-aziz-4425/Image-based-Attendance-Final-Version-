@@ -12,6 +12,7 @@ import { API, graphqlOperation, withSSRContext } from "aws-amplify";
 import { tokenAuth } from "../redux/userlogin/userSlice";
 import { useSelector, useDispatch } from "react-redux";
 import attendance from '../assets/Picture1.png'
+import { getS3Url } from "../src/graphql/queries";
 import Router from "next/router";
 export default function Login() {
   let token = useSelector((state) => state.userReducer.token);
@@ -41,7 +42,7 @@ export default function Login() {
     };
     console.log(variables)
     await API.graphql(graphqlOperation(Loginuser, variables))
-      .then((result) => {
+      .then(async (result) => {
         const token = JSON.parse(result.data.loginUser.token);
         let finalToken = token.split("=");
         finalToken = finalToken[1].split("Max-Age");

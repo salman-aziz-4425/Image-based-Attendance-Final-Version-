@@ -97,7 +97,9 @@ export default function validation(type,User,typeAttributes){
         error.RollNo="Empty Roll no Field"
       count=count+1
      }
-     if(!typeAttributes.RollNo.includes("F")&&(type==="Student"||type=="admin")){
+
+     console.log(typeAttributes.RollNo.toUpperCase())
+     if((!typeAttributes.RollNo.toUpperCase().includes('F-'))&&(type==="Student"||type=="admin")){
         error.RollNo="Wrong Roll no Format"
       count=count+1
      }

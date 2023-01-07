@@ -18,6 +18,10 @@ export default function forgotPage() {
       error:""
     })
     const getOTP=async()=>{
+      if(!rollNumber.toUpperCase().includes('F-')){
+        setUser({...user,error:"Roll no format is not correct write like 19F-"})
+        return 
+      }
       const variables={
         data:{
           rollNumber:rollNumber
@@ -42,10 +46,6 @@ export default function forgotPage() {
       setUser({...user,[name]:value})
     }
     const updatePassword=async()=>{
-      if(!rollNumber.includes('19F-')||!rollNumber.includes('19f-')){
-        setUser({...user,error:"Roll no format is not correct write like 19F-"})
-        return 
-      }
       const variables={
         data:{
           rollNumber:rollNumber,
@@ -76,8 +76,8 @@ export default function forgotPage() {
           </h1>
         </div>
            <div className="flex flex-col justify-center items-center py-6 w-5/7 h-5/7 my-8 mx-10 bg-white font-extrabold align-middle rounded-md shadow-2xl overflow-hidden">
+           <p className="text-red-600">{user.error}</p>
             <div className='flex flex-row items-center space-x-4'>
-            <p className="text-red-600">{user.error}</p>
             <TextField  id="outlined-basic" label="Search for your account" variant="outlined" onChange={(event)=>setRollNumber(event.target.value)}/>
             <Button onClick={getOTP}>Search</Button>
             </div>
