@@ -11,6 +11,10 @@ import Router from 'next/router';
 export default function forgotPage() {
     const [Visibility,setVisibility]=useState(false)
     const [passVisiblility,SetpassVisiblility]=useState(false)
+    const [btnVisiblity,setbtnVisibility]=useState({
+      btn1:false,
+      btn2:false
+    })
     const [rollNumber,setRollNumber]=useState("")
     const [user,setUser]=useState({
       OTP:0,
@@ -32,6 +36,7 @@ export default function forgotPage() {
         alert('Check OTP')
         console.log(result)
         setVisibility(true)
+        setbtnVisibility({...btnVisiblity,btn2:true})
         setUser({...user,OTP:result.data.getOtpCode.optCode})
       }).catch((error)=>{
         alert("Account doesnt exist")
@@ -40,6 +45,7 @@ export default function forgotPage() {
     const checkOTP=()=>{
       if(user.OTP===user.EnteredOTP){
         SetpassVisiblility(true)
+        setbtnVisibility({...btnVisiblity,btn1:true})
       }
     }
     const inputHandler=()=>{
@@ -84,15 +90,15 @@ export default function forgotPage() {
            <p className="text-red-600">{user.error}</p>
             <div className='flex flex-row items-center space-x-4'>
             <TextField  id="outlined-basic" label="Search for your account" variant="outlined" onChange={(event)=>setRollNumber(event.target.value)}/>
-            <Button onClick={getOTP}>Search</Button>
+            <Button onClick={getOTP} disabled={btnVisiblity.btn2}>Search</Button>
             </div>
             {Visibility&&<div className='flex flex-row items-center mt-4 space-x-4'>
             <TextField  id="outlined-basic" label="Enter OTP" name='EnteredOTP' type={'number'} variant="outlined" onChange={inputHandler}/>
-            <Button onClick={checkOTP}>Send</Button>
+            <Button onClick={checkOTP} disabled={btnVisiblity.btn1}>Send</Button>
             </div>
              } 
             {passVisiblility&&<div className='flex flex-row items-center mt-4 space-x-4'>
-            <TextField  id="outlined-basic" label="Enter your new password" name='newPass' type={'text'} variant="outlined" onChange={inputHandler}/>
+            <TextField  id="outlined-basic" label="Enter your new password" name='newPass' type={'password'} variant="outlined" onChange={inputHandler}/>
             <Button onClick={updatePassword}>Update</Button>
             </div>
              } 

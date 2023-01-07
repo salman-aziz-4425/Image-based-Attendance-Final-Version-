@@ -39,7 +39,7 @@ export default function validation(type,User,typeAttributes){
     }
     if(validator.validate(User.Email)&&User.Email!=""){
         for(let i=0;i<User.Email.length;i++){
-            if(i<5&&User.Email.charCodeAt(i)<65){
+            if(User.Email.charCodeAt(i)<65&&User.Email[i]!='@'&&User.Email!='.'){
                 error.Email="Invalid Email Format"
                 count+=1
                 break;

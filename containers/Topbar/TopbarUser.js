@@ -46,7 +46,7 @@ export default function TopbarUser() {
       placement="bottomLeft"
     >
       <div className="isoImgWrapper">
-        <img className='rounded-lg' alt="user" src={srcImage} />
+        <img className='rounded-3xl' alt="user" src={srcImage} />
         <span className="userActivity online" />
       </div>
     </Popover>
