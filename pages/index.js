@@ -50,6 +50,7 @@ export default function Login() {
         finalToken = finalToken.split(";");
         finalToken = finalToken[0];
         dispatch(tokenAuth( {
+          id:result.data.loginUser.user.id,
           token:finalToken,
           name:result.data.loginUser.user.name,
           email:result.data.loginUser.user.email,
@@ -59,6 +60,7 @@ export default function Login() {
           Auth:true
         }));
         localStorage.setItem("Token",JSON.stringify({
+          id:result.data.loginUser.user.id,
           token:finalToken,
           name:result.data.loginUser.user.name,
           email:result.data.loginUser.user.email,

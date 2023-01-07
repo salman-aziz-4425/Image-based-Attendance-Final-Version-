@@ -4,8 +4,12 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useState } from 'react';
 import Model from '../Model/Model';
-
+import { tokenAuth } from '../../redux/userlogin/userSlice';
+import { useDispatch,useSelector } from 'react-redux';
 function Table({Users,flag,deleteUsers,setUser}) {
+  const user={
+    id:useSelector((state)=>state.userReducer.id)
+  }
   const [open,setOpen]=useState(false)
   const [singleUser,setSingle]=useState({})
   const modelHanlder=(User)=>{
@@ -46,31 +50,42 @@ function Table({Users,flag,deleteUsers,setUser}) {
           </thead>
           <tbody className='overflow-auto'>
             {
-              Users.map((User,index)=>(
-          <tr className="border-b">
-              <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                {index+1}
-                </td>
-              <td className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap">
-                {User.rollNumber}
-              </td>
-              <td className="text-sm text-gray-900 font-light px-1 py-4 whitespace-nowrap">
-              {User.name}
-              </td>
-              <td className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap">
-              {User.qualification}
-              </td>
-              <td className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap">
-              {User.userType}
-              </td>
-              {flag&&
-              <td className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap">
-              <Button className='border-none border-transparent' onClick={()=>modelHanlder(User)}><EditIcon/></Button>
-               <Button className='border-none border-transparent' onClick={()=>deleteUsers(User.rollNumber)}><DeleteIcon/></Button>
-              </td>
-}
-            </tr>
-              ))
+              Users.map((User,index)=>{
+              
+                return(
+                  <tr className="border-b">
+                  <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    {index+1}
+                    </td>
+                  <td className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap">
+                    {User.rollNumber}
+                  </td>
+                  <td className="text-sm text-gray-900 font-light px-1 py-4 whitespace-nowrap">
+                  {User.name}
+                  </td>
+                  <td className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap">
+                  {User.qualification}
+                  </td>
+                  <td className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap">
+                  {User.userType}
+                  </td>
+                  {flag&&
+                  <td className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap">
+                  <Button className='border-none border-transparent' onClick={()=>modelHanlder(User)}><EditIcon/></Button>
+                  </td>
+                   }
+                     {(flag&&User.id!==user.id)?
+                  <td className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap">
+                   <Button className='border-none border-transparent' onClick={()=>deleteUsers(User.rollNumber)}><DeleteIcon/></Button>
+                  </td>:<td></td>
+                   }
+                </tr>
+                )
+
+              }
+
+         
+              )
   
 }
           </tbody>

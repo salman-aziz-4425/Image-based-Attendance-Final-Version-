@@ -86,6 +86,7 @@ export default function Widgets() {
     }
     else{
       dispatch(tokenAuth( {
+        id:Data.id,
         token:Data.token,
         name:Data.name,
         email:Data.email,

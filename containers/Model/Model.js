@@ -157,6 +157,7 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
               console.log(result.data.updateUser.id)
               if(result.data.updateUser.id===User1.id){
                 dispatch(tokenAuth( {
+                  id:result.data.updateUser.id,
                   token:token,
                   name:result.data.updateUser.name,
                   email:result.data.updateUser.email,
@@ -166,6 +167,7 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
                   Auth:true
                 }))
                 localStorage.setItem("Token",JSON.stringify({
+                  id:result.data.updateUser.id,
                   token:token,
                   name:result.data.updateUser.name,
                   email:result.data.updateUser.email,

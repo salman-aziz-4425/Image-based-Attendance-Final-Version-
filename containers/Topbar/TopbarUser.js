@@ -18,6 +18,7 @@ export default function TopbarUser() {
     <TopbarDropdownWrapper className="isoUserDropdown">
       <a className="isoDropdownLink" onClick={() =>{
         dispatch(tokenAuth({
+          id:' ',
           token:'',
           name:'',
           email:'',
@@ -45,7 +46,7 @@ export default function TopbarUser() {
       placement="bottomLeft"
     >
       <div className="isoImgWrapper">
-        <img alt="user" src={srcImage} />
+        <img className='rounded-lg' alt="user" src={srcImage} />
         <span className="userActivity online" />
       </div>
     </Popover>

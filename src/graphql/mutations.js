@@ -56,4 +56,18 @@ export const optCode = /* GraphQL */ `
     }
   }
 `
+export const updatepassword = /* GraphQL */ `
+  mutation updatePassword($data: UpdateUserInput!) {
+    updatePassword(data: $data) {
+      password
+      id
+      rollNumber
+      name
+      qualification
+      image
+      userType
+      email
+    }
+  }
+`;
 ;

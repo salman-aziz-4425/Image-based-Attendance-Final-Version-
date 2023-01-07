@@ -3,10 +3,11 @@ import DashboardLayout from '../../containers/DashboardLayout/DashboardLayout'
 import { TextField } from '@mui/material'
 import { Button } from 'antd'
 import { API, graphqlOperation, Amplify } from "aws-amplify";
-import { optCode ,updateUser} from '../../src/graphql/mutations';
+import { optCode , updatepassword} from '../../src/graphql/mutations';
 import attendance from '../../assets/Picture1.png'
 import Image from 'next/image';
 import Link from 'next/link';
+import Router from 'next/router';
 export default function forgotPage() {
     const [Visibility,setVisibility]=useState(false)
     const [passVisiblility,SetpassVisiblility]=useState(false)
@@ -54,8 +55,12 @@ export default function forgotPage() {
           }
         }
       }
-      await API.graphql(graphqlOperation(updateUser,variables)).then(()=>{
+      console.log(variables)
+      await API.graphql(graphqlOperation(updatepassword,variables)).then((result)=>{
         alert("password updated")
+        Router.push('/')
+        console.log(result)
+
       }).catch(()=>{
         setUser({...user,error:"Roll no format is not correct write like 19F-"})
       })

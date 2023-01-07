@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
+  id:' ',
   token:'',
   name:' ',
   qualification:' ',
@@ -15,6 +16,8 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     tokenAuth: (state,payload) => {
+      console.log(payload)
+      state.id=payload.payload.id
       state.token= payload.payload.token
       state.name=payload.payload.name
       state.email=payload.payload.email
