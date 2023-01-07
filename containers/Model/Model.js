@@ -13,7 +13,7 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
     const handleOpen=()=>{
         setOpen(!open)
     }
-    const [type, setType] = useState("");
+    const [type, setType] = useState(User1.userType);
     const [images, setImages] = React.useState([]);
     const [error,setError]=useState({
       Email:"",

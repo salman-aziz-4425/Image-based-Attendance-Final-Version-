@@ -4,6 +4,9 @@ import { TextField } from '@mui/material'
 import { Button } from 'antd'
 import { API, graphqlOperation, Amplify } from "aws-amplify";
 import { optCode ,updateUser} from '../../src/graphql/mutations';
+import attendance from '../../assets/Picture1.png'
+import Image from 'next/image';
+import Link from 'next/link';
 export default function forgotPage() {
     const [Visibility,setVisibility]=useState(false)
     const [passVisiblility,SetpassVisiblility]=useState(false)
@@ -58,13 +61,21 @@ export default function forgotPage() {
       })
     }
   return (
-    <DashboardLayout>
-           <div className="flex flex-col justify-center items-center py-6 w-5/7 h-5/7 my-8 mx-10 bg-white font-extrabold align-middle rounded-md shadow-2xl overflow-hidden">
-           <div className="flex pb-4 px-4 overflow-hidden">
-          <h1 className="font-extrabold text-transparent text-3xl bg-clip-text bg-gradient-to-r from-gray-700 to-red-700">
+    <>
+       <div className="flex flex-row items-center mt-2 justify-start pb-4 px-4 overflow-hidden">
+        <Link href='/'>
+       <Image
+            src={attendance}
+            width={70}
+            height={70}
+            className="flex-1 object-fit"
+            />
+            </Link>
+          <h1 className="ml-[32%] font-extrabold text-transparent text-3xl bg-clip-text bg-gradient-to-r from-gray-700 to-red-700">
           Find your account
           </h1>
         </div>
+           <div className="flex flex-col justify-center items-center py-6 w-5/7 h-5/7 my-8 mx-10 bg-white font-extrabold align-middle rounded-md shadow-2xl overflow-hidden">
             <div className='flex flex-row items-center space-x-4'>
             <p className="text-red-600">{user.error}</p>
             <TextField  id="outlined-basic" label="Search for your account" variant="outlined" onChange={(event)=>setRollNumber(event.target.value)}/>
@@ -81,6 +92,6 @@ export default function forgotPage() {
             </div>
              } 
            </div>
-    </DashboardLayout>
+    </>
   )
 }

@@ -11,11 +11,13 @@ import { Loginuser } from "../src/graphql/mutations";
 import { API, graphqlOperation, withSSRContext } from "aws-amplify";
 import { tokenAuth } from "../redux/userlogin/userSlice";
 import { useSelector, useDispatch } from "react-redux";
+import attendance from '../assets/Picture1.png'
 import Router from "next/router";
 export default function Login() {
   let token = useSelector((state) => state.userReducer.token);
   const [RollNo, setRoll] = useState("");
   const [password, setpassword] = useState("");
+  const [error,seterror]=useState('')
   useEffect(() => {
     const Data=JSON.parse(localStorage.getItem('Token'))
     if(Data.Auth===true){
@@ -69,7 +71,7 @@ export default function Login() {
       .catch((error) => {
         console.log(error);
         console.log("error");
-        alert("data not found");
+        seterror('Invalid password or RollNo')
       });
   };
   return (
@@ -80,10 +82,18 @@ export default function Login() {
       <div className="flex flex-row mt-10 mx-40 h-5/6">
         <div className="bg-white pt-12 px-20 rounded-l-lg">
           <h1 className="font-semibold text-3xl ml-20">Welcome Back</h1>
-          <div className="flex flex-row w-80 justify-items-center rounded-md space-x-8 py-2 px-4 mt-6 ml-10 ... ring-2 ring-gray-100 ring-inset">
-            <h1 className="border-black pl-1/2 font-semibold text-sm whitespace-nowrap">
-              Image-based Attendane system
+          <div className="flex flex-row items-center w-80 justify-items-center rounded-md space-x-8 py-2 px-4 mt-6 ml-10 ... ring-2 ring-gray-100 ring-inset">
+            <Image
+            src={attendance}
+            width={35}
+            height={35}
+            className="object-fit"
+            />
+            <div className="flex">
+            <h1 className="pl-1/2 text-transparent font-semibold text-sm whitespace-nowrap bg-clip-text bg-gradient-to-r from-gray-700 to-red-700">
+              Image-based Attendance system
             </h1>
+            </div>
           </div>
           <div className="relative flex py-4 items-center w-4/5 ml-10 mt-2">
             <div className="flex-grow-[1] border-t border-gray-400"></div>
@@ -94,6 +104,7 @@ export default function Login() {
           </div>
 
           <div className="flex flex-col w-4/5 ml-10 py-1">
+          <p className="text-red-600">{error}</p>
             <Input
               id="inputUserName"
               size="large"

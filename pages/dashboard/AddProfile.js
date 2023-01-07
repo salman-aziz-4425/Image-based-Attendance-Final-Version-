@@ -49,7 +49,7 @@ export default function AddProfile() {
   useEffect(async ()=>{
     const Data=JSON.parse(localStorage.getItem('Token'))
     if(Data.Auth===false){
-      router.push('/')
+      Router.push('/')
     }
     else{
       dispatch(tokenAuth( {
@@ -224,19 +224,12 @@ export default function AddProfile() {
         <div className="flex px-[26px] space-x-2 flex-wrap justify-left">
           <div className="flex flex-col items-center my-2 w-[49%]">
             <p className="text-red-600 align-middle">{error.type}</p>
-            <Dropdown type={type} setType={setType} />
+            {/* <Dropdown type={type} setType={setType} /> */}
           </div>
           <div></div>
           {type === "Student" || type === "admin" ? (
             <>
-              <div className="flex flex-col my-1 w-[49%]">
-                <Input
-                  name="RollNo"
-                  placeholder="Roll no"
-                  onChange={inputHandler}
-                ></Input>
-                <p className="text-red-600 align-middle">{error.RollNo}</p>
-              </div>
+              <Dropdown type={type} setType={setType} />
               <div className="flex flex-col my-1 w-[49%]">
                 <Input
                   name="Qualification"

@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import clone from 'clone';
 import { Row, Col } from 'antd';
 import LayoutWrapper from '@iso/components/utility/layoutWrapper';
 import basicStyle from '@iso/assets/styles/constants';
 import IsoWidgetsWrapper from './WidgetsWrapper';
 import IsoWidgetBox from './WidgetBox';
-import CardWidget from './Card/CardWidget';
-import ProgressWidget from './Progress/ProgressWidget';
 import StickerWidget from './Sticker/StickerWidget';
-import SaleWidget from './Sale/SaleWidget';
 import VCardWidget from './vCard/vCardWidget';
 import SocialWidget from './SocialWidget/SocialWidget';
 import SocialProfile from './SocialWidget/SocialProfileIcon';
@@ -18,14 +14,12 @@ import {getAllUsers} from '../../src/graphql/queries'
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import { tokenAuth } from '../../redux/userlogin/userSlice';
 import { useSelector, useDispatch } from 'react-redux'
-// import * as rechartConfigs from '../Charts/Recharts/config';
 import IntlMessages from '@iso/components/utility/intlMessages';
 import Router from 'next/router';
 import {
   SidebarProfileIcon
 } from '@iso/config/icon.config';
 import Table from '../Table/Table';
-import router from 'next/router';
 
 const styles = {
   wisgetPageStyle: {
@@ -64,12 +58,6 @@ const STICKER_WIDGET = [
     bgColor: 'black',
   },
 ];
-
-const SALE_WIDGET = [
-];
-const PROGRESS_WIDGET=[]
-const CARD_WIDGET = [
-];
 const SOCIAL_PROFILE=[]
 export default function Widgets() {
   let token=useSelector((state) => state.userReducer.token)
@@ -93,7 +81,7 @@ export default function Widgets() {
   useEffect(async ()=>{
     const Data=JSON.parse(localStorage.getItem('Token'))
     if(Data.Auth===false){
-      router.push('/')
+      Router.push('/')
     }
     else{
       dispatch(tokenAuth( {

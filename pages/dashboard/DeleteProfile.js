@@ -29,7 +29,7 @@ function DeleteProfile() {
   useEffect(async ()=>{
     const Data=JSON.parse(localStorage.getItem('Token'))
     if(Data.Auth===false){
-      router.push('/')
+      Router.push('/')
     }
     else{
       dispatch(tokenAuth( {
