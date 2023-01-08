@@ -4,6 +4,7 @@ var validator = require("email-validator");
 export default function validation(type,User,typeAttributes,batch){
     let count=0
     var format = /[!@#$%^&/*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+    var nameRegex = /^[a-zA-Z\-]+$/;
     let usernameFormat=false
     let error={
         Email:"",
@@ -15,15 +16,14 @@ export default function validation(type,User,typeAttributes,batch){
         RollNo:"",
         Qualification:""
       }
-      const name=User.Name.replace(/\s/g, "")
-      if(format.test(name)===true){
+      if(format.test(User.name)===true){
         usernameFormat=false
       }
       else{
         usernameFormat=true
       }
     
-    if(batch===""){
+    if(batch===""&&type==="Student"){
       error.type="Invalid batch"
       count=count+1
     }
@@ -95,9 +95,9 @@ export default function validation(type,User,typeAttributes,batch){
         error.Address="Empty Address Field"
       count=count+1
     }
-    if(typeAttributes.Address<65||typeAttributes.Address>122)
+    if(typeAttributes.Address.length<80)
     {
-        error.Address="Invalid Address Field"
+      error.Address="Empty Address Field"
       count=count+1
     }
     if(typeAttributes.Qualification==="")
