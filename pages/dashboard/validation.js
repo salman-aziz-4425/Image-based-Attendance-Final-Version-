@@ -16,13 +16,21 @@ export default function validation(type,User,typeAttributes,batch){
         RollNo:"",
         Qualification:""
       }
-      if(format.test(User.name)===true){
+      const name=User.Name.replace(/\s/g, "")
+      if(format.test(name)===true){
         usernameFormat=false
       }
       else{
         usernameFormat=true
       }
-    
+    for(let i=0;i<name.length;i++){
+      if(name.charCodeAt(i)<65||name.charCodeAt(i)>112){
+         usernameFormat=false
+      }
+    }
+    if(name.length<=2){
+      usernameFormat=false
+    }
     if(batch===""&&type==="Student"){
       error.type="Invalid batch"
       count=count+1

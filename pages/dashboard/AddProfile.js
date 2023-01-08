@@ -215,7 +215,8 @@ export default function AddProfile() {
               placeholder="password"
               name="password"
               onChange={inputHandler}
-              maxLength={11}
+              max={16}
+              maxLength={16}
             ></Input>
             <p className="text-red-600">
               {error.PhoneNo !== 0 && error.PhoneNo}
@@ -226,7 +227,8 @@ export default function AddProfile() {
               placeholder="Phone No"
               name="PhoneNo"
               onChange={inputHandler}
-              maxLength={6}
+              max={11}
+              maxLength={11}
             ></Input>
               <p className="text-red-600 align-middle">
                     {error.Qualification}
@@ -242,6 +244,8 @@ export default function AddProfile() {
                     className="my-2 "
                     name="Address"
                     placeholder="Address"
+                    max={60}
+                    maxLength={60}
                     onChange={inputHandler}
                   ></Input>
           </div>
