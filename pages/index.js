@@ -19,12 +19,12 @@ export default function Login() {
   const [RollNo, setRoll] = useState("");
   const [password, setpassword] = useState("");
   const [error,seterror]=useState('')
-  useEffect(() => {
-    const Data=JSON.parse(localStorage.getItem('Token'))
-    if(Data.Auth===true){
-      Router.push('/dashboard')
-    }
-  }, []);
+  // useEffect(() => {
+  //   // const Data=JSON.parse(localStorage.getItem('Token'))
+  //   if(Data.Auth===true){
+  //     Router.push('/dashboard')
+  //   }
+  // }, []);
   const dispatch = useDispatch();
   const emailHandler = (event) => {
     setRoll(event.target.value);

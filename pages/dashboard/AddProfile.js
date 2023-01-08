@@ -4,7 +4,6 @@ import Input from "antd/lib/input/Input";
 import Image from "next/image";
 import { getS3Url } from "../../src/graphql/queries";
 import { createUser } from "../../src/graphql/mutations";
-
 import { Button } from "antd";
 import Dropdown from "../../UI/Dropdown/Dropdown";
 import { API, graphqlOperation, Amplify } from "aws-amplify";
@@ -13,7 +12,8 @@ import Router from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import { tokenAuth } from "../../redux/userlogin/userSlice";
 import UploadImage from "../../components/utility/imageUploading";
-import {types,batches} from '../../UI/Dropdown/flowDropdown'
+import {types,batches} from '../../UI/Dropdown/flowDropdown';
+ 
 export default function AddProfile() {
   const dispatch = useDispatch();
   let token = useSelector((state) => state.userReducer.token);
@@ -124,6 +124,7 @@ export default function AddProfile() {
     }
     const imageURl =  `https://user-attendance-image-test.s3.amazonaws.com/` + imageKey;
     console.log("Image Url => ", imageURl);
+    
     if (type === "Student") {
       variables = {
         data: {

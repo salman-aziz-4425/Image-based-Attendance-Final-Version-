@@ -6041,6 +6041,13 @@ elliptic@^6.5.3:
     minimalistic-assert "^1.0.1"
     minimalistic-crypto-utils "^1.0.1"
 
+email-deep-validator@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/email-deep-validator/-/email-deep-validator-3.3.0.tgz#095e2a725ca730c4a75b34c90f665b87df80768b"
+  integrity sha512-iTthLvoKphPK56T2ge5uTxDFixcXfVMfjPQyJewSv9ZbbocdfmYyoB6rZQYEK5uCOsId2tYsY2/+5J9vbr2spw==
+  dependencies:
+    loglevel "^1.6.1"
+
 email-validator@^2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/email-validator/-/email-validator-2.0.4.tgz#b8dfaa5d0dae28f1b03c95881d904d4e40bfe7ed"
@@ -8301,6 +8308,11 @@ lodash@^4.1.1, lodash@^4.16.5, lodash@^4.17.11, lodash@^4.17.14, lodash@^4.17.19
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
+
+loglevel@^1.6.1:
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/loglevel/-/loglevel-1.8.1.tgz#5c621f83d5b48c54ae93b6156353f555963377b4"
+  integrity sha512-tCRIJM51SHjAayKwC+QAg8hT8vg6z7GSgLJKGvzuPb1Wc+hLzqtuVLxp6/HzSPOozuK+8ErAhy7U/sVzw8Dgfg==
 
 long@^4.0.0:
   version "4.0.0"
