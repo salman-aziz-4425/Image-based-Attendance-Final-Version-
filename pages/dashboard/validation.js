@@ -38,13 +38,25 @@ export default function validation(type,User,typeAttributes){
         count+=1
     }
     if(validator.validate(User.Email)&&User.Email!=""){
+      if(User.Email.charCodeAt(0)<65||User.Email.charCodeAt(0)>122)
+      {
+        error.Email="Invalid Email Format"
+        count+=1
+      }
+      else{
         for(let i=0;i<User.Email.length;i++){
-            if(User.Email.charCodeAt(i)<65&&User.Email[i]!='@'&&User.Email!='.'){
+          if(User.Email.charCodeAt(i)!=46){
+            if((User.Email.charCodeAt(i)<48)){
                 error.Email="Invalid Email Format"
                 count+=1
-                break;
             }
+            if(User.Email.charCodeAt(i)>122){
+              error.Email="Invalid Email Format"
+              count+=1
+            }
+          }
         }
+      }
     }
     if(User.Name==="")
     {
@@ -92,17 +104,6 @@ export default function validation(type,User,typeAttributes){
             }
         }
     }
-     if(typeAttributes.RollNo===""&&(type==="Student"||type=="admin"))
-     {
-        error.RollNo="Empty Roll no Field"
-      count=count+1
-     }
-
-     console.log(typeAttributes.RollNo.toUpperCase())
-     if((!typeAttributes.RollNo.toUpperCase().includes('F-'))&&(type==="Student"||type=="admin")){
-        error.RollNo="Wrong Roll no Format"
-      count=count+1
-     }
      console.log(error)
      console.log(count)
      if(count===0){

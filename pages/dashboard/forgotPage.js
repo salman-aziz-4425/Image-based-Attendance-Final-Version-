@@ -34,7 +34,6 @@ export default function forgotPage() {
       }
       await API.graphql(graphqlOperation(optCode,variables)).then((result)=>{
         alert('Check OTP')
-        console.log(result)
         setVisibility(true)
         setbtnVisibility({...btnVisiblity,btn2:true})
         setUser({...user,OTP:result.data.getOtpCode.optCode})
@@ -65,7 +64,6 @@ export default function forgotPage() {
       await API.graphql(graphqlOperation(updatepassword,variables)).then((result)=>{
         alert("password updated")
         Router.push('/')
-        console.log(result)
 
       }).catch(()=>{
         setUser({...user,error:"Roll no format is not correct write like 19F-"})

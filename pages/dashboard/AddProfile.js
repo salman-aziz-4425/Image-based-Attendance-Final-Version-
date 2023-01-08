@@ -13,6 +13,7 @@ import Router from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import { tokenAuth } from "../../redux/userlogin/userSlice";
 import UploadImage from "../../components/utility/imageUploading";
+import {types,batches} from '../../UI/Dropdown/flowDropdown'
 export default function AddProfile() {
   const dispatch = useDispatch();
   let token = useSelector((state) => state.userReducer.token);
@@ -25,6 +26,7 @@ export default function AddProfile() {
   });
   const [images, setImages] = React.useState([]);
   const [type, setType] = useState("");
+  const [batch, setbatch] = useState("");
   const [error, setError] = useState({
     Email: "",
     Name: "",
@@ -124,66 +126,60 @@ export default function AddProfile() {
     if (type === "Student") {
       variables = {
         data: {
-          rollNumber: typeAttributes.RollNo,
+          rollNumber:batch+'F-'+Math.floor(1000 + Math.random() * 9000),
           password: User.password,
           name: User.Name,
           email: User.Email,
           phoneNo: User.PhoneNo,
+          address: typeAttributes.Address,
           qualification: typeAttributes.Qualification,
           image: imageURl,
           userType: "student",
         }, // key is "input" based on the mutation above
       };
     } else if (type === "Teacher") {
-      console.log(User);
-      console.log(typeAttributes);
       variables = {
         data: {
-          rollNumber: typeAttributes.RollNo,
+          rollNumber:'TD-'+Math.floor(1000 + Math.random() * 9000),
           password: User.password,
           name: User.Name,
           email: User.Email,
           phoneNo: User.PhoneNo,
-          Address: typeAttributes.Address,
+          address: typeAttributes.Address,
           qualification: typeAttributes.Qualification,
           image: imageURl,
           userType: "teacher",
         }, // key is "input" based on the mutation above
       };
     } else {
-      console.log(User);
-      console.log(typeAttributes);
       variables = {
         data: {
-          rollNumber: typeAttributes.RollNo,
+          rollNumber: 'AD-'+Math.floor(1000 + Math.random() * 9000),
           password: User.password,
           name: User.Name,
           email: User.Email,
           phoneNo: User.PhoneNo,
+          address: typeAttributes.Address,
           qualification: typeAttributes.Qualification,
           image: imageURl,
           userType: "admin",
         }, // key is "input" based on the mutation above
       };
     }
-
-
     console.log(variables.data);
     await API.graphql(graphqlOperation(createUser, variables))
       .then((result) => {
         alert("Value inserted");
       })
       .catch((error) => {
-        console.log(error);
-        console.log("error");
+        console.log(error)
+        alert("error");
       });
     
   };
   const inputHandler = (event) => {
     const { name, value } = event.target;
-    console.log(name);
     setUser({ ...User, [name]: value });
-    console.log(User);
     setAttributes({ ...typeAttributes, [name]: value });
   };
   return (
@@ -231,59 +227,41 @@ export default function AddProfile() {
               onChange={inputHandler}
               maxLength={6}
             ></Input>
+              <p className="text-red-600 align-middle">
+                    {error.Qualification}
+                  </p>
+             <Input
+               className="my-2 "
+                    name="Qualification"
+                    placeholder="Qualification"
+                    onChange={inputHandler}
+                  ></Input>
+                    <p className="text-red-600 align-middle">{error.Address}</p>
+                  <Input
+                    className="my-2 "
+                    name="Address"
+                    placeholder="Address"
+                    onChange={inputHandler}
+                  ></Input>
           </div>
           <div className="my-2 w-[44%]">
             <UploadImage setImagesFunc={setImages}/>
             <p className="text-red-600">{error.image}</p>
           </div>
         </div>
-        <div className="flex px-[26px] space-x-2 flex-wrap justify-left">
-          <div className="flex flex-col items-center my-2 w-[49%]">
+        <div className="flex px-[26px] space-x-6 items-center flex-wrap justify-left  w-[49%]">
+          <div className="flex flex-col items-center my-2">
             <p className="text-red-600 align-middle">{error.type}</p>
-            <Dropdown type={type} setType={setType} />
+            <Dropdown type={type} setType={setType} activeTypes={types}/>
           </div>
-          <div></div>
-          {type === "Student" || type === "admin" ? (
-            <>
-              <Dropdown type={type} setType={setType} />
-              <div className="flex flex-col my-1 w-[49%]">
-                <Input
-                  name="Qualification"
-                  placeholder="Qualification"
-                  onChange={inputHandler}
-                ></Input>
-                <p className="text-red-600 align-middle">
-                  {error.Qualification}
-                </p>
-              </div>
+            <>{
+              type==="Student"&&
+              <Dropdown type={batch} setType={setbatch} activeTypes={batches} />
+            }
             </>
-          ) : (
-            type === "Teacher" && (
-              <>
-                <div className="flex flex-col my-1 w-[49%]">
-                  <Input
-                    name="Address"
-                    placeholder="Address"
-                    onChange={inputHandler}
-                  ></Input>
-                  <p className="text-red-600 align-middle">{error.Address}</p>
-                </div>
-                <div className="flex flex-col my-1 w-[49%]">
-                  <Input
-                    name="Qualification"
-                    placeholder="Qualification"
-                    onChange={inputHandler}
-                  ></Input>
-                  <p className="text-red-600 align-middle">
-                    {error.Qualification}
-                  </p>
-                </div>
-              </>
-            )
-          )}
-
+            <Button onClick={dataHandler}>Submit</Button>
         </div>
-        <Button onClick={dataHandler}>Submit</Button>
+
 
       </div>
     </DashboardLayout>

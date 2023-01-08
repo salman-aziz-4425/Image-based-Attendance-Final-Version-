@@ -11,6 +11,7 @@ import UploadImage from "../../components/utility/imageUploading";
 import {getS3Url} from '../../src/graphql/queries'
 import validation from './Validation'
 import { tokenAuth } from '../../redux/userlogin/userSlice';
+import {types,batches} from '../../UI/Dropdown/flowDropdown'
 export default function Model({open,setOpen,User1,AllUsers,setUser}) {
   const token = useSelector((state)=>state.userReducer.token);
   const dispatch=useDispatch()
@@ -19,6 +20,7 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
     }
     const [type, setType] = useState(User1.userType);
     const [images, setImages] = React.useState([]);
+    const [batch, setbatch] = useState("");
     const [error,setError]=useState({
       Email:"",
       Name:"",
@@ -83,36 +85,72 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
         </div>
         <div className="flex flex-row items-center w-full px-8 space-x-2 overflow-hidden bg-red">
           <div className="flex-1 flex flex-col w-[44%] justify-start items-center">
-           <p className="text-red-600">{error.Name}</p>
-            <Input className="my-2 " name="Name"  placeholder="Name" onChange={inputHandler}></Input>
-            <p className="text-red-600">{error.Email!==""&&error.Email}</p>
-            <Input className="my-2 " placeholder="Email" name="Email" onChange={inputHandler} ></Input>
-            <p className="text-red-600">{error.PhoneNo!==0&&error.PhoneNo}</p>
+            <p className="text-red-600">{error.Name}</p>
+            <Input
+              className="my-2 "
+              name="Name"
+              placeholder="Name"
+              onChange={inputHandler}
+            ></Input>
+            <p className="text-red-600">{error.Email !== "" && error.Email}</p>
+            <Input
+              className="my-2 "
+              placeholder="Email"
+              name="Email"
+              onChange={inputHandler}
+            ></Input>
+            <p className="text-red-600">{error.password}</p>
+            <Input
+              className="my-2 "
+              type="password"
+              placeholder="password"
+              name="password"
+              onChange={inputHandler}
+              maxLength={11}
+            ></Input>
+            <p className="text-red-600">
+              {error.PhoneNo !== 0 && error.PhoneNo}
+            </p>
             <Input
               className="my-2 "
               type="number"
               placeholder="Phone No"
               name="PhoneNo"
               onChange={inputHandler}
+              maxLength={6}
             ></Input>
+              <p className="text-red-600 align-middle">
+                    {error.Qualification}
+                  </p>
+             <Input
+               className="my-2 "
+                    name="Qualification"
+                    placeholder="Qualification"
+                    onChange={inputHandler}
+                  ></Input>
+                    <p className="text-red-600 align-middle">{error.Address}</p>
+                  <Input
+                    className="my-2 "
+                    name="Address"
+                    placeholder="Address"
+                    onChange={inputHandler}
+                  ></Input>
           </div>
           <div className="my-2 w-[44%]">
             <UploadImage setImagesFunc={setImages}/>
           </div>
         </div>
         <div  className="flex px-[26px] space-x-2 flex-wrap justify-left">
-          <div className="my-2 w-[49%] "></div>
-          <div  className="flex flex-col items-center my-2 w-[49%]">
+          <div  className="flex flex-row items-center my-2 w-[49%]">
           <p className="text-red-600 align-middle">{error.type}</p>
-          <Dropdown type={type} setType={setType}/>
-          </div>
-          <div>
-    </div>
-<div className="flex flex-col my-1 w-[49%]">
-<Input  name="Qualification" placeholder="Qualification" onChange={inputHandler}></Input>
-<p className="text-red-600 align-middle">{error.Qualification}</p>
-</div>
-          <Button onClick={async (event)=>{
+          <Dropdown type={type} setType={setType} activeTypes={types}/>
+          <>{
+              type==="Student"&&
+              <Dropdown type={batch} setType={setbatch} activeTypes={batches} />
+            }
+            </>
+            <p className="text-red-600 align-middle">{error.Qualification}</p>
+            <Button onClick={async (event)=>{
             event.preventDefault()
             const index=AllUsers.findIndex((object)=>{
               return object.id===User1.id
@@ -183,7 +221,9 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
               console.log(error)
             })
           }}>Update</Button>
-
+          </div>
+          <div>
+    </div>
           </div>
       </div>
     </Modal>

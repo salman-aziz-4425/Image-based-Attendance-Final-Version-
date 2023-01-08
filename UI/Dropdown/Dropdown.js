@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
-export default function BasicMenu({type,setType}) {
+export default function BasicMenu({type,setType,activeTypes}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -37,9 +37,13 @@ export default function BasicMenu({type,setType}) {
         }} 
         className="w-full align-middle justify-center"
       >
-        <MenuItem  className="w-full" value="Student" onClick={handleClose}>Student</MenuItem>
-        <MenuItem className="w-full"  value="Teacher" onClick={handleClose}>Teacher</MenuItem>
-        <MenuItem className="w-full"  value="Teacher" onClick={handleClose}>admin</MenuItem>
+        {
+          activeTypes.map((obj)=>(
+            <>
+            <MenuItem  className="w-full" value="Student" onClick={handleClose}>{obj}</MenuItem>
+            </>
+          ))
+      }
       </Menu>
     </div>
   );
