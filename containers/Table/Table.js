@@ -6,7 +6,8 @@ import { useState } from 'react';
 import Model from '../Model/Model';
 import { tokenAuth } from '../../redux/userlogin/userSlice';
 import { useDispatch,useSelector } from 'react-redux';
-function Table({Users,flag,deleteUsers,setUser}) {
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+function Table({Users,flag,deleteUsers,setUser,imageHandler}) {
   const user={
     id:useSelector((state)=>state.userReducer.id)
   }
@@ -72,6 +73,7 @@ function Table({Users,flag,deleteUsers,setUser}) {
                   {flag&&
                   <td className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap">
                   <Button className='border-none border-transparent' onClick={()=>modelHanlder(User)}><EditIcon/></Button>
+                  <Button onClick={()=>imageHandler(User.image)}><AddAPhotoIcon/></Button>
                   </td>
                    }
                      {(flag&&User.id!==user.id)?

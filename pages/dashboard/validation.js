@@ -1,7 +1,7 @@
  
 import * as EmailValidator from 'email-validator'; 
 var validator = require("email-validator");
-export default function validation(type,User,typeAttributes){
+export default function validation(type,User,typeAttributes,batch){
     let count=0
     var format = /[!@#$%^&/*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
     let usernameFormat=false
@@ -22,6 +22,11 @@ export default function validation(type,User,typeAttributes){
       else{
         usernameFormat=true
       }
+    
+    if(batch===""){
+      error.type="Invalid batch"
+      count=count+1
+    }
     if(type==="")
     {
       error.type="Invalid Type"
@@ -85,9 +90,14 @@ export default function validation(type,User,typeAttributes){
         error.PhoneNo="Length of Phone No is not valid"
         count=count+1
     }
-    if(typeAttributes.Address===""&&type==="Teacher")
+    if(typeAttributes.Address==="")
     {
         error.Address="Empty Address Field"
+      count=count+1
+    }
+    if(typeAttributes.Address<65||typeAttributes.Address>122)
+    {
+        error.Address="Invalid Address Field"
       count=count+1
     }
     if(typeAttributes.Qualification==="")
@@ -97,7 +107,7 @@ export default function validation(type,User,typeAttributes){
     }
     else{
         for(let i=0;i<typeAttributes.Qualification.length;i++){
-            if(typeAttributes.Qualification.charCodeAt(i)<65){
+            if(typeAttributes.Qualification.charCodeAt(i)<65||typeAttributes.Qualification.charCodeAt(i)>122){
                 error.Qualification="Wrong Qualification Format"
                 count=count+1
                 break

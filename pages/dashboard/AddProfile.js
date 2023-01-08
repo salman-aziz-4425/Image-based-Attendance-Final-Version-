@@ -36,7 +36,8 @@ export default function AddProfile() {
     Address: "",
     RollNo: "",
     Qualification: "",
-    image:""
+    image:"",
+    batch:""
   });
   const [User, setUser] = useState({
     Name: "",
@@ -108,7 +109,7 @@ export default function AddProfile() {
   const dataHandler = async (event) => {
     event.preventDefault();
     setAttributes({...typeAttributes,RollNo:"19F-0188"})
-    const { Flag, Error } = validation(type, User, typeAttributes);
+    const { Flag, Error } = validation(type, User, typeAttributes,batch);
     setError(Error);
     console.log(Flag);
     if (!Flag) {
@@ -252,11 +253,14 @@ export default function AddProfile() {
         <div className="flex px-[26px] space-x-6 items-center flex-wrap justify-left  w-[49%]">
           <div className="flex flex-col items-center my-2">
             <p className="text-red-600 align-middle">{error.type}</p>
-            <Dropdown type={type} setType={setType} activeTypes={types}/>
+            <Dropdown type={type} setType={setType} activeTypes={types} title="TYPE"/>
           </div>
             <>{
               type==="Student"&&
-              <Dropdown type={batch} setType={setbatch} activeTypes={batches} />
+              <div>
+                 <p className="text-red-600 align-middle">{error.batch}</p>
+              <Dropdown type={batch} setType={setbatch} activeTypes={batches} title="BATCH"/>
+              </div>
             }
             </>
             <Button onClick={dataHandler}>Submit</Button>

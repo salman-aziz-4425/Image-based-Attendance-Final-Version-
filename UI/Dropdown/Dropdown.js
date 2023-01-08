@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
-export default function BasicMenu({type,setType,activeTypes}) {
+export default function BasicMenu({type,setType,activeTypes,title}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -25,7 +25,7 @@ export default function BasicMenu({type,setType,activeTypes}) {
         fullWidth
         className=' border-black'
       >
-        Type:{type}
+        {title}:{type}
       </Button>
       <Menu
         id="basic-menu"

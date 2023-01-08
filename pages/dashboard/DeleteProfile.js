@@ -2,17 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch,useSelector } from 'react-redux';
 import DashboardLayout from '../../containers/DashboardLayout/DashboardLayout'
 import { Row, Col, Button } from 'antd';
-import basicStyle from '@iso/assets/styles/constants';
 import IsoWidgetsWrapper from '../../containers/Widgets/WidgetsWrapper';
 import IsoWidgetBox from '../../containers/Widgets/WidgetBox';
 import Table from '../../containers/Table/Table';
 import {getAllUsers} from '../../src/graphql/queries'
 import { deleteUser } from '../../src/graphql/mutations';
-import actions from '../../redux/app/actions';
 import Router from 'next/router';
 import {API,graphqlOperation,Amplify} from 'aws-amplify';
 import { tokenAuth } from '../../redux/userlogin/userSlice';
-const {clearMenu}=actions
 function DeleteProfile() {
   const dispatch=useDispatch()
   let token=useSelector((state) => state.userReducer.token)
@@ -26,6 +23,7 @@ function DeleteProfile() {
   const [User,setUser]=useState([{
   }])
   const [Visible,setVisible]=useState(false)
+  const [imgSrc,setImage]=useState("")
   useEffect(async ()=>{
     const Data=JSON.parse(localStorage.getItem('Token'))
     if(Data.Auth===false){
@@ -46,7 +44,11 @@ function DeleteProfile() {
     const res=await API.graphql(graphqlOperation(getAllUsers))
     setUser(res.data.getAllUsers)
   },[token])
-
+  const imageHandler=(imageSrc)=>{
+    console.log(imageSrc)
+    setImage(imageSrc)
+    console.log(imageSrc)
+  }
       const deleteUser1= async (rollNumber1)=>{
         const variables = {
               rollNumber:rollNumber1
@@ -70,17 +72,18 @@ function DeleteProfile() {
           </h1>
           </div>
             <Button className='ml-6' onClick={()=>setVisible(!Visible)}>Edit Student</Button>
-            <Row style={{width:'100%'}} gutter={0} justify="start">
+            <Row className='items-center' style={{width:'100%',justifyContent:'between'}} gutter={0} justify="start">
           <Col lg={16} md={24} sm={24} xs={24} style={{marginTop:5,borderRadius:20}}>
             <IsoWidgetsWrapper>
               <IsoWidgetBox>
                 {/* TABLE */}
-                <div className='w-full'>
-                <Table Users={User} flag={Visible} deleteUsers={deleteUser1} setUser={setUser}/>
+                <div className='flex flex-row w-full'>
+                <Table Users={User} flag={Visible} deleteUsers={deleteUser1} setUser={setUser} imageHandler={imageHandler}/>
                 </div>
               </IsoWidgetBox>
             </IsoWidgetsWrapper>
             </Col>
+            <img className='w-45 h-40 object-fit rounded-md' src={imgSrc}/>
             </Row>
             </div>
     </DashboardLayout>

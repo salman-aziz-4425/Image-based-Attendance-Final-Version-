@@ -37,13 +37,25 @@ const validation=(type,User,previousDetails)=>{
         count+=1
     }
     if(validator.validate(User.Email)&&User.Email!=""){
+        if(User.Email.charCodeAt(0)<65||User.Email.charCodeAt(0)>122)
+      {
+        error.Email="Invalid Email Format"
+        count+=1
+      }
+      else{
         for(let i=0;i<User.Email.length;i++){
-            if(i<1&&User.Email.charCodeAt(i)<65){
+          if(User.Email.charCodeAt(i)!=46){
+            if((User.Email.charCodeAt(i)<48)){
                 error.Email="Invalid Email Format"
                 count+=1
-                break;
             }
+            if(User.Email.charCodeAt(i)>122){
+              error.Email="Invalid Email Format"
+              count+=1
+            }
+          }
         }
+      }
     }
     if(User.Name==="")
     {
@@ -53,7 +65,7 @@ const validation=(type,User,previousDetails)=>{
         error.Name="Wrong Name format"
       count=count+1
     }
-    if(User.PhoneNo===0)
+    if(User.PhoneNo===0||User.PhoneNo.length===0)
     {
         User.PhoneNo=previousDetails.phoneNo
     }
@@ -61,18 +73,21 @@ const validation=(type,User,previousDetails)=>{
         error.PhoneNo="Length of Phone No is not valid"
         count=count+1
     }
-    if(User.Qualification==="*")
+    if(User.Qualification==="")
     {
         User.Qualification=previousDetails.qualification
     }
     else{
         for(let i=0;i<User.Qualification.length;i++){
-            if(User.Qualification.charCodeAt(i)<65){
+            if(User.Qualification.charCodeAt(i)<65||User.Qualification.charCodeAt(i)>122){
                 error.Qualification="Wrong Qualification Format"
                 count=count+1
                 break
             }
         }
+    }
+    if(User.Address===""){
+        User.Address=previousDetails.Address
     }
      console.log(error)
      console.log(count)

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState ,useEffect} from 'react'
 import { Modal,Box,Typography } from '@mui/material'
 import {Button } from 'antd';
 import Image from "next/image";
@@ -13,14 +13,15 @@ import validation from './Validation'
 import { tokenAuth } from '../../redux/userlogin/userSlice';
 import {types,batches} from '../../UI/Dropdown/flowDropdown'
 export default function Model({open,setOpen,User1,AllUsers,setUser}) {
+  console.log()
   const token = useSelector((state)=>state.userReducer.token);
+  const userID = useSelector((state)=>state.userReducer.id);
   const dispatch=useDispatch()
     const handleOpen=()=>{
         setOpen(!open)
     }
     const [type, setType] = useState(User1.userType);
     const [images, setImages] = React.useState([]);
-    const [batch, setbatch] = useState("");
     const [error,setError]=useState({
       Email:"",
       Name:"",
@@ -34,8 +35,10 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
       Name:"",
       Email:"",
       PhoneNo:0,
-      Qualification:"*",
-      userType:""
+      Qualification:"",
+      userType:"",
+      Address:"",
+      Password:""
     })
     const inputHandler=(event)=>{
       const { name, value } = event.target;
@@ -43,7 +46,6 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
     }
     const storeImageToS3Bucket = async () =>{
       if(images === undefined||images.length<1){
-        setError({...error,image:"Kindly upload your picture"});
         return
       }
 
@@ -90,6 +92,7 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
               className="my-2 "
               name="Name"
               placeholder="Name"
+              defaultValue={User2.Name}
               onChange={inputHandler}
             ></Input>
             <p className="text-red-600">{error.Email !== "" && error.Email}</p>
@@ -97,16 +100,8 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
               className="my-2 "
               placeholder="Email"
               name="Email"
+              defaultValue={User2.Email}
               onChange={inputHandler}
-            ></Input>
-            <p className="text-red-600">{error.password}</p>
-            <Input
-              className="my-2 "
-              type="password"
-              placeholder="password"
-              name="password"
-              onChange={inputHandler}
-              maxLength={11}
             ></Input>
             <p className="text-red-600">
               {error.PhoneNo !== 0 && error.PhoneNo}
@@ -116,6 +111,7 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
               type="number"
               placeholder="Phone No"
               name="PhoneNo"
+              defaultValue={User2.PhoneNo}
               onChange={inputHandler}
               maxLength={6}
             ></Input>
@@ -126,6 +122,7 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
                className="my-2 "
                     name="Qualification"
                     placeholder="Qualification"
+                    defaultValue={User2.Qualification}
                     onChange={inputHandler}
                   ></Input>
                     <p className="text-red-600 align-middle">{error.Address}</p>
@@ -144,12 +141,6 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
           <div  className="flex flex-row items-center my-2 w-[49%]">
           <p className="text-red-600 align-middle">{error.type}</p>
           <Dropdown type={type} setType={setType} activeTypes={types}/>
-          <>{
-              type==="Student"&&
-              <Dropdown type={batch} setType={setbatch} activeTypes={batches} />
-            }
-            </>
-            <p className="text-red-600 align-middle">{error.Qualification}</p>
             <Button onClick={async (event)=>{
             event.preventDefault()
             const index=AllUsers.findIndex((object)=>{
@@ -158,8 +149,7 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
             const valid=validation(type,User2,User1)
             const imageKey = await storeImageToS3Bucket();
             const imageURl =  `https://user-attendance-image-test.s3.amazonaws.com/` + imageKey;
-            console.log(imageURl)
-            if(imageURl.length===undefined){
+            if(imageURl.length===61){
               imageURl=User1.image
             }
             setError(valid.Error)
@@ -184,22 +174,24 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
                   name:valid.User.Name,
                   email:valid.User.Email,
                   qualification:valid.User.Qualification,
+                  address:valid.User.Address,
                   image:imageURl,
                   userType:valid.User.userType.toLowerCase()
                 },
               }
            };
-           console.log(variables)
             await API.graphql(graphqlOperation(updateUser,variables)).then((result)=>{
+              console.log(result)
               console.log("response data")
               console.log(result.data.updateUser.id)
-              if(result.data.updateUser.id===User1.id){
+              if(result.data.updateUser.id===userID){
+                alert('same')
                 dispatch(tokenAuth( {
                   id:result.data.updateUser.id,
                   token:token,
                   name:result.data.updateUser.name,
                   email:result.data.updateUser.email,
-                  image:result.data.updateUser.image,
+                  image:imageURl,
                   qualification:result.data.updateUser.qualification,
                   rollNumber:result.data.updateUser.rollNumber,
                   Auth:true
@@ -209,7 +201,7 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
                   token:token,
                   name:result.data.updateUser.name,
                   email:result.data.updateUser.email,
-                  image:result.data.updateUser.image,
+                  image:imageURl,
                   qualification:result.data.updateUser.qualification,
                   rollNumber:result.data.updateUser.rollNumber,
                   Auth:true
