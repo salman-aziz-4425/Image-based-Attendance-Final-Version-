@@ -1,5 +1,6 @@
 import * as EmailValidator from 'email-validator'; 
 var validator = require("email-validator");
+const emailValidator = ['gmail.com','yahoo.com','hotmail.com','aol.com','hotmail.co.uk','hotmail.fr','mail.com','edu.pk','nu.edu.pk','.pk'];
 const validation=(type,User,previousDetails)=>{
     let count=0
     var format = /[!@#$%^&/*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
@@ -30,6 +31,13 @@ const validation=(type,User,previousDetails)=>{
     }
     if(User.Email===""){
       User.Email=previousDetails.email
+    }
+    if(User.Email!==""){
+      let SplitEmail = User?.Email?.split("@")[1];
+      if(!emailValidator.includes(SplitEmail)){
+        count = count+1;
+        error.Email="Invalid Email Format"
+      }
     }
     else if(!validator.validate(User.Email))
     {

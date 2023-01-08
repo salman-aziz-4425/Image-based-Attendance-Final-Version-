@@ -23,10 +23,11 @@ export default function forgotPage() {
       error:""
     })
     const getOTP=async()=>{
-      if(!rollNumber.toUpperCase().includes('F-')){
-        setUser({...user,error:"Roll no format is not correct write like 19F-"})
+      if(!rollNumber===""){
+        setUser({...user,error:"Roll no format is not correct write like 19F-,TD-,AD-"})
         return 
       }
+
       const variables={
         data:{
           rollNumber:rollNumber

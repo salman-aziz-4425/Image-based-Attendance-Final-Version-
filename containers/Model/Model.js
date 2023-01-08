@@ -1,7 +1,6 @@
 import React, { useState ,useEffect} from 'react'
 import { Modal,Box,Typography } from '@mui/material'
 import {Button } from 'antd';
-import Image from "next/image";
 import Input from "antd/lib/input/Input";
 import { useSelector, useDispatch } from 'react-redux'
 import Dropdown from '../../UI/Dropdown/Dropdown'
@@ -140,7 +139,7 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
         <div  className="flex px-[26px] space-x-2 flex-wrap justify-left">
           <div  className="flex flex-row items-center my-2 w-[49%]">
           <p className="text-red-600 align-middle">{error.type}</p>
-          <Dropdown type={type} setType={setType} activeTypes={types}/>
+          <Dropdown type={type} setType={setType} activeTypes={types} title="TYPE"/>
             <Button onClick={async (event)=>{
             event.preventDefault()
             const index=AllUsers.findIndex((object)=>{
@@ -148,7 +147,7 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
             })
             const valid=validation(type,User2,User1)
             const imageKey = await storeImageToS3Bucket();
-            const imageURl =  `https://user-attendance-image-test.s3.amazonaws.com/` + imageKey;
+            let imageURl =  `https://user-attendance-image-test.s3.amazonaws.com/` + imageKey;
             if(imageURl.length===61){
               imageURl=User1.image
             }

@@ -12,8 +12,8 @@ import Router from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import { tokenAuth } from "../../redux/userlogin/userSlice";
 import UploadImage from "../../components/utility/imageUploading";
-import {types,batches} from '../../UI/Dropdown/flowDropdown';
- 
+import { types, batches } from "../../UI/Dropdown/flowDropdown";
+
 export default function AddProfile() {
   const dispatch = useDispatch();
   let token = useSelector((state) => state.userReducer.token);
@@ -36,8 +36,8 @@ export default function AddProfile() {
     Address: "",
     RollNo: "",
     Qualification: "",
-    image:"",
-    batch:""
+    image: "",
+    batch: "",
   });
   const [User, setUser] = useState({
     Name: "",
@@ -50,23 +50,27 @@ export default function AddProfile() {
     Qualification: "",
     Address: "",
   });
-  useEffect(async ()=>{
-    const Data=JSON.parse(localStorage.getItem('Token'))
-    if(Data.Auth===false){
-      Router.push('/')
+  useEffect(async () => {
+    const Data =
+      localStorage.getItem("Token") &&
+      JSON.parse(localStorage.getItem("Token"));
+    if (Data?.Auth === false || !localStorage.getItem("Token")) {
+      Router.push("/");
+    } else {
+      dispatch(
+        tokenAuth({
+          id: Data?.id,
+          token: Data?.token,
+          name: Data?.name,
+          email: Data?.email,
+          image: Data?.image,
+          qualification: Data?.qualification,
+          rollNumber: Data?.rollNumber,
+          Auth: true,
+        })
+      );
     }
-    else{
-      dispatch(tokenAuth( {
-        id:Data.id,
-        token:Data.token,
-        name:Data.name,
-        email:Data.email,
-        image:Data.image,
-        qualification:Data.qualification,
-        rollNumber:Data.rollNumber,
-        Auth:true
-      }));
-    }})
+  });
   useEffect(() => {
     setError({
       Email: "",
@@ -78,38 +82,40 @@ export default function AddProfile() {
       Qualification: "",
     });
   }, [type]);
-  const storeImageToS3Bucket = async () =>{
-    if(images === undefined||images.length<1){
-      alert('no pic image')
-      setError({...error,image:"Kindly upload your picture"});
-      return
+  const storeImageToS3Bucket = async () => {
+    if (images === undefined || images.length < 1) {
+      alert("no pic image");
+      setError({ ...error, image: "Kindly upload your picture" });
+      return;
     }
-    console.log("Image List => ",images[0]?.data_url);
+    console.log("Image List => ", images[0]?.data_url);
     const image = images[0]?.file;
     //  Get Secure URL from our server
-    const res = await API.graphql(graphqlOperation(getS3Url))
+    const res = await API.graphql(graphqlOperation(getS3Url));
     //  Post the image directly to S3 bucket
-    console.log("Res => ",res)
-    const s3obj  = res.data.getS3Url;
-    console.log("Url :- ",s3obj)
+    console.log("Res => ", res);
+    const s3obj = res.data.getS3Url;
+    console.log("Url :- ", s3obj);
     await fetch(s3obj?.s3Url, {
       method: "PUT",
       headers: {
-        "ContentType": "multipart/form-data"
+        ContentType: "multipart/form-data",
       },
-      body: image
-    }).then(res=>{
-      console.log("Bucket Res ",res , " s3obj ",s3obj?.key);
-    }).catch(err=>{
-      console.log("Error => ",err)
-      return undefined
+      body: image,
     })
+      .then((res) => {
+        console.log("Bucket Res ", res, " s3obj ", s3obj?.key);
+      })
+      .catch((err) => {
+        console.log("Error => ", err);
+        return undefined;
+      });
     return s3obj?.key;
-  }
+  };
   const dataHandler = async (event) => {
     event.preventDefault();
-    setAttributes({...typeAttributes,RollNo:"19F-0188"})
-    const { Flag, Error } = validation(type, User, typeAttributes,batch);
+    setAttributes({ ...typeAttributes, RollNo: "19F-0188" });
+    const { Flag, Error } = validation(type, User, typeAttributes, batch);
     setError(Error);
     console.log(Flag);
     if (!Flag) {
@@ -117,18 +123,19 @@ export default function AddProfile() {
     }
     let variables;
     const imageKey = await storeImageToS3Bucket();
-    console.log("Image key  "+imageKey)
-    if(imageKey ===undefined){
-      setError({...error,image:"Key not found"});
-      return
+    console.log("Image key  " + imageKey);
+    if (imageKey === undefined) {
+      setError({ ...error, image: "Key not found" });
+      return;
     }
-    const imageURl =  `https://user-attendance-image-test.s3.amazonaws.com/` + imageKey;
+    const imageURl =
+      `https://user-attendance-image-test.s3.amazonaws.com/` + imageKey;
     console.log("Image Url => ", imageURl);
-    
+
     if (type === "Student") {
       variables = {
         data: {
-          rollNumber:batch+'F-'+Math.floor(1000 + Math.random() * 9000),
+          rollNumber: batch + "F-" + Math.floor(1000 + Math.random() * 9000),
           password: User.password,
           name: User.Name,
           email: User.Email,
@@ -142,7 +149,7 @@ export default function AddProfile() {
     } else if (type === "Teacher") {
       variables = {
         data: {
-          rollNumber:'TD-'+Math.floor(1000 + Math.random() * 9000),
+          rollNumber: "TD-" + Math.floor(1000 + Math.random() * 9000),
           password: User.password,
           name: User.Name,
           email: User.Email,
@@ -156,7 +163,7 @@ export default function AddProfile() {
     } else {
       variables = {
         data: {
-          rollNumber: 'AD-'+Math.floor(1000 + Math.random() * 9000),
+          rollNumber: "AD-" + Math.floor(1000 + Math.random() * 9000),
           password: User.password,
           name: User.Name,
           email: User.Email,
@@ -174,10 +181,9 @@ export default function AddProfile() {
         alert("Value inserted");
       })
       .catch((error) => {
-        console.log(error)
+        console.log(error);
         alert("error");
       });
-    
   };
   const inputHandler = (event) => {
     const { name, value } = event.target;
@@ -231,47 +237,53 @@ export default function AddProfile() {
               max={11}
               maxLength={11}
             ></Input>
-              <p className="text-red-600 align-middle">
-                    {error.Qualification}
-                  </p>
-             <Input
-               className="my-2 "
-                    name="Qualification"
-                    placeholder="Qualification"
-                    onChange={inputHandler}
-                  ></Input>
-                    <p className="text-red-600 align-middle">{error.Address}</p>
-                  <Input
-                    className="my-2 "
-                    name="Address"
-                    placeholder="Address"
-                    max={60}
-                    maxLength={60}
-                    onChange={inputHandler}
-                  ></Input>
+            <p className="text-red-600 align-middle">{error.Qualification}</p>
+            <Input
+              className="my-2 "
+              name="Qualification"
+              placeholder="Qualification"
+              onChange={inputHandler}
+            ></Input>
+            <p className="text-red-600 align-middle">{error.Address}</p>
+            <Input
+              className="my-2 "
+              name="Address"
+              placeholder="Address"
+              max={60}
+              maxLength={60}
+              onChange={inputHandler}
+            ></Input>
           </div>
           <div className="my-2 w-[44%]">
-            <UploadImage setImagesFunc={setImages}/>
+            <UploadImage setImagesFunc={setImages} />
             <p className="text-red-600">{error.image}</p>
           </div>
         </div>
         <div className="flex px-[26px] space-x-6 items-center flex-wrap justify-left  w-[49%]">
           <div className="flex flex-col items-center my-2">
             <p className="text-red-600 align-middle">{error.type}</p>
-            <Dropdown type={type} setType={setType} activeTypes={types} title="TYPE"/>
+            <Dropdown
+              type={type}
+              setType={setType}
+              activeTypes={types}
+              title="TYPE"
+            />
           </div>
-            <>{
-              type==="Student"&&
+          <>
+            {type === "Student" && (
               <div>
-                 <p className="text-red-600 align-middle">{error.batch}</p>
-              <Dropdown type={batch} setType={setbatch} activeTypes={batches} title="BATCH"/>
+                <p className="text-red-600 align-middle">{error.batch}</p>
+                <Dropdown
+                  type={batch}
+                  setType={setbatch}
+                  activeTypes={batches}
+                  title="BATCH"
+                />
               </div>
-            }
-            </>
-            <Button onClick={dataHandler}>Submit</Button>
+            )}
+          </>
+          <Button onClick={dataHandler}>Submit</Button>
         </div>
-
-
       </div>
     </DashboardLayout>
   );
