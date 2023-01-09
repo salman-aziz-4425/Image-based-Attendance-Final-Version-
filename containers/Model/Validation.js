@@ -15,14 +15,26 @@ const validation=(type,User,previousDetails)=>{
         RollNo:"",
         Qualification:""
       }
-      const name=User.Name.replace(/\s/g, "")
+      const name=User?.Name.replace(/\s/g, "")
       if(format.test(name)===true){
         usernameFormat=false
       }
       else{
         usernameFormat=true
       }
-    if(type==="")
+      for (let i = 0; i < name.length; i++) {
+        if (
+          name.charCodeAt(i) != 32 &&
+          (name.charCodeAt(i) < 65 || name.charCodeAt(i) > 122)
+        ) {
+    
+          usernameFormat = false;
+        }
+      }
+      if (name.length <= 2) {
+        usernameFormat = false;
+      }
+    if(!type)
     {
         type=previousDetails.userType
     }
@@ -65,7 +77,7 @@ const validation=(type,User,previousDetails)=>{
         }
       }
     }
-    if(User.Name==="")
+    if(!User?.Name)
     {
       User.Name=previousDetails.name
     }
@@ -73,15 +85,15 @@ const validation=(type,User,previousDetails)=>{
         error.Name="Wrong Name format"
       count=count+1
     }
-    if(User.PhoneNo===0||User.PhoneNo.length===0)
+    if(User?.PhoneNo===0||User.PhoneNo.length===0)
     {
         User.PhoneNo=previousDetails.phoneNo
     }
-    else if(User.PhoneNo.length!=11){
+    else if(User?.PhoneNo.length<11){
         error.PhoneNo="Length of Phone No is not valid"
         count=count+1
     }
-    if(User.Qualification==="")
+    if(!User?.Qualification)
     {
         User.Qualification=previousDetails.qualification
     }
@@ -94,15 +106,30 @@ const validation=(type,User,previousDetails)=>{
             }
         }
     }
-    if(User.Address===""){
+    if(!User?.Address){
         User.Address=previousDetails.Address
+    }
+    else{
+      if(!/^[#.0-9a-zA-Z\s,_]+$/.test(User.Address)){
+        error.Address="Invalid Address"
+        count=count+1
+      }
     }
      console.log(error)
      console.log(count)
      if(count===0){
         return {
             Flag:true,
-            Error:error,
+            Error:{
+              Email:"",
+              Name:"",
+              type:"",
+              password:"",
+              PhoneNo:0,
+              Address:"",
+              RollNo:"",
+              Qualification:""
+            },
             User:User
         }
      }

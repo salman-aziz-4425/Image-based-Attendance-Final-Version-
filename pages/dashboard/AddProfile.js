@@ -114,9 +114,9 @@ export default function AddProfile() {
   };
   const dataHandler = async (event) => {
     event.preventDefault();
-    setAttributes({ ...typeAttributes, RollNo: "19F-0188" });
     const { Flag, Error } = validation(type, User, typeAttributes, batch);
     setError(Error);
+    console.log(Error)
     console.log(Flag);
     if (!Flag) {
       return;

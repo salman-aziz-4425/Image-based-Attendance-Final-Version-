@@ -112,7 +112,8 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
               name="PhoneNo"
               defaultValue={User2.PhoneNo}
               onChange={inputHandler}
-              maxLength={6}
+              max={11}
+              maxLength={11}
             ></Input>
               <p className="text-red-600 align-middle">
                     {error.Qualification}

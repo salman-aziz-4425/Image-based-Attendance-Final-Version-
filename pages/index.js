@@ -34,7 +34,10 @@ export default function Login() {
     setpassword(event.target.value);
   };
   const submitHandler = async () => {
-    event.preventDefault();
+    if(!RollNo.includes('AD')){
+      seterror('Only Admins are allowed')
+      return
+    }
     const variables = {
       data: {
         rollNumber: RollNo,
@@ -113,7 +116,7 @@ export default function Login() {
               id="inputUserName"
               size="large"
               placeholder="19F-000"
-              defaultValue="19F-"
+              defaultValue="AD-"
               onChange={emailHandler}
             />
             <Input

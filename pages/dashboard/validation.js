@@ -129,12 +129,31 @@ export default function validation(type, User, typeAttributes, batch) {
       }
     }
   }
+  if(!User?.Address){
+    error.Address="Invalid Address"
+    count=count+1
+}
+else{
+  if(!/^[#.0-9a-zA-Z\s,_]+$/.test(User.Address)){
+    error.Address="Invalid Address"
+    count=count+1
+  }
+}
   console.log(error);
   console.log(count);
   if (count === 0) {
     return {
       Flag: true,
-      Error: error,
+      Error:{
+        Email:"",
+        Name:"",
+        type:"",
+        password:"",
+        PhoneNo:0,
+        Address:"",
+        RollNo:"",
+        Qualification:""
+      },
     };
   } else {
     return {
