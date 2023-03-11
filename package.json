@@ -103,7 +103,8 @@
 		"styled-tools": "^1.7.2",
 		"swiper": "5.4.5",
 		"uppy": "^1.21.0",
-		"uuid": "^8.3.0"
+		"uuid": "^8.3.0",
+		"xlsx": "^0.18.5"
 	},
 	"scripts": {
 		"dev": "next -p 3003",

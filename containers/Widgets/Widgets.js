@@ -33,7 +33,7 @@ const STICKER_WIDGET = [
   {
     count: 0,
     number: "widget.stickerwidget1.number",
-    text: "Total Students",
+    text: "Students",
     icon: <SidebarProfileIcon size={20} color="#ffffff" />,
     fontColor: "#ffffff",
     fontSize: "15px",
@@ -42,7 +42,7 @@ const STICKER_WIDGET = [
   {
     count: 0,
     number: "widget.stickerwidget2.number",
-    text: "Total Admin",
+    text: "Admins",
     icon: <LibraryBooksIcon sx={{ color: "white" }} size={20} color="white" />,
     fontColor: "#ffffff",
     bgColor: "#7ED320",
@@ -50,7 +50,7 @@ const STICKER_WIDGET = [
   {
     count: 0,
     number: "widget.stickerwidget3.number",
-    text: "Total Teachers",
+    text: "Teachers",
     icon: <SidebarProfileIcon size={20} color="#ffffff" />,
     fontColor: "#ffffff",
     bgColor: "black",

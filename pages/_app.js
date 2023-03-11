@@ -14,9 +14,6 @@ import { useSelector, useDispatch } from 'react-redux'
 Amplify.configure({...awsconfig});
 
 function CustomApp({ Component, pageProps, store }){
-  useEffect(()=>{
-
-  },[])
     return (
       <Provider store={store}>
         <ThemeProvider>

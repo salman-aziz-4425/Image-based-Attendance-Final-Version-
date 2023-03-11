@@ -89,7 +89,7 @@ const validation=(type,User,previousDetails)=>{
     {
         User.PhoneNo=previousDetails.phoneNo
     }
-    else if(User?.PhoneNo.length<11){
+    else if(User?.PhoneNo.length!==11){
         error.PhoneNo="Length of Phone No is not valid"
         count=count+1
     }
