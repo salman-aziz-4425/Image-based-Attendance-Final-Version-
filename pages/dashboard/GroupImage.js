@@ -86,15 +86,15 @@ const handleSubmit=(e)=>{
     const workbook = XLSX.read(excelFile,{type:'buffer'});
     const worksheetName = workbook.SheetNames[0];
     const worksheet=workbook.Sheets[worksheetName];
-    const data = XLSX.utils.sheet_to_json(worksheet);
+    let data = XLSX.utils.sheet_to_json(worksheet);
+    data=data.slice(6)
+    console.log(data[0]?.__EMPTY_1.includes("F"))
     try{
       let rollNumbers=[]
-      excelData.map((user)=>{
-        if(!data[0]?.rollNumber){
-          throw new Error
-        }
-        rollNumbers.push(user?.rollNumber)
+      data.map((user)=>{
+        rollNumbers.push(user?.__EMPTY_1)
       })
+      rollNumbers.pop()
       setrollNumbers(rollNumbers)
       console.log(rollNumbers)
     }catch{
