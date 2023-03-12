@@ -14,6 +14,7 @@ export default function TopbarUser() {
     setVisibility(visible => !visible);
   }
   let srcImage=useSelector((state)=>state.userReducer.image)
+  console.log(srcImage)
   const content = (
     <TopbarDropdownWrapper className="isoUserDropdown">
       <a className="isoDropdownLink" onClick={() =>{

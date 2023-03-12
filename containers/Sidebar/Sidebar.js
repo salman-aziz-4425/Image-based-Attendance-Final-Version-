@@ -11,8 +11,18 @@ import Logo from '@iso/components/utility/Logo.next';
 import SidebarWrapper from './Sidebar.styles';
 import SidebarMenu from './SidebarMenu';
 import SIDEBAR_MENU_OPTIONS from './sidebar.navigations';
-import { SidebarMenuLevelIcon } from '@iso/config/icon.config';
+import { SidebarMenuLevelIcon} from '@iso/config/icon.config';
+import {
+	SidebarProfileIcon,
+} from '@iso/config/icon.config';
 
+const TeacherKeys=[
+	{
+		key:'GroupImage',
+		label:'Mark Attendance',
+		leftIcon: <SidebarProfileIcon size={19} />,
+	},
+]
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 const { Sider } = Layout;
@@ -23,6 +33,8 @@ const {
   toggleCollapsed,
 } = appActions;
 export default function Sidebar(props) {
+  let user = useSelector((state) => state.userReducer.rollNumber);
+  console.log(user)
   const {
     view,
     openKeys,
@@ -114,13 +126,14 @@ export default function Sidebar(props) {
             className="isoDashboardMenu"
             // inlineCollapsed={isCollapsed}
           >
-            {SIDEBAR_MENU_OPTIONS.map((option) => (
-              <SidebarMenu
+            {(user?.includes("AD")?SIDEBAR_MENU_OPTIONS:TeacherKeys).map((option) => (
+                <SidebarMenu
                 key={option.key}
                 item={option}
                 submenuColor={submenuColor}
                 submenuStyle={submenuStyle}
               />
+             
             ))}
 
            

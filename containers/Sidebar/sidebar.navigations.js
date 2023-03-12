@@ -19,5 +19,5 @@ export default [
 		label:'Delete/Update Users',
 		leftIcon: <SidebarProfileIcon size={19} />,
 
-	}
+	},
 ];

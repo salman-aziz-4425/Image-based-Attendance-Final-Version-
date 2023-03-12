@@ -70,7 +70,7 @@ export default function AddProfile() {
         })
       );
     }
-  });
+  },[]);
   useEffect(() => {
     setError({
       Email: "",

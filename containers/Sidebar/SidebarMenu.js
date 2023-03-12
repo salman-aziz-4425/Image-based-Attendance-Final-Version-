@@ -4,18 +4,19 @@ import Link from 'next/link';
 import Menu from '@iso/components/uielements/menu';
 import siteConfig from '@iso/config/site.config';
 import IntlMessages from '@iso/components/utility/intlMessages';
-
+import { useSelector} from 'react-redux';
 const SubMenu = Menu.SubMenu;
 
 export default function SidebarMenu({
+
 	item,
 	submenuStyle,
 	submenuColor,
 	...rest
 }) {
+	let user=useSelector(state=>state.userReducer.rollNumber)
 	const router = useRouter();
-	const { key, label, leftIcon, children } = item;
-
+	const { key,label, leftIcon, children } = item;
 	const url = siteConfig.dashboard;
 	const handleClick = (event, linkTo) => {
 		event.preventDefault();
@@ -60,7 +61,7 @@ export default function SidebarMenu({
 				<a className='isoMenuHolder' style={submenuColor}>
 					{leftIcon}
 					<span className='nav-text'>
-						<IntlMessages id={label} />
+					<IntlMessages id={label} />
 					</span>
 				</a>
 			</Link>

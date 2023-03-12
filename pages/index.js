@@ -34,10 +34,6 @@ export default function Login() {
     setpassword(event.target.value);
   };
   const submitHandler = async () => {
-    if(!RollNo.includes('AD')){
-      seterror('Only Admins are allowed')
-      return
-    }
     const variables = {
       data: {
         rollNumber: RollNo,
@@ -73,7 +69,13 @@ export default function Login() {
           qualification:result.data.loginUser.user.qualification,
           Auth:true
         }));
-        Router.push("/dashboard");
+        console.log(result.data.loginUser.user.rollNumber)
+        if(result.data.loginUser.user.rollNumber.includes("TD")){
+          Router.push("/dashboard/GroupImage");
+        }
+        else if(result.data.loginUser.user.rollNumber.includes("TD")){
+          Router.push("/dashboard");
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -86,7 +88,7 @@ export default function Login() {
       <Head>
         <title>Admin Panel</title>
       </Head>
-      <div className="flex flex-row mt-10 mx-40 h-5/6">
+      <div className="flex flex-row mt-[7%] mx-[17%] h-4/6 w-[500vh]">
         <div className="bg-white pt-12 px-20 rounded-l-lg">
           <h1 className="font-semibold text-3xl ml-20">Welcome Back</h1>
           <div className="flex flex-row items-center w-80 justify-items-center rounded-md space-x-8 py-2 px-4 mt-6 ml-10 ... ring-2 ring-gray-100 ring-inset">
