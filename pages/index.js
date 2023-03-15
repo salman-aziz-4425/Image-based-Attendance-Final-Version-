@@ -73,7 +73,7 @@ export default function Login() {
         if(result.data.loginUser.user.rollNumber.includes("TD")){
           Router.push("/dashboard/GroupImage");
         }
-        else if(result.data.loginUser.user.rollNumber.includes("TD")){
+        else if(result.data.loginUser.user.rollNumber.includes("AD")){
           Router.push("/dashboard");
         }
       })

@@ -39,4 +39,32 @@ export const getS3Url = `
       key
   }
   }
-`;
+`
+export const analyzeImage=`
+query analyzeImage($rollNumber: String,$imageS3Key:String!) {
+  analyzeImage(rollNumber:$rollNumber,imageS3Key:$imageS3Key){
+    rollNumber
+    faceConf
+  }
+}
+`
+
+export const comparingFaces=`
+query comparingFaces($rollNumbers:[String],$trgImage:String!){
+  comparingFaces(rollNumbers:$rollNumbers,trgImage:$trgImage){
+    msg
+  }
+}
+`
+export const LastComparison=`
+query receiverSqsComparison{
+  receiverSqsComparison{
+    msg
+    resp{
+      rollNumber
+      faceConf
+    }
+  }
+}
+`
+;

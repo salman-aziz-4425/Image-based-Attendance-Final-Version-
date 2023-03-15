@@ -7,6 +7,9 @@ import { API, Amplify, graphqlOperation } from "aws-amplify";
 import { getAllUsers } from "../../src/graphql/queries";
 import { useDispatch,useSelector } from "react-redux";
 import { tokenAuth } from "../../redux/userlogin/userSlice";
+import { getS3Url } from "../../src/graphql/queries";
+import { comparingFaces } from "../../src/graphql/queries";
+import { LastComparison } from "../../src/graphql/queries";
 export default function GroupImage() {
 const [excelFile, setExcelFile]=useState(null);
 const [excelFileError, setExcelFileError]=useState(null);  
@@ -54,6 +57,37 @@ useEffect(async ()=>{
     setAllUsers(result?.data?.getAllUsers)
   });
 },[])
+
+const storeImageToS3Bucket = async () => {
+  if (images === undefined || images.length < 1) {
+    alert("no pic image");
+    setError({ ...error, image: "Kindly upload your picture" });
+    return;
+  }
+  console.log("Image List => ", images[0]?.data_url);
+  const image = images[0]?.file;
+  //  Get Secure URL from our server
+  const res = await API.graphql(graphqlOperation(getS3Url));
+  //  Post the image directly to S3 bucket
+  console.log("Res => ", res);
+  const s3obj = res.data.getS3Url;
+  console.log("Url :- ", s3obj);
+  await fetch(s3obj?.s3Url, {
+    method: "PUT",
+    headers: {
+      ContentType: "multipart/form-data",
+    },
+    body: image,
+  })
+    .then((res) => {
+      console.log("Bucket Res ", res, " s3obj ", s3obj?.key);
+    })
+    .catch((err) => {
+      console.log("Error => ", err);
+      return undefined;
+    });
+  return s3obj?.key;
+};
 // handle File
 const fileType=['application/vnd.ms-excel'];
 const handleFile = (e)=>{
@@ -80,23 +114,36 @@ const handleFile = (e)=>{
 // }
 
 // submit function
-const handleSubmit=(e)=>{
+const handleSubmit=async (e)=>{
   e.preventDefault();
   if(excelFile!==null){
     const workbook = XLSX.read(excelFile,{type:'buffer'});
     const worksheetName = workbook.SheetNames[0];
     const worksheet=workbook.Sheets[worksheetName];
     let data = XLSX.utils.sheet_to_json(worksheet);
-    data=data.slice(6)
-    console.log(data[0]?.__EMPTY_1.includes("F"))
+    console.log(data)
+    // data=data.slice(6)
+    console.log(data[0]?.__EMPTY_1?.includes("F"))
     try{
       let rollNumbers=[]
       data.map((user)=>{
         rollNumbers.push(user?.__EMPTY_1)
       })
-      rollNumbers.pop()
+      // rollNumbers.pop()
       setrollNumbers(rollNumbers)
       console.log(rollNumbers)
+      const imageKey=await storeImageToS3Bucket()
+      const variables={
+        rollNumbers:rollNumbers,
+        trgImage:imageKey
+      }
+      const responseComparison=await API.graphql(graphqlOperation(comparingFaces,variables))
+      console.log(responseComparison)
+      setTimeout(()=>{
+
+      },2000)
+      const lastResponse=await API.graphql(graphqlOperation(LastComparison))
+      console.log(lastResponse)
     }catch{
       alert("Invalid properties")
     }
@@ -127,7 +174,7 @@ const handleSubmit=(e)=>{
         <div className="flex flex-row space-x-5 mt-[10%] mx-[4%] overflow-auto">
           {
             allUsers.map((user)=>(
-              <img className="h-40 w-60 rounded-md mb-5" src={user.image} alt="hello"/>
+              <img className="h-40 w-60 rounded-md mb-8" src={user.image} alt="hello"/>
             ))
           }
         </div>

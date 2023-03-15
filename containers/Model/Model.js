@@ -11,6 +11,7 @@ import {getS3Url} from '../../src/graphql/queries'
 import validation from './Validation'
 import { tokenAuth } from '../../redux/userlogin/userSlice';
 import {types,batches} from '../../UI/Dropdown/flowDropdown'
+import { analyzeImage } from '../../src/graphql/queries';
 export default function Model({open,setOpen,User1,AllUsers,setUser}) {
   console.log()
   const token = useSelector((state)=>state.userReducer.token);
@@ -28,6 +29,7 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
       PhoneNo:0,
       Address:"",
       RollNo:"",
+      image:"",
       Qualification:""
     })
     const [User2,setUser2]=useState({
@@ -135,6 +137,7 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
           </div>
           <div className="my-2 w-[44%]">
             <UploadImage setImagesFunc={setImages}/>
+            {error.image}
           </div>
         </div>
         <div  className="flex px-[26px] space-x-2 flex-wrap justify-left">
@@ -148,6 +151,19 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
             })
             const valid=validation(type,User2,User1)
             const imageKey = await storeImageToS3Bucket();
+            const variable1={
+              rollNumber:"19F-0295",
+              imageS3Key:imageKey
+          }
+            try{
+              const response= await API.graphql(graphqlOperation(analyzeImage,variable1))
+              if(!response.data?.analyzeImage?.faceConf){
+                throw new Error
+              }
+            }catch{
+              setError({...error,image:"In picture it is not a human"})
+              return
+            }
             let imageURl =  `https://user-attendance-image-test.s3.amazonaws.com/` + imageKey;
             if(imageURl.length===61){
               imageURl=User1.image
@@ -164,6 +180,7 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
               AllUsers[index].email=valid.User.Email
               AllUsers[index].userType=valid.User.userType.toLowerCase()
               AllUsers[index].qualification=valid.User.Qualification
+              AllUsers[index].imageS3key=imageKey
               AllUsers[index].image=imageURl
               console.log(valid.User)
             }
@@ -175,6 +192,7 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
                   email:valid.User.Email,
                   qualification:valid.User.Qualification,
                   address:valid.User.Address,
+                  imageS3Key:imageKey,
                   image:imageURl,
                   userType:valid.User.userType.toLowerCase()
                 },

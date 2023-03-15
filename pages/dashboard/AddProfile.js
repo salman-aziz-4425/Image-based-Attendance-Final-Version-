@@ -13,7 +13,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { tokenAuth } from "../../redux/userlogin/userSlice";
 import UploadImage from "../../components/utility/imageUploading";
 import { types, batches } from "../../UI/Dropdown/flowDropdown";
-
+import { analyzeImage } from "../../src/graphql/queries";
+import image from "next/image";
 export default function AddProfile() {
   const dispatch = useDispatch();
   let token = useSelector((state) => state.userReducer.token);
@@ -116,17 +117,32 @@ export default function AddProfile() {
     event.preventDefault();
     const { Flag, Error } = validation(type, User, typeAttributes, batch);
     setError(Error);
-    console.log(Error)
-    console.log(Flag);
+    // console.log(Error)
+    // console.log(Flag);
     if (!Flag) {
       return;
     }
     let variables;
     const imageKey = await storeImageToS3Bucket();
     console.log("Image key  " + imageKey);
+
     if (imageKey === undefined) {
       setError({ ...error, image: "Key not found" });
       return;
+    }
+    const variable1={
+        rollNumber:"19F-0295",
+        imageS3Key:imageKey
+    }
+    console.log(variable1)
+    try{
+      const response= await API.graphql(graphqlOperation(analyzeImage,variable1))
+      if(!response.data?.analyzeImage?.faceConf){
+        throw new Error
+      }
+    }catch{
+      setError({...error,image:"In picture it is not a human"})
+      return
     }
     const imageURl =
       `https://user-attendance-image-test.s3.amazonaws.com/` + imageKey;
@@ -142,6 +158,7 @@ export default function AddProfile() {
           phoneNo: User.PhoneNo,
           address: typeAttributes.Address,
           qualification: typeAttributes.Qualification,
+          imageS3Key:imageKey,
           image: imageURl,
           userType: "student",
         }, // key is "input" based on the mutation above
@@ -156,6 +173,7 @@ export default function AddProfile() {
           phoneNo: User.PhoneNo,
           address: typeAttributes.Address,
           qualification: typeAttributes.Qualification,
+          imageS3Key:imageKey,
           image: imageURl,
           userType: "teacher",
         }, // key is "input" based on the mutation above
@@ -170,6 +188,7 @@ export default function AddProfile() {
           phoneNo: User.PhoneNo,
           address: typeAttributes.Address,
           qualification: typeAttributes.Qualification,
+          imageS3Key:imageKey,
           image: imageURl,
           userType: "admin",
         }, // key is "input" based on the mutation above

@@ -22,6 +22,11 @@ const TeacherKeys=[
 		label:'Mark Attendance',
 		leftIcon: <SidebarProfileIcon size={19} />,
 	},
+  {
+		key:'ViewPage',
+		label:'View Attendance',
+		leftIcon: <SidebarProfileIcon size={19} />,
+	},
 ]
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
