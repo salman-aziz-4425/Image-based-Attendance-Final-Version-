@@ -41,6 +41,7 @@ export default function AddProfile() {
     batch: "",
   });
   const [User, setUser] = useState({
+    RollNo: "",
     Name: "",
     Email: "",
     PhoneNo: 0,
@@ -151,7 +152,7 @@ export default function AddProfile() {
     if (type === "Student") {
       variables = {
         data: {
-          rollNumber: batch + "F-" + Math.floor(1000 + Math.random() * 9000),
+          rollNumber: batch+"F-"+ User.RollNo,
           password: User.password,
           name: User.Name,
           email: User.Email,
@@ -166,7 +167,7 @@ export default function AddProfile() {
     } else if (type === "Teacher") {
       variables = {
         data: {
-          rollNumber: "TD-" + Math.floor(1000 + Math.random() * 9000),
+          rollNumber: "TD-" + User.RollNo,
           password: User.password,
           name: User.Name,
           email: User.Email,
@@ -181,7 +182,7 @@ export default function AddProfile() {
     } else {
       variables = {
         data: {
-          rollNumber: "AD-" + Math.floor(1000 + Math.random() * 9000),
+          rollNumber: "AD-" + User.RollNo,
           password: User.password,
           name: User.Name,
           email: User.Email,
@@ -225,6 +226,14 @@ export default function AddProfile() {
               className="my-2 "
               name="Name"
               placeholder="Name"
+              onChange={inputHandler}
+            ></Input>
+            <p className="text-red-600">{error.Email !== "" && error.Email}</p>
+            <Input
+              className="my-2 "
+              name="RollNo"
+              type="number"
+              placeholder="Roll no"
               onChange={inputHandler}
             ></Input>
             <p className="text-red-600">{error.Email !== "" && error.Email}</p>

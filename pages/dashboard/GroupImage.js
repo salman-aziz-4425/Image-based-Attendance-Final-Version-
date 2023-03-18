@@ -121,29 +121,40 @@ const handleSubmit=async (e)=>{
     const worksheetName = workbook.SheetNames[0];
     const worksheet=workbook.Sheets[worksheetName];
     let data = XLSX.utils.sheet_to_json(worksheet);
-    console.log(data)
-    // data=data.slice(6)
+    data=data.slice(6)
+    data.pop()
+    // console.log(data)
     console.log(data[0]?.__EMPTY_1?.includes("F"))
     try{
-      let rollNumbers=[]
+      let rollNumber=[]
       data.map((user)=>{
-        rollNumbers.push(user?.__EMPTY_1)
+        rollNumber.push(user?.__EMPTY_1)
       })
       // rollNumbers.pop()
-      setrollNumbers(rollNumbers)
-      console.log(rollNumbers)
+      setrollNumbers(rollNumber)
+      console.log(rollNumber)
+      //for loop to get keys
+
       const imageKey=await storeImageToS3Bucket()
       const variables={
-        rollNumbers:rollNumbers,
+        rollNumbers:rollNumber,
         trgImage:imageKey
       }
+      console.log(variables)
       const responseComparison=await API.graphql(graphqlOperation(comparingFaces,variables))
       console.log(responseComparison)
-      setTimeout(()=>{
-
-      },2000)
+      await new Promise(r => setTimeout(r, 20000));
       const lastResponse=await API.graphql(graphqlOperation(LastComparison))
       console.log(lastResponse)
+      // rollNumbers=lastResponse.data.receiverSqsComparison.resp.filter((user)=>{
+      //   let index=rollNumbers.findIndex((user1)=>{
+      //     return user.rollNumber===user1
+      //   })
+      //   return index!=-1
+      // })
+      // setrollNumbers(rollNumbers)
+      // console.log(rollNumbers)
+      //ends here
     }catch{
       alert("Invalid properties")
     }
