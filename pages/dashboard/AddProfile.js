@@ -118,8 +118,8 @@ export default function AddProfile() {
     event.preventDefault();
     const { Flag, Error } = validation(type, User, typeAttributes, batch);
     setError(Error);
-    // console.log(Error)
-    // console.log(Flag);
+    console.log(Error)
+    console.log(Flag);
     if (!Flag) {
       return;
     }

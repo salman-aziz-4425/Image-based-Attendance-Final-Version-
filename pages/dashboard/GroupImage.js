@@ -10,12 +10,19 @@ import { tokenAuth } from "../../redux/userlogin/userSlice";
 import { getS3Url } from "../../src/graphql/queries";
 import { comparingFaces } from "../../src/graphql/queries";
 import { LastComparison } from "../../src/graphql/queries";
+import checkmark from '../../assets/checkmark.png'
+import cross from '../../assets/cross.png'
+// import { saveAs } from "file-saver";
+// import XlsxPopulate from "xlsx-populate";
 export default function GroupImage() {
 const [excelFile, setExcelFile]=useState(null);
 const [excelFileError, setExcelFileError]=useState(null);  
 const [images, setImages] = React.useState([]);
 const [rollNumbers,setrollNumbers]=useState([])
+const [loading,setloading]=useState("Mark attendance")
+const [updated,setupdatedRollno]=useState([])
 const [allUsers,setAllUsers]=useState([])
+const [flag,setFlag]=useState(false)
 const token=useSelector(state=>state.userReducer.token)
 Amplify.configure({
   API: {
@@ -57,15 +64,14 @@ useEffect(async ()=>{
     setAllUsers(result?.data?.getAllUsers)
   });
 },[])
-
-const storeImageToS3Bucket = async () => {
+const storeImageToS3Bucket = async (GroupImage) => {
   if (images === undefined || images.length < 1) {
     alert("no pic image");
     setError({ ...error, image: "Kindly upload your picture" });
     return;
   }
-  console.log("Image List => ", images[0]?.data_url);
-  const image = images[0]?.file;
+  console.log("Image List => ", GroupImage?.data_url);
+  const image = GroupImage?.file;
   //  Get Secure URL from our server
   const res = await API.graphql(graphqlOperation(getS3Url));
   //  Post the image directly to S3 bucket
@@ -112,10 +118,66 @@ const handleFile = (e)=>{
 //   //   console.log('plz select your file');
 //   // }
 // }
+async function saveAsExcel(data) {
 
+  let header = ["rollNumber", "faceConf"];
+
+  XlsxPopulate.fromBlankAsync().then(async (workbook) => {
+    const sheet1 = workbook.sheet(0);
+    const sheetData = getSheetData(data, header);
+    const totalColumns = sheetData[0].length;
+
+    sheet1.cell("A1").value(sheetData);
+    const range = sheet1.usedRange();
+    const endColumn = String.fromCharCode(64 + totalColumns);
+    sheet1.row(1).style("bold", true);
+    sheet1.range("A1:" + endColumn + "1").style("fill", "BFBFBF");
+    range.style("border", true);
+    return workbook.outputAsync().then((res) => {
+      saveAs(res, "file.xlsx");
+    });
+  });
+}
+const conversion=async (array,rollNumbers)=>{
+  array=array.filter((user)=>{
+    let index=rollNumbers.findIndex((user1)=>{
+      return user.rollNumber===user1&&user.faceConf>80
+    })
+    return index!=-1
+  })
+  return array
+}
+//remove duplicate
+const removal=async (finalresponse)=>{
+  const res=[]
+  console.log("In removal",finalresponse)
+  console.log("In removal",finalresponse.length)
+  for(let i=0;i<finalresponse.length;i++) {
+    let el=finalresponse[i]
+    console.log(el)
+    const index = res.findIndex(obj => {
+       return obj['rollNumber'] === el.rollNumber;
+    });
+    if(index === -1){
+       res.push({
+          "rollNumber": el.rollNumber,
+          "faceConf":el.faceConf,
+          "count": 1
+       })
+    }
+    else{
+       res[index]["count"]++;
+    };
+  }
+ return res
+}
 // submit function
 const handleSubmit=async (e)=>{
+  setloading("Loading....")
+  setFlag(false)
+  let finalresponse=[]
   e.preventDefault();
+  //Excel to array
   if(excelFile!==null){
     const workbook = XLSX.read(excelFile,{type:'buffer'});
     const worksheetName = workbook.SheetNames[0];
@@ -123,6 +185,7 @@ const handleSubmit=async (e)=>{
     let data = XLSX.utils.sheet_to_json(worksheet);
     data=data.slice(6)
     data.pop()
+    //______________________________
     // console.log(data)
     console.log(data[0]?.__EMPTY_1?.includes("F"))
     try{
@@ -134,29 +197,45 @@ const handleSubmit=async (e)=>{
       setrollNumbers(rollNumber)
       console.log(rollNumber)
       //for loop to get keys
-
-      const imageKey=await storeImageToS3Bucket()
-      const variables={
-        rollNumbers:rollNumber,
-        trgImage:imageKey
+      await new Promise(async (r,e)=>{
+        for(let i=0;i<images.length;i++){
+          console.log(i)
+          let imageKey=await storeImageToS3Bucket(images[i])
+          let variables={
+            rollNumbers:rollNumber,
+            trgImage:imageKey
+          }
+          let responseComparison=await API.graphql(graphqlOperation(comparingFaces,variables))
+          console.log(responseComparison)
+          await new Promise(r => setTimeout(r,8500));
+          await API.graphql(graphqlOperation(LastComparison)).then((result)=>{
+            if(!result?.data?.receiverSqsComparison?.resp){
+              throw "Error"
+            }
+            console.log(result)
+            console.log("response1",result?.data?.receiverSqsComparison?.resp)
+           conversion(result?.data?.receiverSqsComparison?.resp,rollNumber).then((result)=>{
+              console.log("response2",result)
+              finalresponse=finalresponse.concat(result)
+            })
+          }).catch((error)=>alert("error"))
+        }
+        r(finalresponse)
       }
-      console.log(variables)
-      const responseComparison=await API.graphql(graphqlOperation(comparingFaces,variables))
-      console.log(responseComparison)
-      await new Promise(r => setTimeout(r, 20000));
-      const lastResponse=await API.graphql(graphqlOperation(LastComparison))
-      console.log(lastResponse)
-      // rollNumbers=lastResponse.data.receiverSqsComparison.resp.filter((user)=>{
-      //   let index=rollNumbers.findIndex((user1)=>{
-      //     return user.rollNumber===user1
-      //   })
-      //   return index!=-1
-      // })
-      // setrollNumbers(rollNumbers)
-      // console.log(rollNumbers)
+      ).then(async (result)=>{
+        console.log("response3",result.length)
+            //Removal of duplication
+    removal(result).then((result)=>{
+      console.log("response4")
+    setupdatedRollno(result)
+    setloading("Attendance marked")
+   })
+      }).catch((error)=>alert(error))
+     //___________________________________________
       //ends here
     }catch{
       alert("Invalid properties")
+      setloading("Something went Wrong")
     }
   
   }
@@ -164,6 +243,12 @@ const handleSubmit=async (e)=>{
     setExcelData(null);
   }
 }
+useEffect(()=>{
+  if(updated.length>1){
+    console.log("inloop",updated)
+    setFlag(true)
+  }
+},[updated])
   return (
     <DashboardLayout>
       <div className="w-5/7 h-5/7 my-8 mx-10 bg-white font-extrabold align-middle rounded-md shadow-2xl overflow-hidden">
@@ -182,11 +267,49 @@ const handleSubmit=async (e)=>{
         <UploadImage setImagesFunc={setImages} />
         </div>
         </div>
-        <div className="flex flex-row space-x-5 mt-[10%] mx-[4%] overflow-auto">
+        <h1>{loading}</h1>
+        <div style={{position:"relative"}} className="flex flex-row space-x-5 mt-[10%] mx-[4%] overflow-auto">
           {
-            allUsers.map((user)=>(
-              <img className="h-40 w-60 rounded-md mb-8" src={user.image} alt="hello"/>
-            ))
+
+            flag===false?allUsers.map((user)=>(
+              <div class="mb-4 md:mb-0">
+              <div class="relative w-60 object-contain overflow-hidden bg-cover bg-no-repeat ">
+                <img
+                  src={user.image}
+                  className="h-40 w-80 mb-4 object-cover"
+                  alt="Louvre" />
+              </div>
+            </div> 
+            )):
+            allUsers.map((user)=>{
+              const index=updated.findIndex((pUser)=>user?.rollNumber==pUser.rollNumber)
+              const faceConf=index!=-1?updated[index]?.faceConf:0
+              return(
+              <div class="mb-4 md:mb-0">
+              <div class="relative w-60 object-contain overflow-hidden bg-cover bg-no-repeat ">
+                <img
+                  src={user.image}
+                  className="h-40 w-80 mb-4 object-cover rounded-md"
+                  alt="Louvre" />
+                  {
+                    faceConf>80?
+                    <div>
+                     <img style={{zIndex:1,opacity:1,position:"absolute",marginTop:"-70%"}} className="h-20 w-20" src={checkmark}/>
+                     <div  className="absolute top-0 right-0 bottom-2 left-0 mb-2 h-full w-full overflow-hidden bg-green-400 bg-fixed transition duration-300 ease-in-out opacity-40 rounded-md">
+                    </div>
+                    </div>
+                    :
+                    <>
+                     <img style={{zIndex:2,opacity:1,position:"absolute",marginTop:"-70%"}} className="h-20 w-20" src={cross}/>
+                    <div
+                    className="absolute top-0 right-0 bottom-2 left-0  mb-2 h-full w-full overflow-hidden bg-red-400 bg-fixed transition duration-300 ease-in-out opacity-40 rounded-md">
+                    </div>
+                    </>
+                  }
+              </div>
+            </div> 
+              )
+         })
           }
         </div>
       </div>
