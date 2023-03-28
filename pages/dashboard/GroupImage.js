@@ -13,13 +13,12 @@ import { LastComparison } from "../../src/graphql/queries";
 import checkmark from '../../assets/checkmark.png'
 import cross from '../../assets/cross.png'
 // import { saveAs } from "file-saver";
-// import XlsxPopulate from "xlsx-populate";
 export default function GroupImage() {
 const [excelFile, setExcelFile]=useState(null);
 const [excelFileError, setExcelFileError]=useState(null);  
 const [images, setImages] = React.useState([]);
 const [rollNumbers,setrollNumbers]=useState([])
-const [loading,setloading]=useState("Mark attendance")
+const [loading,setloading]=useState("Mark Attendance")
 const [updated,setupdatedRollno]=useState([])
 const [allUsers,setAllUsers]=useState([])
 const [flag,setFlag]=useState(false)
@@ -118,26 +117,21 @@ const handleFile = (e)=>{
 //   //   console.log('plz select your file');
 //   // }
 // }
-async function saveAsExcel(data) {
-
-  let header = ["rollNumber", "faceConf"];
-
-  XlsxPopulate.fromBlankAsync().then(async (workbook) => {
-    const sheet1 = workbook.sheet(0);
-    const sheetData = getSheetData(data, header);
-    const totalColumns = sheetData[0].length;
-
-    sheet1.cell("A1").value(sheetData);
-    const range = sheet1.usedRange();
-    const endColumn = String.fromCharCode(64 + totalColumns);
-    sheet1.row(1).style("bold", true);
-    sheet1.range("A1:" + endColumn + "1").style("fill", "BFBFBF");
-    range.style("border", true);
-    return workbook.outputAsync().then((res) => {
-      saveAs(res, "file.xlsx");
-    });
-  });
-}
+// function exportSheet() {
+//   const spread = _spread;
+//   const fileName = "SalesData.xlsx";
+//   const sheet = spread.getSheet(0);
+//   const excelIO = new IO();
+//   const json = JSON.stringify(spread.toJSON({ 
+//       includeBindingSource: true,
+//       columnHeadersAsFrozenRows: true,
+//   }));
+//   excelIO.save(json, (blob) => {
+//       saveAs(blob, fileName);
+//   }, function (e) {  
+//       alert(e);  
+//   });     
+// }
 const conversion=async (array,rollNumbers)=>{
   array=array.filter((user)=>{
     let index=rollNumbers.findIndex((user1)=>{
@@ -224,13 +218,19 @@ const handleSubmit=async (e)=>{
       }
       ).then(async (result)=>{
         console.log("response3",result.length)
+        if(result.length==0){
+          throw "Error"
+        }
             //Removal of duplication
     removal(result).then((result)=>{
+      if(result.length<1){
+        throw "Error"
+      }
       console.log("response4")
     setupdatedRollno(result)
-    setloading("Attendance marked")
+    setloading("Attendance Marked")
    })
-      }).catch((error)=>alert(error))
+      }).catch((error)=>setloading("Something went Wrong"))
      //___________________________________________
       //ends here
     }catch{
@@ -255,7 +255,7 @@ useEffect(()=>{
       <div className="flex pt-5 pb-0 px-4 overflow-hidden">
           <h1 className="font-extrabold text-transparent text-3xl bg-clip-text bg-gradient-to-r from-gray-700 to-red-700">
             {" "}
-            Mark Attendance
+            {loading}
           </h1>
         </div>
         <div className="flex flex-row items center justify-center space-x-10">
@@ -267,7 +267,6 @@ useEffect(()=>{
         <UploadImage setImagesFunc={setImages} />
         </div>
         </div>
-        <h1>{loading}</h1>
         <div style={{position:"relative"}} className="flex flex-row space-x-5 mt-[10%] mx-[4%] overflow-auto">
           {
 
