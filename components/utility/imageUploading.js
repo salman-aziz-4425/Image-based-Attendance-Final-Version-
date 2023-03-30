@@ -8,9 +8,10 @@ export default function UploadImage({ setImagesFunc }) {
       "flex ml-10 mt-2 flex-row items-center justify-center px-2 text-white rounded-md flex-1 bg-blue-900 w-1/4",
     btnRemove:
       "flex ml-10 mt-2 flex-row items-center justify-center px-2 text-white rounded-md flex-1 bg-red-900 w-1/4",
-    btnWrapper: "flex flex-row items-center justify-center",
+    btnWrapper: "flex flex-row items-center justify-center mb-2" ,
     mainWrapper: " bg-[#f6f9fe] ",
-    imageItem: "flex mt-2 mb-2"
+    imageItem: "flex mt-2 mb-2",
+    addOverFlow:"overflow-y-auto h-48 "
   };
   const [images, setImages] = React.useState([]);
   const maxNumber = 69;
@@ -65,10 +66,11 @@ export default function UploadImage({ setImagesFunc }) {
               )}
             </div>
 
+            <div className={tailwindStyle.addOverFlow}>
             {imageList.map((image, index) => (
               <div key={index} className={style.imageItem}>
-                <div className="flex flex-row justify-center items-center mt-2">
-                  <img src={image.data_url} height="130" width="130" />
+                <div className="flex flex-row justify-center items-center mt-2 w-6/12">
+                  <img src={image.data_url}/>
                 </div>
                 <div className={tailwindStyle.btnWrapper}>
                   <button
@@ -87,6 +89,7 @@ export default function UploadImage({ setImagesFunc }) {
                 </div>
               </div>
             ))}
+            </div>
           </div>
         )}
       </ImageUploading>

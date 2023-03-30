@@ -141,7 +141,7 @@ export default function GroupImage() {
       }
     };
   };
-  
+
   const conversion = async (array, rollNumbers) => {
     array = array.filter((user) => {
       let index = rollNumbers.findIndex((user1) => {
@@ -264,7 +264,7 @@ export default function GroupImage() {
           <div className="flex flex-col items-center justify-center mt-[15%] space-y-5">
             <Input className="w-60" type="file" onChange={handleFile}></Input>
             <Button type="button" onClick={handleSubmit}>
-              Upload
+              Mark Attendance
             </Button>
           </div>
           <div className="mt-[15%] w-[30%]">
@@ -273,17 +273,16 @@ export default function GroupImage() {
         </div>
         <div
           style={{ position: "relative" }}
-          className="flex flex-row space-x-5 mt-[10%] mx-[4%] overflow-auto"
+          className="flex flex-row space-x-5 mt-[10%] mx-[4%] overflow-auto m-4 bg-gray-300"
         >
           {flag === false
             ? allUsers?.length > 0 &&
               allUsers.map((user) => (
                 <div class="mb-4 md:mb-0">
-                  <div class="relative w-60 object-contain overflow-hidden bg-cover bg-no-repeat ">
+                  <div class="rounded-full relative w-full object-contain overflow-hidden bg-cover bg-no-repeat ">
                     <img
                       src={user.image}
-                      className="h-40 w-80 mb-4 object-cover"
-                      alt="Louvre"
+                      className="w-[100px] h-[100px] object-cover"
                     />
                   </div>
                 </div>
@@ -295,11 +294,11 @@ export default function GroupImage() {
                 const faceConf = index != -1 ? updated[index]?.faceConf : 0;
                 return (
                   <div class="mb-4 md:mb-0">
-                    <div class="relative w-60 object-contain overflow-hidden bg-cover bg-no-repeat ">
+                    <div class="rounded-full relative w-full object-contain overflow-hidden bg-cover bg-no-repeat ">
                       <img
                         src={user.image}
-                        className="h-40 w-80 mb-4 object-cover rounded-md"
-                        alt="Louvre"
+                        className="w-[100px] h-[100px] object-cover"
+                        // className="w-[100px] mb-4 object-cover rounded-md"
                       />
                       {faceConf > 80 ? (
                         <div>
@@ -308,9 +307,9 @@ export default function GroupImage() {
                               zIndex: 1,
                               opacity: 1,
                               position: "absolute",
-                              marginTop: "-70%",
+                              marginTop: "-105px",
                             }}
-                            className="h-20 w-20"
+                            className="h-28 w-60"
                             src={checkmark}
                           />
                           <div className="absolute top-0 right-0 bottom-2 left-0 mb-2 h-full w-full overflow-hidden bg-green-400 bg-fixed transition duration-300 ease-in-out opacity-40 rounded-md"></div>
@@ -322,9 +321,9 @@ export default function GroupImage() {
                               zIndex: 2,
                               opacity: 1,
                               position: "absolute",
-                              marginTop: "-70%",
+                              marginTop: "-105px",
                             }}
-                            className="h-20 w-20"
+                            className="h-28 w-60"
                             src={cross}
                           />
                           <div className="absolute top-0 right-0 bottom-2 left-0  mb-2 h-full w-full overflow-hidden bg-red-400 bg-fixed transition duration-300 ease-in-out opacity-40 rounded-md"></div>
