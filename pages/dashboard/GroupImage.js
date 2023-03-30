@@ -14,10 +14,12 @@ import { LastComparison } from "../../src/graphql/queries";
 import checkmark from "../../assets/checkmark.png";
 import Router from "next/router";
 import cross from "../../assets/cross.png";
+import MyExcelComponent from "./toExcel";
 // import { saveAs } from "file-saver";
 export default function GroupImage() {
   const [excelFile, setExcelFile] = useState(null);
   const [excelFileError, setExcelFileError] = useState(null);
+  const [responseData,setresponeData] = useState(null);
   const [images, setImages] = React.useState([]);
   const [rollNumbers, setrollNumbers] = useState([]);
   const [loading, setloading] = useState("Mark Attendance");
@@ -279,6 +281,7 @@ export default function GroupImage() {
                   throw "Error";
                 }
                 console.log(result);
+                setresponeData(result?.data?.receiverSqsComparison?.resp)
                 console.log(
                   "response1",
                   result?.data?.receiverSqsComparison?.resp
@@ -366,6 +369,9 @@ export default function GroupImage() {
                 uploading company data or other banned files.
               </p>
             </Dragger>
+            {
+              flag&& <MyExcelComponent users={responseData}/>
+            }
           </div>
           {/* <div className="mt-[15%] w-[30%]">
             <UploadImage setImagesFunc={setImages} />
