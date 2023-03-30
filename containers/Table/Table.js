@@ -22,16 +22,16 @@ function Table({Users,flag,deleteUsers,setUser,imageHandler}) {
                     <div className="flex flex-col h-50 w-full">
                       <thead>
                       <tr className='px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>
-              <th scope="col" className="text-sm font-medium text-gray-900 pl-4 py-4 text-left">
+              <th scope="col" className="text-sm font-medium text-gray-900 pl-8 py-4 text-left">
                 #
               </th>
-              <th scope="col" className="text-sm font-medium text-gray-900 pl-4 py-4 text-left">
+              <th scope="col" className="text-sm font-medium text-gray-900 pl-6 py-4 text-left">
                 RollNumber
               </th>
               <th scope="col" className="text-sm font-medium text-gray-900 pl-8 py-4 text-left">
                 name
               </th>
-              <th scope="col" className="text-sm font-medium text-gray-900 pl-8 py-4 text-left">
+              <th scope="col" className="text-sm font-medium text-gray-900 pl-20 py-4 text-left">
                 qualification
               </th>
               <th scope="col" className="text-sm font-medium text-gray-900 pl-8 py-4 text-left">

@@ -210,7 +210,6 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
               console.log("response data")
               console.log(result.data.updateUser.id)
               if(result.data.updateUser.id===userID){
-                alert('same')
                 dispatch(tokenAuth( {
                   id:result.data.updateUser.id,
                   token:token,

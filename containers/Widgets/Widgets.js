@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col } from "antd";
+import { Row, Col, message } from "antd";
 import LayoutWrapper from "@iso/components/utility/layoutWrapper";
 import basicStyle from "@iso/assets/styles/constants";
 import IsoWidgetsWrapper from "./WidgetsWrapper";
@@ -78,12 +78,12 @@ export default function Widgets() {
   const [Users, setUsers] = useState([]);
   const { rowStyle, colStyle } = basicStyle;
   useEffect(async () => {
-    const Data =
-      localStorage.getItem("Token") &&
-      JSON.parse(localStorage.getItem("Token"));
+    const Data =localStorage.getItem("Token") &&JSON.parse(localStorage.getItem("Token"));
+
     if (Data?.Auth === false || !localStorage.getItem("Token")) {
       Router.push("/");
-    } else {
+    } 
+    else {
       if(Data?.rollNumber.includes("TD-")===true){
         Router.push("/dashboard/GroupImage");
       }
@@ -99,12 +99,12 @@ export default function Widgets() {
           Auth: true,
         })
       );
-    }
-    console.log(authToken);
+      }
     await API.graphql({
       query: getAllUsers,
-      authToken: authToken,
+      authToken: token,
     }).then((result) => {
+      console.log("inResponse",result)
       if (result.data.getAllUsers.length > 0) {
         const Students = result.data.getAllUsers.filter((object) => {
           return object.userType === "student";
@@ -120,6 +120,8 @@ export default function Widgets() {
         STICKER_WIDGET[1].count = Admin.length;
         setUsers(result.data.getAllUsers);
       }
+    }).catch((Err)=>{
+      console.log(Err)
     });
   }, [token]);
   const chartEvents = [];
