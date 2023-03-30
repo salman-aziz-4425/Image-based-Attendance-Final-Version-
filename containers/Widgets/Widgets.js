@@ -84,6 +84,9 @@ export default function Widgets() {
     if (Data?.Auth === false || !localStorage.getItem("Token")) {
       Router.push("/");
     } else {
+      if(Data?.rollNumber.includes("TD-")===true){
+        Router.push("/dashboard/GroupImage");
+      }
       dispatch(
         tokenAuth({
           id: Data?.id,

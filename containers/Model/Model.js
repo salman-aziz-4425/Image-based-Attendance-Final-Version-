@@ -3,6 +3,7 @@ import { Modal,Box,Typography } from '@mui/material'
 import {Button } from 'antd';
 import Input from "antd/lib/input/Input";
 import { useSelector, useDispatch } from 'react-redux'
+import { message } from 'antd';
 import Dropdown from '../../UI/Dropdown/Dropdown'
 import {API,graphqlOperation} from 'aws-amplify';
 import { updateUser } from '../../src/graphql/mutations';
@@ -145,31 +146,37 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
           <p className="text-red-600 align-middle">{error.type}</p>
           <Dropdown type={type} setType={setType} activeTypes={types} title="TYPE"/>
             <Button onClick={async (event)=>{
+              message.loading("Updating...")
             event.preventDefault()
             const index=AllUsers.findIndex((object)=>{
               return object.id===User1.id
             })
+
             const valid=validation(type,User2,User1)
             const imageKey = await storeImageToS3Bucket();
-            const variable1={
-              rollNumber:"19F-0295",
-              imageS3Key:imageKey
-          }
-            try{
-              const response= await API.graphql(graphqlOperation(analyzeImage,variable1))
-              if(!response.data?.analyzeImage?.faceConf){
-                throw new Error
-              }
-            }catch{
-              setError({...error,image:"In picture it is not a human"})
-              return
-            }
             let imageURl =  `https://user-attendance-image-test.s3.amazonaws.com/` + imageKey;
             if(imageURl.length===61){
               imageURl=User1.image
             }
+            else{
+              const variable1={
+                rollNumber:"19F-0295",
+                imageS3Key:imageKey
+            }
+              try{
+                const response= await API.graphql(graphqlOperation(analyzeImage,variable1))
+                if(!response.data?.analyzeImage?.faceConf){
+                  throw new Error
+                }
+              }catch{
+                message.error("In picture it is not a human")
+                setError({...error,image:"In picture it is not a human"})
+                return
+              }
+            }
             setError(valid.Error)
             if(valid.Flag===false){
+              message.error("Something went wrong")
               return
             }
             else{
@@ -226,8 +233,9 @@ export default function Model({open,setOpen,User1,AllUsers,setUser}) {
                 }));
               }
               setUser(AllUsers)
-              alert("Updated")
+              message.success("Updated")
             }).catch((error)=>{
+              message.error("Something Went Wrong")
               console.log(error)
             })
           }}>Update</Button>

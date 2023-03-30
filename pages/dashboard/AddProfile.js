@@ -4,7 +4,7 @@ import Input from "antd/lib/input/Input";
 import Image from "next/image";
 import { getS3Url } from "../../src/graphql/queries";
 import { createUser } from "../../src/graphql/mutations";
-import { Button } from "antd";
+import { Button,message } from "antd";
 import Dropdown from "../../UI/Dropdown/Dropdown";
 import { API, graphqlOperation, Amplify } from "aws-amplify";
 import validation from "./validation";
@@ -59,6 +59,9 @@ export default function AddProfile() {
     if (Data?.Auth === false || !localStorage.getItem("Token")) {
       Router.push("/");
     } else {
+      if(Data?.rollNumber.includes("TD-")===true){
+        Router.push("/dashboard/GroupImage");
+      }
       dispatch(
         tokenAuth({
           id: Data?.id,
@@ -115,6 +118,7 @@ export default function AddProfile() {
     return s3obj?.key;
   };
   const dataHandler = async (event) => {
+    message.loading("Checking Credentials")
     event.preventDefault();
     const { Flag, Error } = validation(type, User, typeAttributes, batch);
     setError(Error);
@@ -198,11 +202,11 @@ export default function AddProfile() {
     console.log(variables.data);
     await API.graphql(graphqlOperation(createUser, variables))
       .then((result) => {
-        alert("Value inserted");
+        message.success("You Credentials Recorded")
       })
       .catch((error) => {
         console.log(error);
-        alert("error");
+        message.error("Something went wrong")
       });
   };
   const inputHandler = (event) => {

@@ -12,6 +12,7 @@ import { API, graphqlOperation, withSSRContext } from "aws-amplify";
 import { tokenAuth } from "../redux/userlogin/userSlice";
 import { useSelector, useDispatch } from "react-redux";
 import attendance from '../assets/Picture1.png'
+import { message } from "antd";
 import { getS3Url } from "../src/graphql/queries";
 import Router from "next/router";
 export default function Login() {
@@ -34,6 +35,7 @@ export default function Login() {
     setpassword(event.target.value);
   };
   const submitHandler = async () => {
+    message.loading("Checking Credentials")
     const variables = {
       data: {
         rollNumber: RollNo,
@@ -71,15 +73,18 @@ export default function Login() {
         }));
         console.log(result.data.loginUser.user.rollNumber)
         if(result.data.loginUser.user.rollNumber.includes("TD")){
+          message.success("User Loged in")
           Router.push("/dashboard/GroupImage");
         }
         else if(result.data.loginUser.user.rollNumber.includes("AD")){
+          message.success("User Loged in")
           Router.push("/dashboard");
         }
       })
       .catch((error) => {
         console.log(error);
         console.log("error");
+        message.error("Invalid Credentials")
         seterror('Invalid password or RollNo')
       });
   };

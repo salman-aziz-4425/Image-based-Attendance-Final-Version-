@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import DashboardLayout from "../../containers/DashboardLayout/DashboardLayout";
-import { Row, Col, Button } from "antd";
+import { Row, Col, Button,message } from "antd";
 import IsoWidgetsWrapper from "../../containers/Widgets/WidgetsWrapper";
 import IsoWidgetBox from "../../containers/Widgets/WidgetBox";
 import Table from "../../containers/Table/Table";
@@ -30,6 +30,9 @@ function DeleteProfile() {
     if (Data?.Auth === false || !localStorage.getItem("Token")) {
       Router.push("/");
     } else {
+      if(Data?.rollNumber.includes("TD-")===true){
+        Router.push("/dashboard/GroupImage");
+      }
       dispatch(
         tokenAuth({
           id: Data?.id,
@@ -55,10 +58,10 @@ function DeleteProfile() {
     const variables = {
       rollNumber: rollNumber1,
     };
-
+    message.loading("Deleting....")
     await API.graphql(graphqlOperation(deleteUser, variables))
       .then((result) => {
-        alert("deleted");
+        message.success("Record Deleted")
         setUser(
           User.filter((object) => {
             return object.rollNumber != rollNumber1;
@@ -66,7 +69,7 @@ function DeleteProfile() {
         );
       })
       .catch((error) => {
-        console.log(error);
+        message.error("Record not Deleted")
       });
   };
   return (

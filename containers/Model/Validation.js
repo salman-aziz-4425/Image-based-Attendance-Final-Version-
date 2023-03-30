@@ -2,6 +2,7 @@ import * as EmailValidator from 'email-validator';
 var validator = require("email-validator");
 const emailValidator = ['gmail.com','yahoo.com','hotmail.com','aol.com','hotmail.co.uk','hotmail.fr','mail.com','edu.pk','nu.edu.pk','.pk'];
 const validation=(type,User,previousDetails)=>{
+  console.log(User)
     let count=0
     var format = /[!@#$%^&/*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
     let usernameFormat=false
