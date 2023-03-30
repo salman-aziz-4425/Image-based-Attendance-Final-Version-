@@ -113,8 +113,6 @@ export default function GroupImage() {
         try {
           let rollNumber = [];
           let usersRecords = [];
-          console.log("check resp");
-
           await Promise.all(
             data.length > 0 &&
               data.map(async (user) => {
@@ -143,30 +141,7 @@ export default function GroupImage() {
       }
     };
   };
-  //   //   else{
-  //   //     setExcelFileError('Please select only excel file types');
-  //   //     setExcelFile(null);
-  //   //   }
-  //   // }
-  //   // else{
-  //   //   console.log('plz select your file');
-  //   // }
-  // }
-  // function exportSheet() {
-  //   const spread = _spread;
-  //   const fileName = "SalesData.xlsx";
-  //   const sheet = spread.getSheet(0);
-  //   const excelIO = new IO();
-  //   const json = JSON.stringify(spread.toJSON({
-  //       includeBindingSource: true,
-  //       columnHeadersAsFrozenRows: true,
-  //   }));
-  //   excelIO.save(json, (blob) => {
-  //       saveAs(blob, fileName);
-  //   }, function (e) {
-  //       alert(e);
-  //   });
-  // }
+  
   const conversion = async (array, rollNumbers) => {
     array = array.filter((user) => {
       let index = rollNumbers.findIndex((user1) => {
