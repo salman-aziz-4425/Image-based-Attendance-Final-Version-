@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
 import DashboardLayout from "../../containers/DashboardLayout/DashboardLayout";
-import { Button, Input } from "antd";
+import { Button, Input, Upload, message } from "antd";
 import UploadImage from "../../components/utility/imageUploading";
 import { API, Amplify, graphqlOperation } from "aws-amplify";
 import { getAllUsers } from "../../src/graphql/queries";
 import { useDispatch, useSelector } from "react-redux";
 import { tokenAuth } from "../../redux/userlogin/userSlice";
+import { InboxOutlined } from "@ant-design/icons";
 import { getS3Url } from "../../src/graphql/queries";
 import { comparingFaces, getUser } from "../../src/graphql/queries";
 import { LastComparison } from "../../src/graphql/queries";
@@ -23,6 +24,30 @@ export default function GroupImage() {
   const [updated, setupdatedRollno] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [flag, setFlag] = useState(false);
+  const { Dragger } = Upload;
+
+  const props = {
+    name: "file",
+    multiple: false,
+    action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
+    onChange(info) {
+      const { status } = info.file;
+      if (status !== "uploading") {
+        console.log(info.file, info.fileList);
+      }
+      if (status === "done") {
+        message.success(`${info.file.name} file uploaded successfully.`);
+        setFlag(false);
+        fetchArrayFromCSV(info?.file?.originFileObj);
+      } else if (status === "error") {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+    onDrop(e) {
+      fetchArrayFromCSV(e?.dataTransfer?.files[0]);
+    },
+  };
+
   const token = useSelector((state) => state.userReducer.token);
   Amplify.configure({
     API: {
@@ -56,6 +81,55 @@ export default function GroupImage() {
       );
     }
   }, []);
+
+  const fetchArrayFromCSV = async (selectedFile) => {
+    let reader = new FileReader();
+    reader.readAsArrayBuffer(selectedFile);
+    reader.onload = async (e) => {
+      console.log("e.target.result => ", e.target.result);
+      setExcelFileError(null);
+      setExcelFile(e.target.result);
+      if (e.target.result != null) {
+        const workbook = XLSX.read(e.target.result, { type: "buffer" });
+        const worksheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[worksheetName];
+        let data = XLSX.utils.sheet_to_json(worksheet);
+        data = data.slice(6);
+        data.pop();
+        console.log("data => ", data);
+
+        try {
+          let rollNumber = [];
+          let usersRecords = [];
+          await Promise.all(
+            data.length > 0 &&
+              data.map(async (user) => {
+                rollNumber.push(user?.__EMPTY_1);
+                try {
+                  const variable1 = {
+                    rollNumber: user?.__EMPTY_1,
+                  };
+                  const response = await API.graphql(
+                    graphqlOperation(getUser, variable1)
+                  );
+                  response?.data.getUser[0] &&
+                    usersRecords.push(response?.data.getUser[0]);
+                  console.log("Resp => data => ", response?.data.getUser[0]);
+                } catch (err) {
+                  console.log("err => ", err);
+                }
+              })
+          );
+          setrollNumbers(rollNumber);
+          setAllUsers(usersRecords);
+          console.log("usersRecords => ", usersRecords);
+        } catch (err) {
+          console.log("err => ", err);
+        }
+      }
+    };
+  };
+
   const storeImageToS3Bucket = async (GroupImage) => {
     if (images === undefined || images.length < 1) {
       alert("no pic image");
@@ -88,59 +162,60 @@ export default function GroupImage() {
   };
   // handle File
   const fileType = ["application/vnd.ms-excel"];
-  const handleFile = async (e) => {
-    console.log("hello");
-    let selectedFile = e.target?.files[0];
-    // if(selectedFile){
-    console.log(selectedFile?.type);
-    // if(selectedFile&&fileType.includes(selectedFile.type)){
-    let reader = new FileReader();
-    reader.readAsArrayBuffer(selectedFile);
-    reader.onload = async (e) => {
-      console.log("e.target.result => ", e.target.result);
+  // const handleFile = async (e) => {
+  //   console.log("hello");
+  //   let selectedFile = e.target?.files[0];
+  //   console.log("selected File => ", selectedFile);
+  //   // if(selectedFile){
+  //   console.log(selectedFile?.type);
+  //   // if(selectedFile&&fileType.includes(selectedFile.type)){
+  //   let reader = new FileReader();
+  //   reader.readAsArrayBuffer(selectedFile);
+  //   reader.onload = async (e) => {
+  //     console.log("e.target.result => ", e.target.result);
 
-      setExcelFileError(null);
-      setExcelFile(e.target.result);
-      if (e.target.result != null) {
-        const workbook = XLSX.read(e.target.result, { type: "buffer" });
-        const worksheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[worksheetName];
-        let data = XLSX.utils.sheet_to_json(worksheet);
-        data = data.slice(6);
-        data.pop();
-        console.log("data => ", data);
+  //     setExcelFileError(null);
+  //     setExcelFile(e.target.result);
+  //     if (e.target.result != null) {
+  //       const workbook = XLSX.read(e.target.result, { type: "buffer" });
+  //       const worksheetName = workbook.SheetNames[0];
+  //       const worksheet = workbook.Sheets[worksheetName];
+  //       let data = XLSX.utils.sheet_to_json(worksheet);
+  //       data = data.slice(6);
+  //       data.pop();
+  //       console.log("data => ", data);
 
-        try {
-          let rollNumber = [];
-          let usersRecords = [];
-          await Promise.all(
-            data.length > 0 &&
-              data.map(async (user) => {
-                rollNumber.push(user?.__EMPTY_1);
-                try {
-                  const variable1 = {
-                    rollNumber: user?.__EMPTY_1,
-                  };
-                  const response = await API.graphql(
-                    graphqlOperation(getUser, variable1)
-                  );
-                  response?.data.getUser[0] && usersRecords.push(response?.data.getUser[0]);
-                  console.log("Resp => data => ", response?.data.getUser[0]);
-                  
-                } catch (err) {
-                  console.log("err => ", err);
-                }
-              })
-          );
-          setrollNumbers(rollNumber);
-          setAllUsers(usersRecords);
-          console.log("usersRecords => ",usersRecords)
-        } catch (err) {
-          console.log("err => ", err);
-        }
-      }
-    };
-  };
+  //       try {
+  //         let rollNumber = [];
+  //         let usersRecords = [];
+  //         await Promise.all(
+  //           data.length > 0 &&
+  //             data.map(async (user) => {
+  //               rollNumber.push(user?.__EMPTY_1);
+  //               try {
+  //                 const variable1 = {
+  //                   rollNumber: user?.__EMPTY_1,
+  //                 };
+  //                 const response = await API.graphql(
+  //                   graphqlOperation(getUser, variable1)
+  //                 );
+  //                 response?.data.getUser[0] &&
+  //                   usersRecords.push(response?.data.getUser[0]);
+  //                 console.log("Resp => data => ", response?.data.getUser[0]);
+  //               } catch (err) {
+  //                 console.log("err => ", err);
+  //               }
+  //             })
+  //         );
+  //         setrollNumbers(rollNumber);
+  //         setAllUsers(usersRecords);
+  //         console.log("usersRecords => ", usersRecords);
+  //       } catch (err) {
+  //         console.log("err => ", err);
+  //       }
+  //     }
+  //   };
+  // };
 
   const conversion = async (array, rollNumbers) => {
     array = array.filter((user) => {
@@ -176,13 +251,14 @@ export default function GroupImage() {
   };
   // submit function
   const handleSubmit = async (e) => {
-    setloading("Loading....");
     setFlag(false);
     let finalresponse = [];
     e.preventDefault();
     //Excel to array
-
-    if (excelFile !== null) {
+    if (rollNumbers.length > 0 && images.length > 0) {
+      setloading("Loading....");
+      message.loading("Now comparing Started Plz wait")
+      if (excelFile !== null) {
         await new Promise(async (r, e) => {
           console.log("next promise");
           for (let i = 0; i < images.length; i++) {
@@ -229,20 +305,24 @@ export default function GroupImage() {
               if (result.length < 1) {
                 throw "Error";
               }
-              console.log("response4 ",result);
+              console.log("response4 ", result);
               setupdatedRollno(result);
               setloading("Attendance Marked");
+              message.success('Hurrah! Attendance Marked')
             });
           })
           .catch((error) => {
             console.log("error => ", error);
+            message.error(`OOPS! Something went Wrong`);
             setloading("Something went Wrong");
           });
         //___________________________________________
         //ends here
-
+      } else {
+        setExcelData(null);
+      }
     } else {
-      setExcelData(null);
+      message.error(`Kindly Upload the Image or csv file to Mark Attendance`);
     }
   };
   useEffect(() => {
@@ -253,7 +333,7 @@ export default function GroupImage() {
   }, [updated]);
   return (
     <DashboardLayout>
-      <div className="w-5/7 h-5/7 my-8 mx-10 bg-white font-extrabold align-middle rounded-md shadow-2xl overflow-hidden">
+      <div className="overflow-y-auto w-5/7 h-5/7 my-8 mx-10 bg-white font-extrabold align-middle rounded-md shadow-2xl overflow-hidden">
         <div className="flex pt-5 pb-0 px-4 overflow-hidden">
           <h1 className="font-extrabold text-transparent text-3xl bg-clip-text bg-gradient-to-r from-gray-700 to-red-700">
             {" "}
@@ -261,15 +341,31 @@ export default function GroupImage() {
           </h1>
         </div>
         <div className="w-full">
-            <UploadImage setImagesFunc={setImages} />
-          </div>
+          <UploadImage setImagesFunc={setImages} />
+        </div>
         <div className="flex flex-row items center justify-center space-x-10">
-          <div className="flex flex-col items-center justify-center mt-[9%] space-y-5">
-            <Input className="w-60" type="file" onChange={handleFile}></Input>
-            {/* disabled */}
-            <Button type="primary"  shape="round" className="bg-blue-900" onClick={handleSubmit} block> 
+          <div className="flex flex-col items-center justify-center mt-[5%] space-y-5">
+            <Button
+              type="primary"
+              shape="round"
+              className="bg-blue-900"
+              onClick={handleSubmit}
+              block
+            >
               Mark Attendance
             </Button>
+            <Dragger {...props}>
+              <p className="ant-upload-drag-icon">
+                <InboxOutlined />
+              </p>
+              <p className="ant-upload-text">
+                Click or drag file to this area to upload
+              </p>
+              <p className="ant-upload-hint">
+                Support for a single or bulk upload. Strictly prohibited from
+                uploading company data or other banned files.
+              </p>
+            </Dragger>
           </div>
           {/* <div className="mt-[15%] w-[30%]">
             <UploadImage setImagesFunc={setImages} />
