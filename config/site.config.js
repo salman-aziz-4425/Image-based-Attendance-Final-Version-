@@ -1,5 +1,5 @@
 export default {
-  siteName: 'Admin Panel',
+  siteName: 'Attendance system',
   siteIcon: 'ion-flash',
   footerText: `Image-based Attendance system ${new Date().getFullYear()}`,
   enableAnimatedRoute: false,

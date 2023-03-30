@@ -260,20 +260,24 @@ export default function GroupImage() {
             {loading}
           </h1>
         </div>
+        <div className="w-full">
+            <UploadImage setImagesFunc={setImages} />
+          </div>
         <div className="flex flex-row items center justify-center space-x-10">
-          <div className="flex flex-col items-center justify-center mt-[15%] space-y-5">
+          <div className="flex flex-col items-center justify-center mt-[9%] space-y-5">
             <Input className="w-60" type="file" onChange={handleFile}></Input>
-            <Button type="button" onClick={handleSubmit}>
+            {/* disabled */}
+            <Button type="primary"  shape="round" className="bg-blue-900" onClick={handleSubmit} block> 
               Mark Attendance
             </Button>
           </div>
-          <div className="mt-[15%] w-[30%]">
+          {/* <div className="mt-[15%] w-[30%]">
             <UploadImage setImagesFunc={setImages} />
-          </div>
+          </div> */}
         </div>
         <div
           style={{ position: "relative" }}
-          className="flex flex-row space-x-5 mt-[10%] mx-[4%] overflow-auto m-4 bg-gray-300"
+          className="flex flex-row space-x-5 mt-[10%] mx-[4%] overflow-auto m-4"
         >
           {flag === false
             ? allUsers?.length > 0 &&
