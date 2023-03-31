@@ -17,6 +17,7 @@ export default function validation(type, User, typeAttributes, batch) {
   var nameRegex = /^[a-zA-Z\-]+$/;
   let usernameFormat = true;
   let error = {
+    RollNo:"",
     Email: "",
     Name: "",
     type: "",
@@ -88,6 +89,11 @@ export default function validation(type, User, typeAttributes, batch) {
       }
     }
   }
+  console.log(User.RollNo.length)
+  if(User.RollNo.length!=4){
+    error.RollNo = "Invalid RollNo Field";
+    count = count + 1;
+  }
   if (User.Name === "") {
     error.Name = "Empty Name field";
     count = count + 1;
@@ -145,6 +151,7 @@ else{
     return {
       Flag: true,
       Error:{
+        RollNo:"",
         Email:"",
         Name:"",
         type:"",

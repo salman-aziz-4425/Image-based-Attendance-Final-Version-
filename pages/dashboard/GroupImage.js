@@ -27,6 +27,7 @@ export default function GroupImage() {
   const [allUsers, setAllUsers] = useState([]);
   const [flag, setFlag] = useState(false);
   const { Dragger } = Upload;
+  const [lastResponseStudents,setLastResponseStudents]=useState([])
 
   const props = {
     name: "file",
@@ -281,7 +282,6 @@ export default function GroupImage() {
                   throw "Error";
                 }
                 console.log(result);
-                setresponeData(result?.data?.receiverSqsComparison?.resp)
                 console.log(
                   "response1",
                   result?.data?.receiverSqsComparison?.resp
@@ -294,7 +294,7 @@ export default function GroupImage() {
                   finalresponse = finalresponse.concat(result);
                 });
               })
-              .catch((error) => alert("error"));
+              .catch((error) => message.error("Try again"));
           }
           r(finalresponse);
         })
@@ -311,6 +311,8 @@ export default function GroupImage() {
               console.log("response4 ", result);
               setupdatedRollno(result);
               setloading("Attendance Marked");
+              setresponeData(rollNumbers)
+              setLastResponseStudents(result)
               message.success('Hurrah! Attendance Marked')
             });
           })
@@ -370,7 +372,7 @@ export default function GroupImage() {
               </p>
             </Dragger>
             {
-              flag&& <MyExcelComponent users={responseData}/>
+              flag&& <MyExcelComponent users={responseData} presents={lastResponseStudents}/>
             }
           </div>
           {/* <div className="mt-[15%] w-[30%]">

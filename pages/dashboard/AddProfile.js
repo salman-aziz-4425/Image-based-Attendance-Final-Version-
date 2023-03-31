@@ -29,6 +29,7 @@ export default function AddProfile() {
   const [type, setType] = useState("");
   const [batch, setbatch] = useState("");
   const [error, setError] = useState({
+    RollNo:"",
     Email: "",
     Name: "",
     type: "",
@@ -125,6 +126,7 @@ export default function AddProfile() {
     console.log(Error)
     console.log(Flag);
     if (!Flag) {
+      message.error("Something went wrong")
       return;
     }
     let variables;
@@ -232,7 +234,7 @@ export default function AddProfile() {
               placeholder="Name"
               onChange={inputHandler}
             ></Input>
-            <p className="text-red-600">{error.Email !== "" && error.Email}</p>
+            <p className="text-red-600">{error.RollNo !== "" && error.RollNo}</p>
             <Input
               className="my-2 "
               name="RollNo"

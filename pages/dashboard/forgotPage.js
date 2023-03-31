@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import DashboardLayout from '../../containers/DashboardLayout/DashboardLayout'
 import { TextField } from '@mui/material'
-import { Button } from 'antd'
+import { Button ,message} from 'antd'
 import { API, graphqlOperation, Amplify } from "aws-amplify";
 import { optCode , updatepassword} from '../../src/graphql/mutations';
 import attendance from '../../assets/Picture1.png'
@@ -23,6 +23,7 @@ export default function forgotPage() {
       error:""
     })
     const getOTP=async()=>{
+      message.loading("Loading...")
       if(!rollNumber===""){
         setUser({...user,error:"Roll no format is not correct write like 19F-,TD-,AD-"})
         return 
@@ -34,12 +35,12 @@ export default function forgotPage() {
         }
       }
       await API.graphql(graphqlOperation(optCode,variables)).then((result)=>{
-        alert('Check OTP')
+        message.success('Check OTP')
         setVisibility(true)
         setbtnVisibility({...btnVisiblity,btn2:true})
         setUser({...user,OTP:result.data.getOtpCode.optCode})
       }).catch((error)=>{
-        alert("Account doesnt exist")
+        message.error("Account doesnt exist")
       })
     }
     const checkOTP=()=>{
@@ -53,6 +54,7 @@ export default function forgotPage() {
       setUser({...user,[name]:value})
     }
     const updatePassword=async()=>{
+      message.loading("Loading...")
       const variables={
         data:{
           rollNumber:rollNumber,
@@ -63,10 +65,11 @@ export default function forgotPage() {
       }
       console.log(variables)
       await API.graphql(graphqlOperation(updatepassword,variables)).then((result)=>{
-        alert("password updated")
+        message.success('password updated')
         Router.push('/')
 
       }).catch(()=>{
+        message.error("Roll no format is not correct")
         setUser({...user,error:"Roll no format is not correct write like 19F-"})
       })
     }

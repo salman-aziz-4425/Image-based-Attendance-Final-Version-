@@ -14,14 +14,16 @@ export default function MyExcelComponent(props) {
 
     // Add data to the worksheet
     props?.users.map((obj)=>{
+      let isPresent=props?.presents.findIndex((user)=>user.rollNumber===obj)
+      console.log(isPresent)
         let attend=""
-        if(obj?.faceConf>80){
+        if(isPresent!=-1){
             attend="Present"
         }
         else{
             attend="Absent"
         }
-        worksheet.addRow({ rollNumber:obj?.rollNumber,Attendance:attend,time:new Date()});
+        worksheet.addRow({ rollNumber:obj,Attendance:attend,time:new Date()});
     })
     console.log(props.users)
     // Write the workbook to a buffer
