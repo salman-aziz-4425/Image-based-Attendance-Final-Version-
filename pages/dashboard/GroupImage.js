@@ -274,7 +274,7 @@ export default function GroupImage() {
               graphqlOperation(comparingFaces, variables)
             );
             console.log(responseComparison);
-            await new Promise((r) => setTimeout(r, 8500));
+            await new Promise((r) => setTimeout(r, 20500));
             await API.graphql(graphqlOperation(LastComparison))
               .then((result) => {
                 if (!result?.data?.receiverSqsComparison?.resp) {
