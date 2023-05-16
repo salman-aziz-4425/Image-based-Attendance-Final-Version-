@@ -111,8 +111,8 @@
 		"xlsx-populate": "^1.21.0"
 	},
 	"scripts": {
-		"dev": "next -p 3003",
-		"start": "next -p 3003",
+		"dev": "cross-env NODE_OPTIONS='--openssl-legacy-provider' next dev",
+		"start": "react-scripts --openssl-legacy-provider start",
 		"build": "next build",
 		"serve": "next start",
 		"analyze": "cross-env ANALYZE=1 next build",

@@ -123,18 +123,19 @@ export default function validation(type, User, typeAttributes, batch) {
   if (typeAttributes.Qualification === "") {
     error.Qualification = "Empty Qualification Field";
     count = count + 1;
-  } else {
-    for (let i = 0; i < typeAttributes.Qualification.length; i++) {
-      if (
-        typeAttributes.Qualification.charCodeAt(i) < 65 ||
-        typeAttributes.Qualification.charCodeAt(i) > 122
-      ) {
-        error.Qualification = "Wrong Qualification Format";
-        count = count + 1;
-        break;
-      }
-    }
-  }
+   }
+   //else {
+  //   for (let i = 0; i < typeAttributes.Qualification.length; i++) {
+  //     if (
+  //       typeAttributes.Qualification.charCodeAt(i) < 65 ||
+  //       typeAttributes.Qualification.charCodeAt(i) > 1000
+  //     ) {
+  //       error.Qualification = "Wrong Qualification Format";
+  //       count = count + 1;
+  //       break;
+  //     }
+  //   }
+  // }
   if(!User?.Address){
     error.Address="Invalid Address"
     count=count+1
