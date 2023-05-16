@@ -98,7 +98,6 @@ export default function GroupImage() {
         const worksheet = workbook.Sheets[worksheetName];
         let data = XLSX.utils.sheet_to_json(worksheet);
         data = data.slice(6);
-        data.pop();
         console.log("data => ", data);
 
         try {

@@ -154,7 +154,7 @@ export default function AddProfile() {
     const imageURl =
       `https://user-attendance-image-test.s3.amazonaws.com/` + imageKey;
     console.log("Image Url => ", imageURl);
-
+  
     if (type === "Student") {
       variables = {
         data: {
@@ -201,7 +201,7 @@ export default function AddProfile() {
         }, // key is "input" based on the mutation above
       };
     }
-    console.log(variables.data);
+    console.log("our data",variables.data);
     await API.graphql(graphqlOperation(createUser, variables))
       .then((result) => {
         message.success("You Credentials Recorded")

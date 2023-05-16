@@ -44,7 +44,7 @@ export default function UploadImage({ setImagesFunc }) {
         onChange={onChange}
         maxNumber={maxNumber}
         dataURLKey="data_url"
-        acceptType={["jpg"]}
+        acceptType={["jpeg"]}
       >
         {({
           imageList,
