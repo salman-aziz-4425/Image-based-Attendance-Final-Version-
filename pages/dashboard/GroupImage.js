@@ -320,7 +320,7 @@ export default function GroupImage() {
             message.error(`OOPS! Something went Wrong`);
             setloading("Something went Wrong");
           });
-        //___________________________________________
+        //_______________
         //ends here
       } else {
         setExcelData(null);
@@ -392,6 +392,7 @@ export default function GroupImage() {
                       className="w-[100px] h-[100px] object-cover"
                     />
                   </div>
+                  <h2 className="text-center mt-4">{user?.rollNumber}</h2>
                 </div>
               ))
             : allUsers.map((user) => {
@@ -437,6 +438,7 @@ export default function GroupImage() {
                         </>
                       )}
                     </div>
+                    <h2 className="text-center mt-4">{user?.rollNumber}</h2>
                   </div>
                 );
               })}
