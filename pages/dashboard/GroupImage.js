@@ -19,7 +19,7 @@ import MyExcelComponent from "./toExcel";
 export default function GroupImage() {
   const [excelFile, setExcelFile] = useState(null);
   const [excelFileError, setExcelFileError] = useState(null);
-  const [responseData,setresponeData] = useState(null);
+  const [responseData, setresponeData] = useState(null);
   const [images, setImages] = React.useState([]);
   const [rollNumbers, setrollNumbers] = useState([]);
   const [loading, setloading] = useState("Mark Attendance");
@@ -27,7 +27,7 @@ export default function GroupImage() {
   const [allUsers, setAllUsers] = useState([]);
   const [flag, setFlag] = useState(false);
   const { Dragger } = Upload;
-  const [lastResponseStudents,setLastResponseStudents]=useState([])
+  const [lastResponseStudents, setLastResponseStudents] = useState([]);
 
   const props = {
     name: "file",
@@ -259,7 +259,7 @@ export default function GroupImage() {
     //Excel to array
     if (rollNumbers.length > 0 && images.length > 0) {
       setloading("Loading....");
-      message.loading("Now comparing Started Plz wait")
+      message.loading("Now comparing Started Plz wait");
       if (excelFile !== null) {
         await new Promise(async (r, e) => {
           console.log("next promise");
@@ -310,9 +310,9 @@ export default function GroupImage() {
               console.log("response4 ", result);
               setupdatedRollno(result);
               setloading("Attendance Marked");
-              setresponeData(rollNumbers)
-              setLastResponseStudents(result)
-              message.success('Hurrah! Attendance Marked')
+              setresponeData(rollNumbers);
+              setLastResponseStudents(result);
+              message.success("Hurrah! Attendance Marked");
             });
           })
           .catch((error) => {
@@ -320,7 +320,7 @@ export default function GroupImage() {
             message.error(`OOPS! Something went Wrong`);
             setloading("Something went Wrong");
           });
-        //_______________
+        //_____
         //ends here
       } else {
         setExcelData(null);
@@ -370,26 +370,35 @@ export default function GroupImage() {
                 uploading company data or other banned files.
               </p>
             </Dragger>
-            {
-              flag&& <MyExcelComponent users={responseData} presents={lastResponseStudents}/>
-            }
+            {flag && (
+              <MyExcelComponent
+                users={responseData}
+                presents={lastResponseStudents}
+              />
+            )}
           </div>
           {/* <div className="mt-[15%] w-[30%]">
             <UploadImage setImagesFunc={setImages} />
           </div> */}
         </div>
+        {console.log("userslength => ", allUsers.length)}
         <div
-          style={{ position: "relative" }}
-          className="flex flex-row space-x-5 mt-[10%] mx-[4%] overflow-auto m-4"
+          style={{
+            position: "relative",
+            width: "100%",
+            height: "200px",
+            overflowX: "auto"
+          }}
+          className="flex flex-row space-x-8 mt-[10%] mx-[4%] m-4"
         >
           {flag === false
             ? allUsers?.length > 0 &&
               allUsers.map((user) => (
-                <div class="mb-4 md:mb-0">
-                  <div class="rounded-full relative w-full object-contain overflow-hidden bg-cover bg-no-repeat ">
+                <div className="flex-shrink-0 mb-4 md:mb-0">
+                  <div className="rounded-full relative w-32 h-32 object-cover overflow-hidden">
                     <img
                       src={user.image}
-                      className="w-[100px] h-[100px] object-cover"
+                      className="w-full h-full object-cover"
                     />
                   </div>
                   <h2 className="text-center mt-4">{user?.rollNumber}</h2>
@@ -401,12 +410,11 @@ export default function GroupImage() {
                 );
                 const faceConf = index != -1 ? updated[index]?.faceConf : 0;
                 return (
-                  <div class="mb-4 md:mb-0">
-                    <div class="rounded-full relative w-full object-contain overflow-hidden bg-cover bg-no-repeat ">
+                  <div className="flex-shrink-0 mb-4 md:mb-0">
+                    <div className="rounded-full relative w-32 h-32 object-cover overflow-hidden">
                       <img
                         src={user.image}
-                        className="w-[100px] h-[100px] object-cover"
-                        // className="w-[100px] mb-4 object-cover rounded-md"
+                        className="w-full h-full object-cover"
                       />
                       {faceConf > 80 ? (
                         <div>
@@ -415,12 +423,12 @@ export default function GroupImage() {
                               zIndex: 1,
                               opacity: 1,
                               position: "absolute",
-                              marginTop: "-105px",
+                              marginTop: "-127px",
                             }}
-                            className="h-28 w-60"
+                            className="h-full w-full"
                             src={checkmark}
                           />
-                          <div className="absolute top-0 right-0 bottom-2 left-0 mb-2 h-full w-full overflow-hidden bg-green-400 bg-fixed transition duration-300 ease-in-out opacity-40 rounded-md"></div>
+                          <div className="absolute top-0 right-0 bottom-2 left-0 mb-2 h-full w-full bg-green-400 bg-fixed opacity-40 rounded-md"></div>
                         </div>
                       ) : (
                         <>
@@ -429,12 +437,12 @@ export default function GroupImage() {
                               zIndex: 2,
                               opacity: 1,
                               position: "absolute",
-                              marginTop: "-105px",
+                              marginTop: "-127px",
                             }}
-                            className="h-28 w-60"
+                            className="h-full w-full"
                             src={cross}
                           />
-                          <div className="absolute top-0 right-0 bottom-2 left-0  mb-2 h-full w-full overflow-hidden bg-red-400 bg-fixed transition duration-300 ease-in-out opacity-40 rounded-md"></div>
+                          <div className="absolute top-0 right-0 bottom-2 left-0 mb-2 h-full w-full bg-red-400 bg-fixed opacity-40 rounded-md"></div>
                         </>
                       )}
                     </div>
