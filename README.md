@@ -1,7 +1,8 @@
 # image-based-nextjs-attendance-system
 
-Mobile View:
+Website View:
 
+![image](https://github.com/salman-aziz-4425/Image-based-Updated/assets/85288719/0057936a-50af-4f22-b9e9-69875c56fffb)
 ![image](https://github.com/salman-aziz-4425/Image-based-Updated/assets/85288719/689032d1-2960-4058-a7c4-55064cea6e40)
 ![image](https://github.com/salman-aziz-4425/Image-based-Updated/assets/85288719/69beace7-a7ac-4bcd-a967-57fd0cc10666)
 ![image](https://github.com/salman-aziz-4425/Image-based-Updated/assets/85288719/c2103c17-6de9-4cb5-a92c-ecc8a394fb50)
