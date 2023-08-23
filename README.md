@@ -1,5 +1,9 @@
 # image-based-nextjs-attendance-system
 
+Introduction:
+The system is developed for deploying an easy and a secure way of taking down attendance. The software first captures an image of all students and stores the information into a database. The system then gets the picture of the class and map it into a face coordinate structure and marks his/her attendance at the time. This system will also help in evaluating attendance eligibility criteria of a student.
+
+
 Website View:
 
 ![image](https://github.com/salman-aziz-4425/Image-based-Updated/assets/85288719/0057936a-50af-4f22-b9e9-69875c56fffb)
